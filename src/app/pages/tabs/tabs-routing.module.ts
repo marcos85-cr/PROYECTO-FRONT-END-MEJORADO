@@ -6,8 +6,40 @@ import { TabsPage } from './tabs.page';
 const routes: Routes = [
   {
     path: '',
-    component: TabsPage
-  }
+    component: TabsPage,
+    children: [
+      {
+        path: '',
+        redirectTo: '/tabs/home',
+        pathMatch: 'full',
+      },
+
+      {
+        path: 'home',
+        loadChildren: () =>
+          import('./home/home.module').then((m) => m.HomePageModule),
+      },
+      {
+        path: 'settings',
+        loadChildren: () =>
+          import('./settings/settings.module').then(
+            (m) => m.SettingsPageModule
+          ),
+      },
+      {
+        path: 'card',
+        loadChildren: () =>
+          import('./card/card.module').then((m) => m.CardPageModule),
+      },
+      {
+        path: 'transactions',
+        loadChildren: () =>
+          import('./transactions/transactions.module').then(
+            (m) => m.TransactionsPageModule
+          ),
+      },
+    ],
+  },
 ];
 
 @NgModule({
