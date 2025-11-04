@@ -1,0 +1,43 @@
+.banners {
+  width: 100%;
+  margin-top: 20px;
+  padding: 0 10px;
+}
+
+swiper-container {
+  width: 100%;
+  height: auto;
+  --swiper-pagination-color: var(--ion-color-tertiary);
+  --swiper-pagination-bullet-inactive-color: var(--ion-color-light);
+  --swiper-pagination-bullet-inactive-opacity: 0.5;
+}
+
+swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 30px 20px;
+  min-height: 200px;
+  backdrop-filter: blur(10px);
+  
+  ion-label {
+    text-align: center;
+    width: 100%;
+    
+    span {
+      color: var(--ion-color-light);
+      font-size: 14px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    
+    .acc-amt {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 15px 0;
+      letter-spacing: 1px;
+    }
+  }
+}

@@ -10,12 +10,12 @@ ion-tabs {
         border: 1px solid var(2, 52, 54, 0.08); // Borde sutil
         overflow: hidden;
         box-shadow: 0px -5px 10px rgba(2 181 170 / 8%); // Sombra suave
-        height: 80px;
+        height: 70px;
         --background: var(--ion-color-light); 
         // color de los iconos
         ion-tab-button {
             --background: var(--ion-color-light);
-            --color: #282bc9; // Color de los iconos no seleccionados
+            --color: #5f5c5c; // Color de los iconos no seleccionados
             ion-icon {
                 font-size: 1.9rem;
             }

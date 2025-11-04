@@ -1,13 +1,30 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>home</ion-title>
+<ion-header class="ion-no-border"> <!-- Quitar la línea inferior del encabezado -->
+  <ion-toolbar color="primary"> <!-- Cambiar el color de fondo del encabezado a primario -->
+    <ion-title mode="md" class="ion-no-padding"> <!-- Quitar el padding del título -->
+      <ion-label>
+        <ion-text color="tertiary">Bienvenido</ion-text>
+        <p><ion-text color="white"><strong>Usuario ...</strong></ion-text></p>
+      </ion-label>
+    </ion-title>
+    <ion-avatar slot="end">
+      <img src="assets/icon/BANK.jpg" />
+    </ion-avatar>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+
+<ion-content color="primary">
+
+ <ion-row class="banners">
+  <swiper-container pagination="true" slides-per-view="1" space-between="10" autoplay="true" loop="true">
+    <swiper-slide *ngFor="let account of account">
+      <div align="center">
+        <ion-label>
+          <span>Balance Total</span>
+          <p class="acc-amt"><ion-text color="white"> ${{ account?.balance }}</ion-text></p>
+          <span>{{account?.acc_no}}</span>
+        </ion-label>
+      </div>
+    </swiper-slide>
+  </swiper-container>
+ </ion-row>
