@@ -15,16 +15,61 @@
 
 <ion-content color="primary">
 
- <ion-row class="banners">
-  <swiper-container pagination="true" slides-per-view="1" space-between="10" autoplay="false" loop="true">
-    <swiper-slide *ngFor="let account of account">
-      <div align="center">
+  <ion-row class="banners">
+    <swiper-container pagination="true" slides-per-view="1" space-between="10" autoplay="false" loop="true">
+      <swiper-slide *ngFor="let account of account">
+        <div align="center">
+          <ion-label>
+            <span>Balance Total</span>
+            <p class="acc-amt"><ion-text color="white"> ${{ account?.balance }}</ion-text></p>
+            <span>{{account?.acc_no}}</span>
+          </ion-label>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </ion-row>
+
+  <!-- Sección de características/iconos -->
+  <ion-row class="features">
+    <swiper-container slides-per-view="3.5" space-between="10">
+      <swiper-slide *ngFor="let feature of features">
+        <ion-button [color]="feature.color" shape="round" class="feature-btn">
+          <ion-icon [name]="feature.icon" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-label>{{ feature.name }}</ion-label>
+      </swiper-slide>
+    </swiper-container>
+  </ion-row>
+
+  <ion-list class="transactions" *ngIf="transactions.length > 0">
+    <ion-list-header>
+      <ion-label color="medium">Transacciones</ion-label>
+    </ion-list-header>
+
+    <ion-item-group>
+      <ion-item lines="full" *ngFor="let transaction of transactions">
+        <ion-icon 
+          slot="start" 
+          [name]="transaction?.amount >= 0 ? 'arrow-up-circle' : 'arrow-down-circle'" 
+          [color]="transaction?.amount >= 0 ? 'success' : 'danger'"
+          size="large">
+        </ion-icon>
         <ion-label>
-          <span>Balance Total</span>
-          <p class="acc-amt"><ion-text color="white"> ${{ account?.balance }}</ion-text></p>
-          <span>{{account?.acc_no}}</span>
+          <ion-text>{{transaction?.to}}</ion-text>
+          <p>
+            <ion-text>
+              {{transaction?.date | date: 'MMM d, y'}}
+            </ion-text>
+          </p>
         </ion-label>
-      </div>
-    </swiper-slide>
-  </swiper-container>
- </ion-row>
+        <ion-text slot="end" color="primary">
+          {{transaction?.amount >= 0 ? '$' + transaction?.amount : '-$' + (transaction?.amount * (-1))}}
+        </ion-text>
+      </ion-item>
+    </ion-item-group>
+
+
+
+  </ion-list>
+
+</ion-content>

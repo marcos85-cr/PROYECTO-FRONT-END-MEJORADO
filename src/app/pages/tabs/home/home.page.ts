@@ -1,8 +1,17 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  AfterContentChecked,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { register } from 'swiper/element/bundle';
+import { SwiperOptions } from 'swiper/types';
 
 register();
 
@@ -12,21 +21,58 @@ register();
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HomePage implements OnInit {
-
+export class HomePage implements OnInit, AfterContentChecked {
   account: any[] = []; /* Arreglo para almacenar los datos de la cuenta */
+  bannerConfig: SwiperOptions = {};
+  featureConfig: SwiperOptions = {};
+  features: any[] = [];
+  transactions: any[] = [];
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.account = [
       { id: 1, acc_no: '1234567890', acc_type: 'Checking', balance: '2500.75' },
       { id: 2, acc_no: '0987654321', acc_type: 'Savings', balance: '10500.00' },
-      { id: 3, acc_no: '1122334455', acc_type: 'Investment', balance: '50000.50' }
+      {
+        id: 3,
+        acc_no: '1122334455',
+        acc_type: 'Investment',
+        balance: '50000.50',
+      },
+    ];
 
+    this.features = [
+      {
+        id: 1,
+        color: 'secondary',
+        icon: 'paper-plane-outline',
+        name: 'Enviar',
+      },
+      { id: 2, color: 'primary', icon: 'arrow-up-outline', name: 'Traer' },
+      { id: 3, color: 'success', icon: 'add-circle-outline', name: 'Sinpe' },
+      { id: 4, color: 'medium', icon: 'newspaper-outline', name: 'Pagos' },
+      { id: 5, color: 'warning', icon: 'card-outline', name: 'Tarjetas' },
+    ];
+
+    this.transactions = [
+      { id: 1, to: 'Pedro Sanchez', date: '2025-05-22', amount: 5000 },
+      { id: 2, to: 'Marta Porras', date: '2025-03-02', amount: 7000 },
+      { id: 3, to: 'Ezequiel Santos', date: '2025-07-28', amount: -3250 },
+      { id: 4, to: 'Tomas Cerrano.', date: '2025-01-09', amount: 1000 },
+      { id: 5, to: 'Juan Perez', date: '2025-04-13', amount: -800 },
     ];
   }
 
+  ngAfterContentChecked() {
+    this.bannerConfig = {
+      slidesPerView: 1,
+      pagination: { clickable: true },
+    };
+    this.featureConfig = {
+      slidesPerView: 3.5,
+    };
+  }
 }

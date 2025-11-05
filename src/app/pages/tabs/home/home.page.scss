@@ -1,12 +1,12 @@
 .banners {
   width: 100%;
-  margin-top: 20px;
-  padding: 0 10px;
+  margin-top: 15px;
+  padding: 0 15px;
 }
 
 swiper-container {
   width: 100%;
-  height: auto;
+  height: 34vh;
   --swiper-pagination-color: var(--ion-color-tertiary);
   --swiper-pagination-bullet-inactive-color: var(--ion-color-light);
   --swiper-pagination-bullet-inactive-opacity: 0.5;
@@ -16,23 +16,23 @@ swiper-slide {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
+  background: rgba(3, 64, 233, 0.363);
+  border-radius: 2.5rem;
   padding: 30px 20px;
   min-height: 200px;
   backdrop-filter: blur(10px);
-  
+
   ion-label {
     text-align: center;
     width: 100%;
-    
+
     span {
       color: var(--ion-color-light);
-      font-size: 14px;
+      font-size: 18px;
       display: block;
       margin-bottom: 10px;
     }
-    
+
     .acc-amt {
       font-size: 32px;
       font-weight: bold;
@@ -40,4 +40,67 @@ swiper-slide {
       letter-spacing: 1px;
     }
   }
+}
+
+// Estilos para la sección de features/iconos
+.features {
+  width: 100%;
+  margin-top: 20px;
+  padding: 0 15px;
+
+  swiper-container {
+    height: auto;
+    padding: 10px 0;
+  }
+
+  swiper-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    backdrop-filter: none;
+    padding: 10px;
+    min-height: auto;
+
+    .feature-btn {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 8px;
+
+      ion-icon {
+        font-size: 28px;
+      }
+    }
+
+    // Estilos para el label debajo del icono
+    ion-label {
+      color: var(--ion-color-light);
+      font-size: 12px;
+      text-align: center;
+    }
+  }
+
+  ion-row.feature-list {
+    padding: 5vh 0; // Agregado para separar la lista de features
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      ion-button {
+        --border-radius: 15px;
+        height: 8vh;
+      }
+
+      ion-label {
+        font-size: 1rem;
+      }
+    }
+  }
+
+
+
 }
