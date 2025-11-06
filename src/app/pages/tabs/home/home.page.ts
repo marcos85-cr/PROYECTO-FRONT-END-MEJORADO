@@ -36,12 +36,7 @@ export class HomePage implements OnInit, AfterContentChecked {
     this.account = [
       { id: 1, acc_no: '1234567890', acc_type: 'Checking', balance: '2500.75' },
       { id: 2, acc_no: '0987654321', acc_type: 'Savings', balance: '10500.00' },
-      {
-        id: 3,
-        acc_no: '1122334455',
-        acc_type: 'Investment',
-        balance: '50000.50',
-      },
+      { id: 3, acc_no: '1122334455', acc_type: 'Investment', balance: '50000.50' }
     ];
 
     this.features = [

@@ -1,3 +1,34 @@
+// Estilos para el header
+ion-header {
+  ion-toolbar {
+    ion-title {
+      ion-label {
+        // Estilo para "Bienvenido"
+        ion-text:first-child {
+          font-size: 20px; // Tamaño del texto "Bienvenido"
+          font-family: 'Courier New', Courier, monospace;
+          font-weight: 600;
+          padding: 10px;
+          color:rgba(3, 64, 233, 0.692);
+        }
+
+        // Estilo para "Marcos Vargas"
+        p {
+          margin-top: 5px;
+          
+          ion-text {
+            font-size: 18px; // Tamaño del texto "Marcos Vargas"
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: white;
+            // El color ya está definido en el HTML como "white"
+          }
+        }
+      }
+    }
+  }
+}
+
 .banners {
   width: 100%;
   margin-top: 15px;
@@ -76,11 +107,14 @@ swiper-slide {
     // Estilos para el label debajo del icono
     ion-label {
       color: var(--ion-color-light);
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: 800;
       text-align: center;
+      margin-top: 5px; // Espaciado desde el botón
     }
   }
 
+  // Estilos para la fila que contiene los features
   ion-row.feature-list {
     padding: 5vh 0; // Agregado para separar la lista de features
 
@@ -90,6 +124,7 @@ swiper-slide {
       align-items: center;
       justify-content: center;
 
+      // Estilos para el botón de cada feature
       ion-button {
         --border-radius: 15px;
         height: 8vh;
@@ -97,10 +132,79 @@ swiper-slide {
 
       ion-label {
         font-size: 1rem;
+        font-weight: bold;
       }
     }
   }
+}
 
+// Estilos para la lista de transacciones
+ion-list.transactions {
+  border-radius: 7vh 7vh 0 0;
+  background: var(--ion-color-secondary);
+  padding-bottom: 10vh;
+  /*ion-list-header {
+    padding-inline-start: 3.5vh;
+  }*/
 
+  ion-list-header {
 
+    ion-label,
+    ion-item {
+      font-size: 15px;
+      font-weight: bold;
+      color: black;
+    }
+  }
+    // Estilos para cada grupo de items (transacciones)
+    ion-item-group {
+      padding: 0 3.5vh;
+        // Estilos para cada item (transacción)
+      ion-item {
+        font-weight: bold;
+        --background: transparent;
+        --border-style: solid; // Estilo de la línea divisoria (solid, dashed, dotted)
+        --border-color: var(--ion-color-tertiary-shade); // ← COLOR DE LA LÍNEA DIVISORIA
+        --padding-bottom: 1rem;
+        --padding-top: 1rem;
+        --padding-start: 0;
+  
+        // Estilos para el label principal (nombre de la persona)
+        ion-label {
+          ion-text {
+            color: var(--ion-color-dark); // ← COLOR DEL NOMBRE (Pedro Sanchez)
+            font-size: 1rem;
+          }
+          
+          // Estilos para el párrafo (fecha)
+          p {
+            ion-text {
+              color: var(--ion-color-medium); // ← COLOR DE LA FECHA (May 22, 2025)
+            }
+            font-size: 0.9rem;
+            font-weight: normal;
+            margin-top: 3px;
+          }
+        }
+  
+        // Estilos para el monto al final
+        ion-text[slot="end"] {
+          font-size: 1rem;
+          color: black;
+          // El color ya está definido en el HTML como "primary"
+          // Si quieres cambiarlo, puedes usar: color: tu-color !important;
+        }
+          
+          // Estilos para la miniatura/icono de la transacción
+        ion-thumbnail {
+          height: 6vh;
+          width: 6vh;
+          border-radius: 10px;
+          background: var(--ion-color-white);
+          box-shadow: 0px 3px 6px rgb(3 181 170 / 4%); // Sombra sutil para el efecto de elevación
+          
+         
+        }
+      }
+    }
 }
