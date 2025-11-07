@@ -8,12 +8,14 @@
 /*  Header and Segment Styles */
 ion-header {
     ion-toolbar {
-        --background: var(--ion-color-secondary);
+        --background: var(--ion-color-primary);
+        
         ion-segment {
-            --background: var(--ion-color-primary);
+            --background: var(--ion-color-secondary);
             ion-segment-button {
                 --color: var(--ion-color-white);
                 --color-checked: var(--ion-color-primary);
+                color: black;
             }
         }
     }

@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border" translucent>
   <ion-toolbar>
-    <ion-title color="dark">Transacciones</ion-title>
+    <ion-title color="secondary">Transacciones</ion-title>
   </ion-toolbar>
   <ion-toolbar>
     <ion-segment mode="ios" [value]="segmentValue" (ionChange)="segmentChanged($event)">
@@ -14,7 +14,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content color="secondary -shade" fullscreen>
+<ion-content color="primary" fullscreen>
 
   <ion-list class="transactions" *ngIf="transactions.length > 0">
     <ion-item-group>

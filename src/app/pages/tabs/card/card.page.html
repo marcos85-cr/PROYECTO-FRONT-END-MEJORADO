@@ -7,12 +7,9 @@
 <ion-content color="primary">
 
   <div class="bg_circle"></div>
-  
+
   <ion-row>
-    <swiper-container 
-      slides-per-view="1.2" 
-      space-between="10" 
-      centered-slides="true">
+    <swiper-container slides-per-view="1.2" space-between="10" centered-slides="true">
       <swiper-slide *ngFor="let card of cards">
         <div class="card_details ion-padding">
           <img [src]="card.company_img" alt="Card logo" />
@@ -27,5 +24,27 @@
       </swiper-slide>
     </swiper-container>
   </ion-row>
+
+  <!-- Activar Tarjeta y Cambiar Pin -->
+  <ion-list class="transactions">
+    <ion-list-header>
+      <ion-label color="medium">Configuración</ion-label>
+    </ion-list-header>
+    <ion-item-group>
+      <ion-item lines="full">
+        <ion-label>
+          Activar Tarjeta
+        </ion-label>
+        <ion-toggle slot="end" [checked]="true"></ion-toggle>
+      </ion-item>
+    </ion-item-group>
+    <ion-item-group>
+      <ion-item lines="full" detail>
+        <ion-label>
+          Cambiar Pin
+        </ion-label>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
 
 </ion-content>

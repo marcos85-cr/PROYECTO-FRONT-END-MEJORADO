@@ -17,7 +17,7 @@ ion-content {
 
         swiper-container {
             height: 37vh;
-            width: 100%;
+            width: 110%;
 
             swiper-slide {
                 display: flex;
@@ -40,14 +40,14 @@ ion-content {
 
                 img {
                     align-self: start;
-                    width: 3.5rem;
-                    margin: 2rem 0 2rem 0;
+                    width: 2.5rem;
+                    margin: 1.2rem 0 1.2rem 0;
                 }
 
                 ion-label {
                     div.acc-amt {
                         margin: 0.2rem 0;
-                        font-size: 1.5rem;
+                        font-size: 1.2rem;
                         font-weight: 700;
                         letter-spacing: 0.1rem;
                         text-shadow: 
@@ -60,15 +60,29 @@ ion-content {
                     span {
                         font-size: 1.1rem;
                         font-weight: 500;
+                        text-shadow:
+                                0px 1px 0px rgba(255, 255, 255, 0.3),
+                                0px 2px 0px rgba(255, 255, 255, 0.2),
+                                0px 3px 3px rgba(0, 0, 0, 0.4),
+                                0px -1px 0px rgba(0, 0, 0, 0.2);
                     }
                 }
 
                 p.exp {
                     font-size: 1rem;
                     font-weight: 500;
-                    align-self: start;
+                   // align-self: start;
                     margin: 2rem 0;
                 }
+            }
+        }
+    }
+    // estilos para la lista de configuraciones
+    ion-list {
+        ion-item {
+            ion-label {
+                font-size: 1.1rem !important;
+                
             }
         }
     }
