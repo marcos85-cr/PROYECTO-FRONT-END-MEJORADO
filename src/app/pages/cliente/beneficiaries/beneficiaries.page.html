@@ -1,0 +1,99 @@
+
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Beneficiarios</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="openCreateModal()">
+                <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+    <!-- Búsqueda y Filtros -->
+    <ion-toolbar color="secondary">
+        <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterBeneficiaries()"
+            placeholder="Buscar por alias o banco" animated></ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Filtros Rápidos por Estado -->
+    <div class="filter-chips">
+        <ion-chip [outline]="selectedStatus !== 'all'" (click)="filterByStatus('all')">
+            <ion-label>Todos</ion-label>
+        </ion-chip>
+        <ion-chip [outline]="selectedStatus !== 'Activo'" (click)="filterByStatus('Activo')">
+            <ion-label>Activos</ion-label>
+        </ion-chip>
+        <ion-chip [outline]="selectedStatus !== 'Pendiente'" (click)="filterByStatus('Pendiente')">
+            <ion-label>Pendientes</ion-label>
+        </ion-chip>
+    </div>
+
+    <div class="beneficiaries-container">
+        <!-- Lista de Beneficiarios -->
+        <ion-list *ngIf="filteredBeneficiaries.length > 0">
+            <ion-item-sliding *ngFor="let ben of filteredBeneficiaries">
+                <ion-item lines="full" button (click)="viewBeneficiaryDetail(ben)">
+                    <ion-icon slot="start" name="person-circle"
+                        [color]="ben.estado === 'Activo' ? 'primary' : 'warning'" size="large"></ion-icon>
+                    <ion-label>
+                        <h2>{{ ben.alias }}</h2>
+                        <p class="bank-name">{{ ben.banco }}</p>
+                        <p class="account-number">{{ ben.numeroCuenta }}</p>
+                        <div class="beneficiary-meta">
+                            <ion-badge [color]="getStatusColor(ben.estado)">
+                                {{ ben.estado }}
+                            </ion-badge>
+                            <span class="country">{{ ben.pais }}</span>
+                            <span class="currency">{{ ben.moneda }}</span>
+                        </div>
+                    </ion-label>
+                    <ion-icon slot="end" [name]="ben.estado === 'Activo' ? 'checkmark-circle' : 'time'"
+                        [color]="ben.estado === 'Activo' ? 'success' : 'warning'"></ion-icon>
+                </ion-item>
+
+                <ion-item-options side="start" *ngIf="ben.estado === 'Pendiente'">
+                    <ion-item-option color="success" (click)="confirmBeneficiary(ben)">
+                        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+                    </ion-item-option>
+                </ion-item-options>
+
+                <ion-item-options side="end">
+                    <ion-item-option color="primary" (click)="editBeneficiary(ben)">
+                        <ion-icon slot="icon-only" name="create"></ion-icon>
+                    </ion-item-option>
+                    <ion-item-option color="danger" (click)="deleteBeneficiary(ben)">
+                        <ion-icon slot="icon-only" name="trash"></ion-icon>
+                    </ion-item-option>
+                </ion-item-options>
+            </ion-item-sliding>
+        </ion-list>
+
+        <!-- Sin Resultados -->
+        <div class="empty-state" *ngIf="filteredBeneficiaries.length === 0 && !isLoading">
+            <ion-icon name="people-outline" color="medium"></ion-icon>
+            <p>No tienes beneficiarios registrados</p>
+            <ion-text color="medium">
+                <small>Los beneficiarios te permiten realizar transferencias más rápido</small>
+            </ion-text>
+            <ion-button expand="block" color="primary" (click)="openCreateModal()" class="mt-2">
+                <ion-icon slot="start" name="add-circle"></ion-icon>
+                Agregar Primer Beneficiario
+            </ion-button>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading-state" *ngIf="isLoading">
+            <ion-spinner name="crescent" color="primary"></ion-spinner>
+            <p>Cargando beneficiarios...</p>
+        </div>
+    </div>
+</ion-content>

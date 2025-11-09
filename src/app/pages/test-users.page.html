@@ -1,0 +1,161 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Usuarios de Prueba</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="information-circle" slot="start"></ion-icon>
+        Credenciales de Acceso
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Contraseña para todos los usuarios:</strong> <code>123456</code></p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Administrador -->
+  <ion-card>
+    <ion-card-header color="warning">
+      <ion-card-title>
+        <ion-icon name="shield" slot="start"></ion-icon>
+        Administrador
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item>
+          <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3>admin@banco.com</h3>
+            <p>Email de acceso</p>
+          </ion-label>
+          <ion-button fill="clear" (click)="copyToClipboard('admin@banco.com')">
+            <ion-icon name="copy"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="person" slot="start" color="secondary"></ion-icon>
+          <ion-label>
+            <h3>Administrador Sistema</h3>
+            <p>Acceso completo al sistema</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Gestor -->
+  <ion-card>
+    <ion-card-header color="secondary">
+      <ion-card-title>
+        <ion-icon name="business" slot="start"></ion-icon>
+        Gestor Bancario
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item>
+          <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3>gestor@banco.com</h3>
+            <p>Email de acceso</p>
+          </ion-label>
+          <ion-button fill="clear" (click)="copyToClipboard('gestor@banco.com')">
+            <ion-icon name="copy"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="person" slot="start" color="secondary"></ion-icon>
+          <ion-label>
+            <h3>María González</h3>
+            <p>Gestión de clientes y operaciones</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Clientes -->
+  <ion-card>
+    <ion-card-header color="success">
+      <ion-card-title>
+        <ion-icon name="people" slot="start"></ion-icon>
+        Clientes
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      
+      <!-- Cliente Principal -->
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>Cliente Principal</ion-label>
+        </ion-item-divider>
+        <ion-item>
+          <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3>cliente@banco.com</h3>
+            <p>Marcos Vargas</p>
+          </ion-label>
+          <ion-button fill="clear" (click)="copyToClipboard('cliente@banco.com')">
+            <ion-icon name="copy"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-item-group>
+
+      <!-- Clientes Adicionales -->
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>Clientes Adicionales</ion-label>
+        </ion-item-divider>
+        <ion-item>
+          <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3>juan.perez@email.com</h3>
+            <p>Juan Pérez</p>
+          </ion-label>
+          <ion-button fill="clear" (click)="copyToClipboard('juan.perez@email.com')">
+            <ion-icon name="copy"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="mail" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3>maria.lopez@email.com</h3>
+            <p>María López</p>
+          </ion-label>
+          <ion-button fill="clear" (click)="copyToClipboard('maria.lopez@email.com')">
+            <ion-icon name="copy"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-item-group>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="rocket" slot="start"></ion-icon>
+        Cómo Acceder
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ol>
+        <li>Ve a la página de <strong>Login</strong></li>
+        <li>Usa cualquier email de arriba</li>
+        <li>Contraseña: <code>123456</code></li>
+        <li>Serás redirigido según tu rol</li>
+      </ol>
+      
+      <ion-button expand="block" color="primary" href="/login" class="ion-margin-top">
+        <ion-icon name="log-in" slot="start"></ion-icon>
+        Ir a Login
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

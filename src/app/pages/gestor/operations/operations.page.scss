@@ -1,0 +1,132 @@
+
+
+.summary-section {
+  padding: 1rem;
+}
+
+ion-card {
+  margin: 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  background: var(--ion-color-light);
+  border-radius: 12px;
+}
+
+.summary-item ion-icon {
+  font-size: 2rem;
+}
+
+.summary-info h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ion-color-dark);
+}
+
+.summary-info p {
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+  margin: 0.2rem 0 0 0;
+}
+
+ion-list {
+  background: transparent;
+}
+
+ion-item {
+  --background: var(--ion-color-light);
+  --border-radius: 12px;
+  margin: 0.5rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+ion-item ion-icon {
+  font-size: 1.8rem;
+  margin-right: 1rem;
+}
+
+ion-item ion-label h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  margin-bottom: 0.3rem;
+}
+
+ion-item ion-label p {
+  font-size: 0.85rem;
+  color: var(--ion-color-medium);
+  margin-top: 0.2rem;
+}
+
+.operation-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.operation-meta ion-badge {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+}
+
+.operation-amount {
+  text-align: right;
+}
+
+.operation-amount .amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin: 0 0 0.2rem 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-state ion-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: var(--ion-color-medium);
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  color: var(--ion-color-medium);
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 2rem;
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  ion-item {
+    margin: 0.3rem 0.5rem;
+  }
+}

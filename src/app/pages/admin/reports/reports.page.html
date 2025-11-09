@@ -1,0 +1,128 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/admin/dashboard"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Reportes y Auditoría</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <div class="reports-container">
+
+        <!-- Selector de Rango de Fechas -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Período de Reporte</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-item lines="none">
+                    <ion-label position="stacked">Fecha Inicio</ion-label>
+                    <ion-datetime [(ngModel)]="startDate" presentation="date"
+                        (ionChange)="loadReports()"></ion-datetime>
+                </ion-item>
+                <ion-item lines="none">
+                    <ion-label position="stacked">Fecha Fin</ion-label>
+                    <ion-datetime [(ngModel)]="endDate" presentation="date" (ionChange)="loadReports()"></ion-datetime>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Resumen de Operaciones -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Resumen de Operaciones</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <ion-icon name="swap-horizontal" color="primary"></ion-icon>
+                        <h3>{{ reportData.totalTransactions }}</h3>
+                        <p>Transacciones</p>
+                    </div>
+                    <div class="stat-item">
+                        <ion-icon name="cash" color="success"></ion-icon>
+                        <h3>₡{{ reportData.totalVolume | number:'1.2-2' }}</h3>
+                        <p>Volumen Total</p>
+                    </div>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Top 10 Clientes -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Top 10 Clientes por Volumen</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item *ngFor="let client of reportData.topClients; let i = index" lines="full">
+                        <ion-label slot="start">
+                            <ion-badge color="primary">{{ i + 1 }}</ion-badge>
+                        </ion-label>
+                        <ion-label>
+                            <h3>{{ client.nombre }}</h3>
+                            <p>{{ client.transacciones }} transacciones</p>
+                        </ion-label>
+                        <ion-text slot="end" color="success">
+                            <strong>₡{{ client.volumen | number:'1.2-2' }}</strong>
+                        </ion-text>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Volumen Diario -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Volumen por Día</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item *ngFor="let day of reportData.dailyVolume" lines="full">
+                        <ion-label>
+                            <h3>{{ day.fecha | date:'mediumDate' }}</h3>
+                        </ion-label>
+                        <ion-text slot="end">
+                            <strong>₡{{ day.monto | number:'1.2-2' }}</strong>
+                        </ion-text>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Registro de Auditoría -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Registro de Auditoría</ion-card-title>
+                <ion-card-subtitle>Últimas 20 acciones</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item *ngFor="let log of auditLogs" lines="full">
+                        <ion-icon slot="start" [name]="getAuditIcon(log.accion)"
+                            [color]="getAuditColor(log.accion)"></ion-icon>
+                        <ion-label>
+                            <h3>{{ log.accion }}</h3>
+                            <p>{{ log.usuario }} - {{ log.descripcion }}</p>
+                            <p class="timestamp">{{ log.fecha | date:'short' }}</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Botones de Descarga -->
+        <div class="download-buttons">
+            <ion-button expand="block" color="danger" (click)="downloadPDF()">
+                <ion-icon slot="start" name="document-text"></ion-icon>
+                Descargar PDF
+            </ion-button>
+            <ion-button expand="block" color="success" (click)="downloadExcel()">
+                <ion-icon slot="start" name="document"></ion-icon>
+                Descargar Excel
+            </ion-button>
+        </div>
+
+    </div>
+</ion-content>

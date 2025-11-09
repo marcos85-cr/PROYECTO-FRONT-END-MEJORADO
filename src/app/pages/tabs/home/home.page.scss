@@ -169,3 +169,17 @@ swiper-slide {
   }
 }
 
+.action-buttons {
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  ion-button {
+    --border-radius: 12px;
+    --padding-top: 14px;
+    --padding-bottom: 14px;
+    font-weight: 600;
+    text-transform: none;
+  }
+}

@@ -1,0 +1,165 @@
+
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Nueva Transferencia</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <div class="transfer-container">
+
+        <form [formGroup]="transferForm" (ngSubmit)="preCheckTransfer()">
+
+            <!-- Cuenta Origen -->
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-subtitle>Desde</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-item lines="none">
+                        <ion-label position="stacked">Cuenta Origen *</ion-label>
+                        <ion-select formControlName="cuentaOrigenId" placeholder="Seleccione cuenta">
+                            <ion-select-option *ngFor="let account of myAccounts" [value]="account.id">
+                                {{ account.numeroCuenta }} - {{ account.moneda }} {{ account.saldo | number:'1.2-2' }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-card-content>
+            </ion-card>
+
+            <!-- Tipo de Destino -->
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-subtitle>Hacia</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-segment [value]="destinationType"
+                        (ionChange)="changeDestinationType($event)">
+                        <ion-segment-button value="own">
+                            <ion-label>Mis Cuentas</ion-label>
+                        </ion-segment-button>
+                        <ion-segment-button value="beneficiary">
+                            <ion-label>Beneficiarios</ion-label>
+                        </ion-segment-button>
+                    </ion-segment>
+
+                    <ion-item lines="none" class="destination-item" *ngIf="destinationType === 'own'">
+                        <ion-label position="stacked">Cuenta Destino *</ion-label>
+                        <ion-select formControlName="cuentaDestinoId" placeholder="Seleccione cuenta">
+                            <ion-select-option *ngFor="let account of myAccounts" [value]="account.id">
+                                {{ account.numeroCuenta }} - {{ account.tipo }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-item lines="none" class="destination-item" *ngIf="destinationType === 'beneficiary'">
+                        <ion-label position="stacked">Beneficiario *</ion-label>
+                        <ion-select formControlName="beneficiarioId" placeholder="Seleccione beneficiario">
+                            <ion-select-option *ngFor="let ben of beneficiaries" [value]="ben.id">
+                                {{ ben.alias }} - {{ ben.banco }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-card-content>
+            </ion-card>
+
+            <!-- Monto -->
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-subtitle>Detalles</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-item lines="none">
+                        <ion-label position="stacked">Monto *</ion-label>
+                        <ion-input type="number" formControlName="monto" placeholder="0.00" min="1"></ion-input>
+                    </ion-item>
+
+                    <ion-item lines="none">
+                        <ion-label position="stacked">Descripción (Opcional)</ion-label>
+                        <ion-textarea formControlName="descripcion" placeholder="Ingrese una descripción"
+                            rows="3"></ion-textarea>
+                    </ion-item>
+
+                    <!-- Transferencia Programada -->
+                    <ion-item lines="none">
+                        <ion-label>Programar transferencia</ion-label>
+                        <ion-toggle formControlName="programada" slot="end"></ion-toggle>
+                    </ion-item>
+
+                    <ion-item lines="none" *ngIf="transferForm.get('programada')?.value">
+                        <ion-label position="stacked">Fecha de Ejecución</ion-label>
+                        <ion-datetime formControlName="fechaProgramada" presentation="date" [min]="minDate"
+                            [max]="maxDate"></ion-datetime>
+                    </ion-item>
+                </ion-card-content>
+            </ion-card>
+
+            <!-- Pre-check Result -->
+            <ion-card *ngIf="preCheckResult" class="precheck-card">
+                <ion-card-header>
+                    <ion-card-title>Resumen de Transferencia</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <div class="precheck-row">
+                        <span>Saldo antes:</span>
+                        <strong>{{ selectedCurrency }} {{ preCheckResult.saldoAntes | number:'1.2-2' }}</strong>
+                    </div>
+                    <div class="precheck-row">
+                        <span>Monto a transferir:</span>
+                        <strong>{{ selectedCurrency }} {{ preCheckResult.monto | number:'1.2-2' }}</strong>
+                    </div>
+                    <div class="precheck-row">
+                        <span>Comisión:</span>
+                        <strong>{{ selectedCurrency }} {{ preCheckResult.comision | number:'1.2-2' }}</strong>
+                    </div>
+                    <div class="precheck-row total">
+                        <span>Total a debitar:</span>
+                        <strong>{{ selectedCurrency }} {{ preCheckResult.montoTotal | number:'1.2-2' }}</strong>
+                    </div>
+                    <div class="precheck-row">
+                        <span>Saldo después:</span>
+                        <strong>{{ selectedCurrency }} {{ preCheckResult.saldoDespues | number:'1.2-2' }}</strong>
+                    </div>
+
+                    <ion-text color="warning" *ngIf="preCheckResult.requiereAprobacion">
+                        <p class="warning-text">
+                            <ion-icon name="alert-circle"></ion-icon>
+                            Esta transferencia requiere aprobación de un gestor
+                        </p>
+                    </ion-text>
+
+                    <ion-text color="danger" *ngIf="!preCheckResult.puedeEjecutar">
+                        <p class="error-text">
+                            <ion-icon name="close-circle"></ion-icon>
+                            {{ preCheckResult.mensaje }}
+                        </p>
+                    </ion-text>
+                </ion-card-content>
+            </ion-card>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <ion-button expand="block" color="tertiary" type="submit" [disabled]="transferForm.invalid || isLoading"
+                    *ngIf="!preCheckResult">
+                    <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+                    <span *ngIf="!isLoading">Verificar Transferencia</span>
+                </ion-button>
+
+                <ion-button expand="block" color="success" (click)="executeTransfer()"
+                    [disabled]="!preCheckResult || !preCheckResult.puedeEjecutar || isExecuting" *ngIf="preCheckResult">
+                    <ion-spinner name="crescent" *ngIf="isExecuting"></ion-spinner>
+                    <span *ngIf="!isExecuting">Confirmar y Enviar</span>
+                </ion-button>
+
+                <ion-button expand="block" fill="outline" color="medium" (click)="cancelTransfer()"
+                    *ngIf="preCheckResult">
+                    Cancelar
+                </ion-button>
+            </div>
+
+        </form>
+    </div>
+</ion-content>

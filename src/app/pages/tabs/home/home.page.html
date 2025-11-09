@@ -41,6 +41,30 @@
     </swiper-container>
   </ion-row>
 
+
+  <div class="action-buttons">
+    <ion-button expand="block" routerLink="/cliente/transfer" color="tertiary">
+      <ion-icon slot="start" name="swap-horizontal"></ion-icon>
+      Nueva Transferencia
+    </ion-button>
+  
+    <ion-button expand="block" routerLink="/cliente/beneficiaries" color="primary" fill="outline">
+      <ion-icon slot="start" name="people"></ion-icon>
+      Beneficiarios
+    </ion-button>
+  
+    <ion-button expand="block" routerLink="/cliente/payments" color="success" fill="outline">
+      <ion-icon slot="start" name="card"></ion-icon>
+      Pagar Servicios
+    </ion-button>
+  
+    <ion-button expand="block" routerLink="/cliente/history" color="medium" fill="outline">
+      <ion-icon slot="start" name="time"></ion-icon>
+      Historial
+    </ion-button>
+  </div>
+
+  <!-- Sección de transacciones -->
   <ion-list class="transactions" *ngIf="transactions.length > 0">
     <ion-list-header>
       <ion-label color="medium">Transacciones</ion-label>

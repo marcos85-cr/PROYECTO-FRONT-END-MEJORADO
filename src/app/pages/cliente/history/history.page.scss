@@ -1,0 +1,107 @@
+
+
+.download-section {
+    padding: 1rem;
+
+    ion-button {
+        --border-radius: 12px;
+        --border-width: 2px;
+        font-weight: 600;
+        text-transform: none;
+    }
+}
+
+ion-list {
+    background: transparent;
+
+    ion-item-divider {
+        --background: var(--ion-color-secondary);
+        --color: var(--ion-color-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        padding: 0.8rem 1rem;
+    }
+
+    ion-item {
+        --background: var(--ion-color-light);
+        --border-radius: 12px;
+        margin: 0.5rem 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+        ion-icon {
+            font-size: 1.8rem;
+            margin-right: 1rem;
+        }
+
+        ion-label {
+            h2 {
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--ion-color-dark);
+                margin-bottom: 0.3rem;
+            }
+
+            p {
+                font-size: 0.85rem;
+                color: var(--ion-color-medium);
+                margin-top: 0.2rem;
+
+                &.date-text {
+                    font-size: 0.75rem;
+                    margin-top: 0.3rem;
+                }
+            }
+
+            ion-badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.5rem;
+                margin-top: 0.5rem;
+            }
+        }
+
+        .amount-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.3rem;
+
+            .amount {
+                font-size: 1rem;
+                font-weight: 700;
+                color: var(--ion-color-success);
+                margin: 0;
+
+                &.negative {
+                    color: var(--ion-color-danger);
+                }
+            }
+        }
+    }
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+
+    ion-icon {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: var(--ion-color-medium);
+    }
+}
+
+ion-segment {
+    ion-segment-button {
+        --indicator-color: var(--ion-color-primary);
+        font-size: 0.85rem;
+    }
+}

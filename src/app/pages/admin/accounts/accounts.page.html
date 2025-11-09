@@ -1,0 +1,83 @@
+
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/admin/dashboard"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Gestión de Cuentas</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="openCreateAccountModal()">
+                <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+    <!-- Filtros -->
+    <ion-toolbar color="secondary">
+        <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterAccounts()" placeholder="Buscar por número o cliente"
+            animated></ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Filtros Rápidos -->
+    <div class="filter-chips">
+        <ion-chip [outline]="selectedType !== 'all'" (click)="filterByType('all')">
+            <ion-label>Todas</ion-label>
+        </ion-chip>
+        <ion-chip [outline]="selectedType !== 'Ahorros'" (click)="filterByType('Ahorros')">
+            <ion-label>Ahorros</ion-label>
+        </ion-chip>
+        <ion-chip [outline]="selectedType !== 'Corriente'" (click)="filterByType('Corriente')">
+            <ion-label>Corriente</ion-label>
+        </ion-chip>
+        <ion-chip [outline]="selectedType !== 'Inversión'" (click)="filterByType('Inversión')">
+            <ion-label>Inversión</ion-label>
+        </ion-chip>
+    </div>
+
+    <div class="accounts-container">
+        <!-- Lista de Cuentas -->
+        <ion-list *ngIf="filteredAccounts.length > 0">
+            <ion-item-sliding *ngFor="let account of filteredAccounts">
+                <ion-item lines="full" button (click)="openAccountDetail(account)">
+                    <ion-icon slot="start" [name]="getAccountIcon(account.tipo)" [color]="getAccountColor(account.tipo)"
+                        size="large"></ion-icon>
+                    <ion-label>
+                        <h2>{{ account.numeroCuenta }}</h2>
+                        <p>{{ account.clienteNombre }}</p>
+                        <div class="account-info">
+                            <ion-badge [color]="getStatusColor(account.estado)">
+                                {{ account.estado }}
+                            </ion-badge>
+                            <span class="account-type">{{ account.tipo }} - {{ account.moneda }}</span>
+                        </div>
+                    </ion-label>
+                    <div slot="end" class="account-balance">
+                        <p class="balance-label">Saldo</p>
+                        <p class="balance-amount">{{ account.moneda }} {{ account.saldo | number:'1.2-2' }}</p>
+                    </div>
+                </ion-item>
+
+                <ion-item-options side="end">
+                    <ion-item-option color="warning" (click)="blockAccount(account)">
+                        <ion-icon slot="icon-only" name="lock-closed"></ion-icon>
+                    </ion-item-option>
+                    <ion-item-option color="danger" (click)="closeAccount(account)">
+                        <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+                    </ion-item-option>
+                </ion-item-options>
+            </ion-item-sliding>
+        </ion-list>
+
+        <!-- Sin Resultados -->
+        <div class="empty-state" *ngIf="filteredAccounts.length === 0">
+            <ion-icon name="wallet-outline" color="medium"></ion-icon>
+            <p>No se encontraron cuentas</p>
+        </div>
+    </div>
+</ion-content>

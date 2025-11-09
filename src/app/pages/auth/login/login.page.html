@@ -1,0 +1,78 @@
+
+<ion-content class="ion-padding" color="primary">
+    <div class="login-container">
+        <!-- Logo y título -->
+        <div class="header-section">
+            <ion-avatar class="logo-avatar">
+                <img src="assets/icon/BANK.jpg" alt="Bank Logo" />
+            </ion-avatar>
+            <h1 class="app-title">Banca en Línea</h1>
+            <p class="app-subtitle">Ingrese a su cuenta</p>
+        </div>
+
+        <!-- Formulario de Login -->
+        <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+            <!-- Email -->
+            <ion-item lines="none" class="input-item">
+                <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
+                <ion-input 
+                    type="email" 
+                    formControlName="email" 
+                    placeholder="Correo electrónico"
+                    [clearInput]="true">
+                </ion-input>
+            </ion-item>
+            <div class="error-message" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                <ion-text color="light">
+                    <small>Ingrese un correo válido</small>
+                </ion-text>
+            </div>
+
+            <!-- Password -->
+            <ion-item lines="none" class="input-item">
+                <ion-icon name="lock-closed-outline" slot="start" color="primary"></ion-icon>
+                <ion-input 
+                    [type]="showPassword ? 'text' : 'password'" 
+                    formControlName="password"
+                    placeholder="Contraseña">
+                </ion-input>
+                <ion-icon 
+                    slot="end" 
+                    [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+                    (click)="togglePassword()" 
+                    color="medium"
+                    style="cursor: pointer;">
+                </ion-icon>
+            </ion-item>
+            <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                <ion-text color="light">
+                    <small>La contraseña es requerida</small>
+                </ion-text>
+            </div>
+
+            <!-- Login Button -->
+            <ion-button expand="block" type="submit" class="login-button" color="light" [disabled]="loginForm.invalid || isLoading">
+                <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+                <span *ngIf="!isLoading">Iniciar Sesión</span>
+            </ion-button>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>o</span>
+            </div>
+
+            <!-- Register Link -->
+            <ion-button expand="block" fill="outline" color="light" routerLink="/register" class="register-button">
+                Crear Cuenta Nueva
+            </ion-button>
+        </form>
+
+        <!-- Footer -->
+        <div class="footer-section">
+            <ion-text color="light">
+                <small>© 2025 Banca en Línea. Todos los derechos reservados.</small>
+            </ion-text>
+        </div>
+    </div>
+</ion-content>

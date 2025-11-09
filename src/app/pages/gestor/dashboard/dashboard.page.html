@@ -1,0 +1,109 @@
+
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-title>Panel Gestor</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="logout()">
+                <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <div class="dashboard-container">
+
+        <!-- Bienvenida -->
+        <div class="welcome-section">
+            <h2>Bienvenido, {{ userName }}</h2>
+            <p>Gestión de Cartera de Clientes</p>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="stats-grid">
+            <ion-card class="stat-card">
+                <ion-card-content>
+                    <ion-icon name="people-outline" color="primary"></ion-icon>
+                    <h3>{{ stats.myClients }}</h3>
+                    <p>Mis Clientes</p>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card class="stat-card">
+                <ion-card-content>
+                    <ion-icon name="wallet-outline" color="success"></ion-icon>
+                    <h3>{{ stats.activeAccounts }}</h3>
+                    <p>Cuentas Activas</p>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card class="stat-card">
+                <ion-card-content>
+                    <ion-icon name="swap-horizontal-outline" color="tertiary"></ion-icon>
+                    <h3>{{ stats.todayOperations }}</h3>
+                    <p>Operaciones Hoy</p>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card class="stat-card">
+                <ion-card-content>
+                    <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
+                    <h3>{{ stats.pendingApprovals }}</h3>
+                    <p>Pendientes</p>
+                </ion-card-content>
+            </ion-card>
+        </div>
+
+        <!-- Menú de Opciones -->
+        <ion-list class="menu-list">
+            <ion-list-header>
+                <ion-label>Gestión</ion-label>
+            </ion-list-header>
+
+            <ion-item button routerLink="/gestor/clients" detail>
+                <ion-icon slot="start" name="people" color="primary"></ion-icon>
+                <ion-label>
+                    <h2>Mis Clientes</h2>
+                    <p>Ver y gestionar cartera asignada</p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item button routerLink="/gestor/operations" detail>
+                <ion-icon slot="start" name="swap-horizontal" color="tertiary"></ion-icon>
+                <ion-label>
+                    <h2>Operaciones</h2>
+                    <p>Consultar y aprobar operaciones</p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item button detail>
+                <ion-icon slot="start" name="add-circle" color="success"></ion-icon>
+                <ion-label>
+                    <h2>Abrir Cuenta</h2>
+                    <p>Crear nueva cuenta para cliente</p>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+
+        <!-- Operaciones Pendientes -->
+        <ion-list class="pending-list" *ngIf="pendingOperations.length > 0">
+            <ion-list-header>
+                <ion-label>Operaciones Pendientes de Aprobación</ion-label>
+            </ion-list-header>
+
+            <ion-item *ngFor="let operation of pendingOperations" lines="full">
+                <ion-icon slot="start" name="time-outline" color="warning"></ion-icon>
+                <ion-label>
+                    <h3>{{ operation.clienteNombre }}</h3>
+                    <p>{{ operation.descripcion }}</p>
+                    <p>Monto: {{ operation.moneda }} {{ operation.monto | number:'1.2-2' }}</p>
+                </ion-label>
+                <ion-button slot="end" fill="outline" size="small" color="success"
+                    (click)="approveOperation(operation.id)">
+                    Aprobar
+                </ion-button>
+            </ion-item>
+        </ion-list>
+
+    </div>
+</ion-content>

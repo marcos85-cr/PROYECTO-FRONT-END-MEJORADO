@@ -1,0 +1,255 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>
+      <ion-icon name="apps" slot="start"></ion-icon>
+      Navegador de Páginas
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="information-circle" slot="start"></ion-icon>
+        🔓 Acceso Libre Habilitado
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Todas las páginas están disponibles sin necesidad de autenticación. Haz clic en cualquier enlace para explorar.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Páginas de Autenticación -->
+  <ion-card>
+    <ion-card-header color="primary">
+      <ion-card-title>
+        <ion-icon name="lock-closed" slot="start"></ion-icon>
+        🔐 Autenticación
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item button routerLink="/login">
+          <ion-icon name="log-in" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3>Login</h3>
+            <p>Página de inicio de sesión</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/register">
+          <ion-icon name="person-add" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3>Registro</h3>
+            <p>Crear nueva cuenta</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Páginas del Cliente -->
+  <ion-card>
+    <ion-card-header color="success">
+      <ion-card-title>
+        <ion-icon name="person" slot="start"></ion-icon>
+        👤 Área del Cliente
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      
+      <!-- Tabs principales -->
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>Dashboard Principal</ion-label>
+        </ion-item-divider>
+        <ion-item button routerLink="/tabs/home">
+          <ion-icon name="home" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h3>Home</h3>
+            <p>Dashboard principal del cliente</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/tabs/card">
+          <ion-icon name="card" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h3>Tarjetas</h3>
+            <p>Información de tarjetas bancarias</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/tabs/transactions">
+          <ion-icon name="swap-horizontal" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h3>Transacciones</h3>
+            <p>Historial de movimientos</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/tabs/settings">
+          <ion-icon name="settings" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h3>Configuración</h3>
+            <p>Ajustes de la cuenta</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+      </ion-item-group>
+
+      <!-- Funcionalidades adicionales -->
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>Operaciones Bancarias</ion-label>
+        </ion-item-divider>
+        <ion-item button routerLink="/cliente/transfer">
+          <ion-icon name="paper-plane" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h3>Transferencias</h3>
+            <p>Enviar dinero a otros usuarios</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/cliente/beneficiaries">
+          <ion-icon name="people" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h3>Beneficiarios</h3>
+            <p>Gestionar contactos frecuentes</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/cliente/payments">
+          <ion-icon name="cash" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h3>Pagos</h3>
+            <p>Realizar pagos de servicios</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/cliente/history">
+          <ion-icon name="time" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h3>Historial</h3>
+            <p>Historial detallado de operaciones</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+      </ion-item-group>
+
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Páginas del Gestor -->
+  <ion-card>
+    <ion-card-header color="secondary">
+      <ion-card-title>
+        <ion-icon name="business" slot="start"></ion-icon>
+        👔 Área del Gestor
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item button routerLink="/gestor/dashboard">
+          <ion-icon name="analytics" slot="start" color="secondary"></ion-icon>
+          <ion-label>
+            <h3>Dashboard Gestor</h3>
+            <p>Panel de control del gestor</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/gestor/clients">
+          <ion-icon name="people-circle" slot="start" color="secondary"></ion-icon>
+          <ion-label>
+            <h3>Gestión de Clientes</h3>
+            <p>Administrar clientes del banco</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/gestor/operations">
+          <ion-icon name="cog" slot="start" color="secondary"></ion-icon>
+          <ion-label>
+            <h3>Operaciones</h3>
+            <p>Supervisar operaciones bancarias</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Páginas del Administrador -->
+  <ion-card>
+    <ion-card-header color="warning">
+      <ion-card-title>
+        <ion-icon name="shield" slot="start"></ion-icon>
+        🛠️ Área del Administrador
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item button routerLink="/admin/dashboard">
+          <ion-icon name="speedometer" slot="start" color="warning"></ion-icon>
+          <ion-label>
+            <h3>Dashboard Admin</h3>
+            <p>Panel principal del administrador</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/admin/users">
+          <ion-icon name="people" slot="start" color="warning"></ion-icon>
+          <ion-label>
+            <h3>Gestión de Usuarios</h3>
+            <p>Administrar todos los usuarios</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/admin/accounts">
+          <ion-icon name="wallet" slot="start" color="warning"></ion-icon>
+          <ion-label>
+            <h3>Gestión de Cuentas</h3>
+            <p>Administrar cuentas bancarias</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+        <ion-item button routerLink="/admin/reports">
+          <ion-icon name="document-text" slot="start" color="warning"></ion-icon>
+          <ion-label>
+            <h3>Reportes</h3>
+            <p>Generar reportes del sistema</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="refresh" slot="start"></ion-icon>
+        🔄 Volver a Habilitar Autenticación
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Para volver a habilitar la autenticación, descomenta los guards en el archivo <code>app-routing.module.ts</code></p>
+      <ion-button expand="block" fill="outline" (click)="showAuthInfo = !showAuthInfo">
+        <ion-icon name="information-circle" slot="start"></ion-icon>
+        Mostrar Información de Usuarios
+      </ion-button>
+      
+      <div *ngIf="showAuthInfo" class="auth-info">
+        <h4>Usuarios Disponibles:</h4>
+        <ul>
+          <li><strong>admin@banco.com</strong> - Administrador</li>
+          <li><strong>gestor@banco.com</strong> - Gestor</li>
+          <li><strong>cliente@banco.com</strong> - Cliente</li>
+        </ul>
+        <p><strong>Contraseña para todos:</strong> <code>123456</code></p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

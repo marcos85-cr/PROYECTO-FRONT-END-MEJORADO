@@ -1,0 +1,93 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Pago de Servicios</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <div class="payment-container">
+
+        <form [formGroup]="paymentForm" (ngSubmit)="makePayment()">
+
+            <!-- Proveedor -->
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-subtitle>Servicio</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-item lines="none">
+                        <ion-label position="stacked">Proveedor *</ion-label>
+                        <ion-select formControlName="proveedorId" placeholder="Seleccione proveedor"
+                            (ionChange)="onProviderChange()">
+                            <ion-select-option *ngFor="let provider of providers" [value]="provider.id">
+                                {{ provider.nombre }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-item lines="none" *ngIf="selectedProvider">
+                        <ion-label position="stacked">Número de Contrato *</ion-label>
+                        <ion-input type="text" formControlName="numeroContrato"
+                            [placeholder]="'Formato: ' + selectedProvider.codigoValidacion"></ion-input>
+                    </ion-item>
+                    <div class="validation-info" *ngIf="selectedProvider">
+                        <ion-text color="medium">
+                            <small>{{ selectedProvider.codigoValidacion }}</small>
+                        </ion-text>
+                    </div>
+                </ion-card-content>
+            </ion-card>
+
+            <!-- Cuenta y Monto -->
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-subtitle>Detalles del Pago</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-item lines="none">
+                        <ion-label position="stacked">Cuenta Origen *</ion-label>
+                        <ion-select formControlName="cuentaOrigenId" placeholder="Seleccione cuenta">
+                            <ion-select-option *ngFor="let account of myAccounts" [value]="account.id">
+                                {{ account.numeroCuenta }} - {{ account.moneda }} {{ account.saldo | number:'1.2-2' }}
+                            </ion-select-option>
+                        </ion-select>
+                    </ion-item>
+
+                    <ion-item lines="none">
+                        <ion-label position="stacked">Monto *</ion-label>
+                        <ion-input type="number" formControlName="monto" placeholder="0.00" min="1"></ion-input>
+                    </ion-item>
+
+                    <!-- Pago Programado -->
+                    <ion-item lines="none">
+                        <ion-label>Programar pago</ion-label>
+                        <ion-toggle formControlName="programado" slot="end"></ion-toggle>
+                    </ion-item>
+
+                    <ion-item lines="none" *ngIf="paymentForm.get('programado')?.value">
+                        <ion-label position="stacked">Fecha de Ejecución</ion-label>
+                        <ion-datetime formControlName="fechaProgramada" presentation="date" [min]="minDate"
+                            [max]="maxDate"></ion-datetime>
+                    </ion-item>
+                </ion-card-content>
+            </ion-card>
+
+            <!-- Botones -->
+            <div class="button-group">
+                <ion-button expand="block" color="success" type="submit" [disabled]="paymentForm.invalid || isLoading">
+                    <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+                    <span *ngIf="!isLoading">Pagar Servicio</span>
+                </ion-button>
+
+                <ion-button expand="block" fill="outline" color="medium" routerLink="/tabs/home">
+                    Cancelar
+                </ion-button>
+            </div>
+
+        </form>
+
+    </div>
+</ion-content>

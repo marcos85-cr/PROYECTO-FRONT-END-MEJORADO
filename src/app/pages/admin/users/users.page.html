@@ -1,0 +1,71 @@
+
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/admin/dashboard"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Gestión de Usuarios</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="openCreateModal()">
+                <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+    <!-- Búsqueda y Filtros -->
+    <ion-toolbar color="secondary">
+        <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterUsers()" placeholder="Buscar por nombre o email"
+            animated></ion-searchbar>
+    </ion-toolbar>
+
+    <ion-toolbar color="secondary">
+        <ion-segment [(ngModel)]="selectedRole" (ionChange)="filterUsers()">
+            <ion-segment-button value="all">
+                <ion-label>Todos</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Cliente">
+                <ion-label>Clientes</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Gestor">
+                <ion-label>Gestores</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Administrador">
+                <ion-label>Admins</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div class="users-container">
+        <!-- Lista de Usuarios -->
+        <ion-list *ngIf="filteredUsers.length > 0">
+            <ion-item *ngFor="let user of filteredUsers" lines="full" button (click)="openUserDetail(user)">
+                <ion-avatar slot="start">
+                    <img [src]="'https://ui-avatars.com/api/?name=' + user.nombre + '&background=random'" />
+                </ion-avatar>
+                <ion-label>
+                    <h2>{{ user.nombre }}</h2>
+                    <p>{{ user.email }}</p>
+                    <ion-badge [color]="getRoleBadgeColor(user.role)">
+                        {{ user.role }}
+                    </ion-badge>
+                </ion-label>
+                <div slot="end" class="user-status">
+                    <ion-icon [name]="user.bloqueado ? 'lock-closed' : 'checkmark-circle'"
+                        [color]="user.bloqueado ? 'danger' : 'success'" size="large"></ion-icon>
+                </div>
+            </ion-item>
+        </ion-list>
+
+        <!-- Sin Resultados -->
+        <div class="empty-state" *ngIf="filteredUsers.length === 0">
+            <ion-icon name="people-outline" color="medium"></ion-icon>
+            <p>No se encontraron usuarios</p>
+        </div>
+    </div>
+</ion-content>

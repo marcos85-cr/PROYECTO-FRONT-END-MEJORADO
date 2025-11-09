@@ -1,0 +1,159 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/gestor/dashboard"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Operaciones</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="openFilterModal()">
+                <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+    <!-- Segment de Estado -->
+    <ion-toolbar color="secondary">
+        <ion-segment [(ngModel)]="selectedStatus" (ionChange)="filterOperations()">
+            <ion-segment-button value="all">
+                <ion-label>Todas</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="PendienteAprobacion">
+                <ion-label>Pendientes</ion-label>
+                <ion-badge color="warning" *ngIf="pendingCount > 0">{{ pendingCount }}</ion-badge>
+            </ion-segment-button>
+            <ion-segment-button value="Exitosa">
+                <ion-label>Aprobadas</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Rechazada">
+                <ion-label>Rechazadas</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Resumen Rápido -->
+    <div class="summary-section" *ngIf="selectedStatus === 'all'">
+        <ion-card>
+            <ion-card-content>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <ion-icon name="hourglass" color="warning"></ion-icon>
+                        <div class="summary-info">
+                            <h3>{{ summary.pending }}</h3>
+                            <p>Pendientes</p>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                        <div class="summary-info">
+                            <h3>{{ summary.approved }}</h3>
+                            <p>Aprobadas Hoy</p>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <ion-icon name="close-circle" color="danger"></ion-icon>
+                        <div class="summary-info">
+                            <h3>{{ summary.rejected }}</h3>
+                            <p>Rechazadas Hoy</p>
+                        </div>
+                    </div>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    </div>
+
+    <div class="operations-container">
+        <!-- Lista de Operaciones -->
+        <ion-list *ngIf="filteredOperations.length > 0">
+            <ion-item-group *ngFor="let group of groupedOperations">
+                <ion-item-divider sticky>
+                    <ion-label>{{ group.date | date:'fullDate' }}</ion-label>
+                </ion-item-divider>
+
+                <ion-item-sliding *ngFor="let operation of group.operations">
+                    <ion-item lines="full" button (click)="openOperationDetail(operation)">
+                        <ion-icon slot="start" [name]="getOperationIcon(operation.tipo)"
+                            [color]="getStatusColor(operation.estado)" size="large"></ion-icon>
+                        <ion-label>
+                            <h2>{{ operation.clienteNombre }}</h2>
+                            <p class="operation-type">{{ operation.tipo }}</p>
+                            <p class="operation-description">{{ operation.descripcion }}</p>
+                            <div class="operation-meta">
+                                <ion-badge [color]="getStatusColor(operation.estado)">
+                                    {{ operation.estado }}
+                                </ion-badge>
+                                <span class="operation-time">{{ operation.fecha | date:'shortTime' }}</span>
+                            </div>
+                        </ion-label>
+                        <div slot="end" class="operation-amount">
+                            <p class="amount">{{ operation.moneda }} {{ operation.monto | number:'1.2-2' }}</p>
+                            <p class="commission" *ngIf="operation.comision > 0">
+                                <small>+ ₡{{ operation.comision | number:'1.2-2' }}</small>
+                            </p>
+                        </div>
+                    </ion-item>
+
+                    <ion-item-options side="start" *ngIf="operation.estado === 'PendienteAprobacion'">
+                        <ion-item-option color="success" (click)="approveOperation(operation)">
+                            <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+                        </ion-item-option>
+                        <ion-item-option color="danger" (click)="rejectOperation(operation)">
+                            <ion-icon slot="icon-only" name="close"></ion-icon>
+                        </ion-item-option>
+                    </ion-item-options>
+
+                    <ion-item-options side="end">
+                        <ion-item-option color="primary" (click)="viewOperationDetail(operation)">
+                            <ion-icon slot="icon-only" name="eye"></ion-icon>
+                        </ion-item-option>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </ion-item-group>
+        </ion-list>
+
+        <!-- Operaciones Pendientes Destacadas -->
+        <div class="pending-alerts" *ngIf="selectedStatus === 'PendienteAprobacion' && urgentOperations.length > 0">
+            <ion-card class="urgent-card">
+                <ion-card-header>
+                    <ion-icon name="alert-circle" color="warning"></ion-icon>
+                    <ion-card-title>Operaciones Urgentes</ion-card-title>
+                    <ion-card-subtitle>Requieren atención inmediata</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-list>
+                        <ion-item *ngFor="let op of urgentOperations" lines="full" button
+                            (click)="openOperationDetail(op)">
+                            <ion-label>
+                                <h3>{{ op.clienteNombre }}</h3>
+                                <p>{{ op.descripcion }}</p>
+                            </ion-label>
+                            <ion-text slot="end" color="danger">
+                                <strong>{{ op.moneda }} {{ op.monto | number:'1.2-2' }}</strong>
+                            </ion-text>
+                        </ion-item>
+                    </ion-list>
+                </ion-card-content>
+            </ion-card>
+        </div>
+
+        <!-- Sin Resultados -->
+        <div class="empty-state" *ngIf="filteredOperations.length === 0 && !isLoading">
+            <ion-icon name="swap-horizontal-outline" color="medium"></ion-icon>
+            <p>No se encontraron operaciones</p>
+            <ion-text color="medium">
+                <small>{{ getEmptyMessage() }}</small>
+            </ion-text>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading-state" *ngIf="isLoading">
+            <ion-spinner name="crescent" color="primary"></ion-spinner>
+            <p>Cargando operaciones...</p>
+        </div>
+    </div>
+</ion-content>

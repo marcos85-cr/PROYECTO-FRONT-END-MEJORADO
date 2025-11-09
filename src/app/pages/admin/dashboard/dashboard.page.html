@@ -1,0 +1,121 @@
+
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-title>Panel Administrador</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="logout()">
+                <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <div class="dashboard-container">
+
+        <!-- Bienvenida -->
+        <div class="welcome-section">
+            <h2>Bienvenido, {{ userName }}</h2>
+            <p>Panel de Administración</p>
+        </div>
+
+        <!-- Estadísticas Rápidas -->
+        <div class="stats-grid">
+            <ion-card class="stat-card">
+                <ion-card-content>
+                    <ion-icon name="people-outline" color="primary"></ion-icon>
+                    <h3>{{ stats.totalUsers }}</h3>
+                    <p>Usuarios Totales</p>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card class="stat-card">
+                <ion-card-content>
+                    <ion-icon name="wallet-outline" color="success"></ion-icon>
+                    <h3>{{ stats.totalAccounts }}</h3>
+                    <p>Cuentas Activas</p>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card class="stat-card">
+                <ion-card-content>
+                    <ion-icon name="swap-horizontal-outline" color="tertiary"></ion-icon>
+                    <h3>{{ stats.todayTransactions }}</h3>
+                    <p>Transacciones Hoy</p>
+                </ion-card-content>
+            </ion-card>
+
+            <ion-card class="stat-card">
+                <ion-card-content>
+                    <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
+                    <h3>{{ stats.pendingApprovals }}</h3>
+                    <p>Pendientes</p>
+                </ion-card-content>
+            </ion-card>
+        </div>
+
+        <!-- Menú de Opciones -->
+        <ion-list class="menu-list">
+            <ion-list-header>
+                <ion-label>Gestión</ion-label>
+            </ion-list-header>
+
+            <ion-item button routerLink="/admin/users" detail>
+                <ion-icon slot="start" name="people" color="primary"></ion-icon>
+                <ion-label>
+                    <h2>Usuarios</h2>
+                    <p>Gestionar usuarios del sistema</p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item button routerLink="/admin/accounts" detail>
+                <ion-icon slot="start" name="wallet" color="success"></ion-icon>
+                <ion-label>
+                    <h2>Cuentas</h2>
+                    <p>Administrar cuentas bancarias</p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item button routerLink="/admin/reports" detail>
+                <ion-icon slot="start" name="bar-chart" color="tertiary"></ion-icon>
+                <ion-label>
+                    <h2>Reportes</h2>
+                    <p>Ver reportes y auditoría</p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item button detail>
+                <ion-icon slot="start" name="settings" color="medium"></ion-icon>
+                <ion-label>
+                    <h2>Configuración</h2>
+                    <p>Parámetros del sistema</p>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+
+        <!-- Transacciones Pendientes de Aprobación -->
+        <ion-list class="pending-list" *ngIf="pendingTransactions.length > 0">
+            <ion-list-header>
+                <ion-label>Aprobaciones Pendientes</ion-label>
+            </ion-list-header>
+
+            <ion-item *ngFor="let transaction of pendingTransactions" lines="full">
+                <ion-icon slot="start" name="time-outline" color="warning"></ion-icon>
+                <ion-label>
+                    <h3>{{ transaction.descripcion }}</h3>
+                    <p>Monto: ${{ transaction.monto | number:'1.2-2' }}</p>
+                    <p>{{ transaction.fecha | date:'short' }}</p>
+                </ion-label>
+                <ion-button slot="end" fill="outline" size="small" color="success"
+                    (click)="approveTransaction(transaction.id)">
+                    Aprobar
+                </ion-button>
+                <ion-button slot="end" fill="outline" size="small" color="danger"
+                    (click)="rejectTransaction(transaction.id)">
+                    Rechazar
+                </ion-button>
+            </ion-item>
+        </ion-list>
+
+    </div>
+</ion-content>

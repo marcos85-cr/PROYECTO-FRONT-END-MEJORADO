@@ -1,0 +1,81 @@
+
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Historial</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="openFilterModal()">
+                <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+    <!-- Segment de Tipo -->
+    <ion-toolbar color="secondary">
+        <ion-segment [(ngModel)]="selectedType" (ionChange)="filterTransactions()">
+            <ion-segment-button value="all">
+                <ion-label>Todas</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Transferencia">
+                <ion-label>Transferencias</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="Pago de Servicio">
+                <ion-label>Pagos</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Botón de Descarga -->
+    <div class="download-section">
+        <ion-button expand="block" fill="outline" (click)="downloadStatement()">
+            <ion-icon slot="start" name="download-outline"></ion-icon>
+            Descargar Extracto
+        </ion-button>
+    </div>
+
+    <!-- Lista de Transacciones -->
+    <ion-list *ngIf="filteredTransactions.length > 0">
+        <ion-item-group *ngFor="let group of groupedTransactions">
+            <ion-item-divider sticky>
+                <ion-label>{{ group.date | date:'MMMM yyyy' }}</ion-label>
+            </ion-item-divider>
+
+            <ion-item *ngFor="let transaction of group.transactions" lines="full" button
+                (click)="openTransactionDetail(transaction)">
+                <ion-icon slot="start" [name]="getTransactionIcon(transaction.tipo)"
+                    [color]="getTransactionColor(transaction.estado)" size="large"></ion-icon>
+                <ion-label>
+                    <h2>{{ transaction.tipo }}</h2>
+                    <p>{{ transaction.beneficiarioNombre || transaction.cuentaDestinoNumero }}</p>
+                    <p class="date-text">{{ transaction.fecha | date:'short' }}</p>
+                    <ion-badge [color]="getStatusBadgeColor(transaction.estado)">
+                        {{ transaction.estado }}
+                    </ion-badge>
+                </ion-label>
+                <div slot="end" class="amount-section">
+                    <p class="amount" [class.negative]="transaction.monto < 0">
+                        {{ transaction.moneda }} {{ transaction.monto | number:'1.2-2' }}
+                    </p>
+                    <ion-button fill="clear" size="small"
+                        (click)="downloadReceipt(transaction); $event.stopPropagation()">
+                        <ion-icon slot="icon-only" name="download" color="primary"></ion-icon>
+                    </ion-button>
+                </div>
+            </ion-item>
+        </ion-item-group>
+    </ion-list>
+
+    <!-- Sin Resultados -->
+    <div class="empty-state" *ngIf="filteredTransactions.length === 0">
+        <ion-icon name="file-tray-outline" color="medium"></ion-icon>
+        <p>No se encontraron transacciones</p>
+    </div>
+</ion-content>
