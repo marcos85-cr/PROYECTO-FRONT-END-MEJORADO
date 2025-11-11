@@ -1,0 +1,208 @@
+// Estilos del header
+.custom-toolbar {
+  --background: #5cb3ff;
+  --color: white;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  
+  .modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  .close-button {
+    --color: white;
+    --padding: 8px;
+    
+    ion-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Contenido del modal
+.modal-content {
+  --background: #f8f9fa;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+}
+
+// Secciones de información
+.info-section {
+  background: white;
+  margin: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  &:first-child {
+    margin-top: 20px;
+  }
+}
+
+// Header de cada sección
+.section-header {
+  background: #e3f2fd;
+  padding: 16px 20px 12px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  .section-icon {
+    color: #5cb3ff;
+    font-size: 1.3rem;
+  }
+  
+  .section-title {
+    color: #5cb3ff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+// Contenido de cada sección
+.info-item {
+  padding: 0;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &.total-row {
+    background: #fafafa;
+    font-weight: 600;
+    
+    .total-amount {
+      color: #2dd36f;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+  }
+}
+
+.info-label {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.info-value {
+  color: #333;
+  font-size: 0.95rem;
+  text-align: right;
+  margin-left: 16px;
+  
+  &.account-number {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #444;
+  }
+  
+  &.amount {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  &.reference-number {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #666;
+  }
+}
+
+// Badge de estado
+.status-badge {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+// Footer con botones
+.footer-toolbar {
+  --background: white;
+  --border-color: #e0e0e0;
+  --border-width: 1px 0 0 0;
+  --padding-start: 20px;
+  --padding-end: 20px;
+}
+
+.footer-buttons {
+  display: flex;
+  gap: 12px;
+  padding: 16px 0;
+  width: 100%;
+  
+  .cancel-button {
+    --color: #666;
+    --border-color: #ddd;
+    --border-width: 1px;
+    --border-style: solid;
+    --border-radius: 8px;
+    --padding-start: 24px;
+    --padding-end: 24px;
+    flex: 1;
+    height: 44px;
+    font-weight: 500;
+  }
+  
+  .download-button {
+    --background: #5cb3ff;
+    --color: white;
+    --border-radius: 8px;
+    --padding-start: 20px;
+    --padding-end: 20px;
+    flex: 2;
+    height: 44px;
+    font-weight: 600;
+    
+    ion-icon {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 480px) {
+  .info-section {
+    margin: 12px 8px;
+  }
+  
+  .section-header {
+    padding: 12px 16px 10px 16px;
+  }
+  
+  .info-row {
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    
+    .info-value {
+      margin-left: 0;
+      text-align: left;
+    }
+  }
+  
+  .footer-buttons {
+    flex-direction: column;
+    gap: 8px;
+    
+    .cancel-button,
+    .download-button {
+      flex: 1;
+    }
+  }
+}

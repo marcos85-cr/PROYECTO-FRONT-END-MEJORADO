@@ -1,0 +1,65 @@
+    .operation-detail {
+  .action-buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+    ion-button {
+      margin: 0;
+    }
+  }
+
+  ion-card {
+    margin-bottom: 16px;
+    
+    ion-card-header {
+      padding-bottom: 8px;
+    }
+    
+    ion-card-content {
+      padding-top: 0;
+    }
+  }
+
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    
+    ion-label {
+      h3 {
+        color: var(--ion-color-dark);
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+      
+      p {
+        color: var(--ion-color-dark);
+        font-size: 1rem;
+        margin: 0;
+        
+        strong {
+          font-weight: 600;
+        }
+      }
+    }
+    
+    ion-icon {
+      margin-right: 12px;
+    }
+  }
+
+  ion-badge {
+    font-size: 0.875rem;
+    padding: 4px 12px;
+  }
+}
+
+// Modal específico
+.operation-detail-modal {
+  --width: 90%;
+  --max-width: 500px;
+  --height: auto;
+  --max-height: 90%;
+}

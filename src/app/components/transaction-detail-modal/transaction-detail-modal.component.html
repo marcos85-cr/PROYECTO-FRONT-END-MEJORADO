@@ -1,0 +1,122 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="custom-toolbar">
+    <ion-title class="modal-title">Detalle de Operación</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()" class="close-button">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <!-- Información del Cliente -->
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="person" class="section-icon"></ion-icon>
+      <h3 class="section-title">Información del Cliente</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Cliente</span>
+        <span class="info-value">{{ transaction.beneficiarioNombre || 'Usuario Actual' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalles de la Operación -->
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="swap-horizontal" class="section-icon"></ion-icon>
+      <h3 class="section-title">Detalles de la Operación</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Tipo</span>
+        <span class="info-value">{{ transaction.tipo }}</span>
+      </div>
+      <div class="info-row" *ngIf="transaction.descripcion">
+        <span class="info-label">Descripción</span>
+        <span class="info-value">{{ transaction.descripcion }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cuentas Involucradas -->
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="card" class="section-icon"></ion-icon>
+      <h3 class="section-title">Cuentas Involucradas</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Cuenta Origen</span>
+        <span class="info-value account-number">{{ transaction.cuentaOrigenNumero }}</span>
+      </div>
+      <div class="info-row" *ngIf="transaction.cuentaDestinoNumero">
+        <span class="info-label">Cuenta Destino</span>
+        <span class="info-value account-number">{{ transaction.cuentaDestinoNumero }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Información Financiera -->
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="cash" class="section-icon"></ion-icon>
+      <h3 class="section-title">Información Financiera</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Monto</span>
+        <span class="info-value amount">{{ formatAmount(transaction.monto, transaction.moneda) }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Comisión</span>
+        <span class="info-value">{{ formatAmount(transaction.comision, transaction.moneda) }}</span>
+      </div>
+      <div class="info-row total-row">
+        <span class="info-label">Total</span>
+        <span class="info-value total-amount">{{ formatAmount(transaction.montoTotal, transaction.moneda) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado y Fechas -->
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="information-circle" class="section-icon"></ion-icon>
+      <h3 class="section-title">Estado y Fechas</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Estado</span>
+        <ion-badge [color]="getStatusColor(transaction.estado)" class="status-badge">
+          {{ transaction.estado }}
+        </ion-badge>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Fecha</span>
+        <span class="info-value">{{ formatDate(transaction.fecha) }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Referencia</span>
+        <span class="info-value reference-number">{{ transaction.numeroReferencia }}</span>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="footer-toolbar">
+    <div class="footer-buttons">
+      <ion-button fill="clear" (click)="dismiss()" class="cancel-button">
+        Cerrar
+      </ion-button>
+      <ion-button (click)="downloadReceipt()" class="download-button">
+        <ion-icon name="download" slot="start"></ion-icon>
+        Descargar Comprobante
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

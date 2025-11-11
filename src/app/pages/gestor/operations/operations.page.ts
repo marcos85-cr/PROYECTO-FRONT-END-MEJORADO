@@ -2,8 +2,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, AlertController, ToastController } from '@ionic/angular';
+import { IonicModule, AlertController, ToastController, ModalController } from '@ionic/angular';
 import { TransactionService } from '../../../services/transaction.service';
+import { OperationDetailModalComponent } from './operation-detail-modal/operation-detail-modal.component';
 
 interface Operation {
   id: string;
@@ -52,7 +53,8 @@ export class OperationsPage implements OnInit {
   constructor(
     private transactionService: TransactionService,
     private alertController: AlertController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -334,47 +336,16 @@ export class OperationsPage implements OnInit {
   }
 
   async viewOperationDetail(operation: Operation) {
-    const alert = await this.alertController.create({
-      header: 'Detalle de Operación',
-      message: `
-        <div class="operation-detail">
-          <p><strong>Cliente:</strong> ${operation.clienteNombre}</p>
-          <p><strong>Tipo:</strong> ${operation.tipo}</p>
-          <p><strong>Descripción:</strong> ${operation.descripcion}</p>
-          <hr>
-          <p><strong>Cuenta Origen:</strong> ${operation.cuentaOrigenNumero}</p>
-          ${operation.cuentaDestinoNumero ? `<p><strong>Cuenta Destino:</strong> ${operation.cuentaDestinoNumero}</p>` : ''}
-          <hr>
-          <p><strong>Monto:</strong> ${operation.moneda} ${operation.monto.toLocaleString()}</p>
-          <p><strong>Comisión:</strong> ${operation.moneda} ${operation.comision.toLocaleString()}</p>
-          <p><strong>Total:</strong> ${operation.moneda} ${(operation.monto + operation.comision).toLocaleString()}</p>
-          <hr>
-          <p><strong>Estado:</strong> <span style="color: var(--ion-color-${this.getStatusColor(operation.estado)})">${operation.estado}</span></p>
-          <p><strong>Fecha:</strong> ${new Date(operation.fecha).toLocaleString()}</p>
-        </div>
-      `,
-      cssClass: 'operation-detail-alert',
-      buttons: operation.estado === 'PendienteAprobacion' ? [
-        {
-          text: 'Cerrar',
-          role: 'cancel'
-        },
-        {
-          text: 'Rechazar',
-          role: 'destructive',
-          handler: () => {
-            this.rejectOperation(operation);
-          }
-        },
-        {
-          text: 'Aprobar',
-          handler: () => {
-            this.approveOperation(operation);
-          }
-        }
-      ] : ['Cerrar']
+    const modal = await this.modalController.create({
+      component: OperationDetailModalComponent,
+      componentProps: {
+        operation: operation,
+        onApprove: () => this.approveOperation(operation),
+        onReject: () => this.rejectOperation(operation)
+      },
+      cssClass: 'operation-detail-modal'
     });
-    await alert.present();
+    await modal.present();
   }
 
   async approveOperation(operation: Operation) {

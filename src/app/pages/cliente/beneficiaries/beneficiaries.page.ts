@@ -3,12 +3,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, AlertController, ToastController } from '@ionic/angular';
+import { IonicModule, AlertController, ToastController, ModalController } from '@ionic/angular';
 import { BeneficiaryService } from '../../../services/beneficiary.service';
 import {
   Beneficiary,
   BeneficiaryStatus,
 } from '../../../models/beneficiary.model';
+import { BeneficiaryDetailModalComponent } from '../../../components/beneficiary-detail-modal/beneficiary-detail-modal.component';
 
 @Component({
   selector: 'app-beneficiaries',
@@ -27,7 +28,8 @@ export class BeneficiariesPage implements OnInit {
   constructor(
     private beneficiaryService: BeneficiaryService,
     private alertController: AlertController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -278,23 +280,16 @@ export class BeneficiariesPage implements OnInit {
   }
 
   async viewBeneficiaryDetail(ben: Beneficiary) {
-    const alert = await this.alertController.create({
-      header: ben.alias,
-      message: `
-        <div class="beneficiary-detail">
-          <p><strong>Banco:</strong> ${ben.banco}</p>
-          <p><strong>Cuenta:</strong> ${ben.numeroCuenta}</p>
-          <p><strong>Moneda:</strong> ${ben.moneda}</p>
-          <p><strong>País:</strong> ${ben.pais}</p>
-          <p><strong>Estado:</strong> ${ben.estado}</p>
-          <p><strong>Fecha creación:</strong> ${new Date(
-            ben.fechaCreacion
-          ).toLocaleDateString()}</p>
-        </div>
-      `,
-      buttons: ['Cerrar'],
+    const modal = await this.modalController.create({
+      component: BeneficiaryDetailModalComponent,
+      componentProps: {
+        beneficiary: ben
+      },
+      breakpoints: [0, 0.75, 1],
+      initialBreakpoint: 0.75
     });
-    await alert.present();
+    
+    return await modal.present();
   }
 
   async editBeneficiary(ben: Beneficiary) {

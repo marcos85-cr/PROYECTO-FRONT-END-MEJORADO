@@ -4,9 +4,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, AlertController, ToastController } from '@ionic/angular';
+import { IonicModule, AlertController, ToastController, ModalController } from '@ionic/angular';
+import { firstValueFrom } from 'rxjs';
 import { TransactionService } from '../../../services/transaction.service';
+import { ReportService } from '../../../services/report.service';
+import { AccountService } from '../../../services/account.service';
 import { Transaction } from '../../../models/transaction.model';
+import { Account } from '../../../models/account.model';
+import { TransactionDetailModalComponent } from '../../../components/transaction-detail-modal/transaction-detail-modal.component';
 
 interface TransactionGroup {
   date: Date;
@@ -27,17 +32,42 @@ export class HistoryPage implements OnInit {
   selectedType: string = 'all';
   startDate: Date = new Date();
   endDate: Date = new Date();
+  currentAccount: Account | null = null;
 
   constructor(
     private transactionService: TransactionService,
+    private reportService: ReportService,
+    private accountService: AccountService,
     private alertController: AlertController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private modalController: ModalController
   ) {
     this.startDate.setDate(this.startDate.getDate() - 30);
   }
 
   ngOnInit() {
-    this.loadTransactions();
+    this.loadInitialData();
+  }
+
+  async loadInitialData() {
+    try {
+      await this.loadCurrentAccount();
+      await this.loadTransactions();
+    } catch (error) {
+      console.error('Error loading initial data:', error);
+      await this.showToast('Error al cargar datos', 'danger');
+    }
+  }
+
+  async loadCurrentAccount() {
+    try {
+      const accounts = await firstValueFrom(this.accountService.getMyAccounts());
+      this.currentAccount = accounts && accounts.length > 0 ? accounts[0] : null;
+    } catch (error) {
+      console.error('Error loading account:', error);
+      // En caso de error, usar un ID de cuenta simulado
+      this.currentAccount = { id: 'default-account' } as Account;
+    }
   }
 
   async loadTransactions() {
@@ -312,54 +342,64 @@ export class HistoryPage implements OnInit {
   }
 
   async openTransactionDetail(transaction: Transaction) {
-    const alert = await this.alertController.create({
-      header: 'Detalle de Transacción',
-      message: `
-        <div class="transaction-detail">
-          <p><strong>Tipo:</strong> ${transaction.tipo}</p>
-          <p><strong>Para:</strong> ${transaction.beneficiarioNombre || 'N/A'}</p>
-          ${transaction.descripcion ? `<p><strong>Descripción:</strong> ${transaction.descripcion}</p>` : ''}
-          <hr>
-          <p><strong>Cuenta Origen:</strong> ${transaction.cuentaOrigenNumero}</p>
-          ${transaction.cuentaDestinoNumero ? `<p><strong>Cuenta Destino:</strong> ${transaction.cuentaDestinoNumero}</p>` : ''}
-          <hr>
-          <p><strong>Monto:</strong> ${transaction.moneda} ${transaction.monto.toFixed(2)}</p>
-          <p><strong>Comisión:</strong> ${transaction.moneda} ${transaction.comision.toFixed(2)}</p>
-          <p><strong>Total:</strong> ${transaction.moneda} ${transaction.montoTotal.toFixed(2)}</p>
-          <hr>
-          <p><strong>Estado:</strong> ${transaction.estado}</p>
-          <p><strong>Fecha:</strong> ${new Date(transaction.fecha).toLocaleString()}</p>
-          <p><strong>Referencia:</strong> ${transaction.numeroReferencia}</p>
-        </div>
-      `,
-      buttons: [
-        {
-          text: 'Cerrar',
-          role: 'cancel'
-        },
-        {
-          text: 'Descargar Comprobante',
-          handler: () => {
-            this.downloadReceipt(transaction);
-          }
-        }
-      ]
+    const modal = await this.modalController.create({
+      component: TransactionDetailModalComponent,
+      componentProps: {
+        transaction: transaction,
+        onDownload: () => this.downloadReceipt(transaction)
+      },
+      breakpoints: [0, 0.75, 1],
+      initialBreakpoint: 0.75
     });
-    await alert.present();
+    
+    return await modal.present();
   }
 
+
+
   async downloadReceipt(transaction: Transaction) {
+    console.log('downloadReceipt called for transaction:', transaction.id);
     try {
       await this.showToast('Descargando comprobante...', 'primary');
       
-      // En producción usar: this.transactionService.downloadReceipt(transaction.id).toPromise()
-      // Simulación
+      // Simular descarga por ahora hasta que el backend esté listo
+      // TODO: Reemplazar con llamada real al servicio cuando el backend esté disponible
+      console.log('Simulando descarga de comprobante...');
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      await this.showToast('Comprobante descargado', 'success');
-    } catch (error) {
+      // Crear un blob simulado para la descarga
+      const pdfContent = this.generateMockPDF(transaction);
+      const blob = new Blob([pdfContent], { type: 'application/pdf' });
+      
+      const filename = `comprobante-${transaction.numeroReferencia || transaction.id}-${new Date().toISOString().split('T')[0]}.pdf`;
+      this.downloadBlob(blob, filename);
+      await this.showToast('Comprobante descargado exitosamente', 'success');
+      
+      // Para producción, descomentar el siguiente código:
+      /*
+      const blob = await firstValueFrom(this.reportService.downloadReceipt(transaction.id));
+      
+      if (blob) {
+        const filename = `comprobante-${transaction.numeroReferencia || transaction.id}-${new Date().toISOString().split('T')[0]}.pdf`;
+        this.downloadBlob(blob, filename);
+        await this.showToast('Comprobante descargado exitosamente', 'success');
+      } else {
+        throw new Error('No se pudo generar el comprobante');
+      }
+      */
+    } catch (error: any) {
       console.error('Error downloading receipt:', error);
-      await this.showToast('Error al descargar comprobante', 'danger');
+      let errorMessage = 'Error al descargar comprobante';
+      
+      if (error?.status === 404) {
+        errorMessage = 'Comprobante no encontrado';
+      } else if (error?.status === 403) {
+        errorMessage = 'No tiene permisos para descargar este comprobante';
+      } else if (error?.status === 0) {
+        errorMessage = 'Error de conexión. Verifique su internet';
+      }
+      
+      await this.showToast(errorMessage, 'danger');
     }
   }
 
@@ -390,16 +430,75 @@ export class HistoryPage implements OnInit {
   }
 
   async downloadStatementFile(format: 'pdf' | 'csv') {
-    await this.showToast(`Generando extracto en ${format.toUpperCase()}...`, 'primary');
-    
-    // En producción usar servicio real
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    await this.showToast(`Extracto ${format.toUpperCase()} descargado`, 'success');
+    console.log(`downloadStatementFile called with format: ${format}`);
+    try {
+      await this.showToast(`Generando extracto en ${format.toUpperCase()}...`, 'primary');
+      
+      // Simular generación de extracto por ahora hasta que el backend esté listo
+      // TODO: Reemplazar con llamada real al servicio cuando el backend esté disponible
+      console.log('Simulando generación de extracto...');
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Crear archivo simulado
+      let content: string;
+      let mimeType: string;
+      
+      if (format === 'csv') {
+        content = this.generateMockCSV();
+        mimeType = 'text/csv';
+      } else {
+        content = this.generateMockStatementPDF();
+        mimeType = 'application/pdf';
+      }
+      
+      const blob = new Blob([content], { type: mimeType });
+      const dateRange = `${this.startDate.toISOString().split('T')[0]}_${this.endDate.toISOString().split('T')[0]}`;
+      const filename = `extracto-${dateRange}.${format}`;
+      
+      this.downloadBlob(blob, filename);
+      await this.showToast(`Extracto ${format.toUpperCase()} descargado exitosamente`, 'success');
+      
+      // Para producción, descomentar el siguiente código:
+      /*
+      if (!this.currentAccount) {
+        await this.showToast('No se pudo obtener la cuenta actual', 'danger');
+        return;
+      }
+
+      const blob = await firstValueFrom(this.reportService.downloadStatement(
+        this.currentAccount.id,
+        this.startDate,
+        this.endDate,
+        format
+      ));
+
+      if (blob) {
+        const dateRange = `${this.startDate.toISOString().split('T')[0]}_${this.endDate.toISOString().split('T')[0]}`;
+        const filename = `extracto-${dateRange}.${format}`;
+        this.downloadBlob(blob, filename);
+        await this.showToast(`Extracto ${format.toUpperCase()} descargado exitosamente`, 'success');
+      } else {
+        throw new Error('No se pudo generar el extracto');
+      }
+      */
+    } catch (error: any) {
+      console.error('Error downloading statement:', error);
+      let errorMessage = `Error al generar extracto ${format.toUpperCase()}`;
+      
+      if (error?.status === 404) {
+        errorMessage = 'No se encontraron datos para el período seleccionado';
+      } else if (error?.status === 403) {
+        errorMessage = 'No tiene permisos para generar extractos';
+      } else if (error?.status === 0) {
+        errorMessage = 'Error de conexión. Verifique su internet';
+      }
+      
+      await this.showToast(errorMessage, 'danger');
+    }
   }
 
   async handleRefresh(event: any) {
-    await this.loadTransactions();
+    await this.loadInitialData();
     event.target.complete();
   }
 
@@ -411,5 +510,314 @@ export class HistoryPage implements OnInit {
       color
     });
     toast.present();
+  }
+
+  private downloadBlob(blob: Blob, filename: string) {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
+
+  private generateMockPDF(transaction: Transaction): string {
+    // Generar contenido PDF completo con toda la información del modal
+    const fechaFormateada = new Date(transaction.fecha).toLocaleString('es-ES', {
+      year: 'numeric',
+      month: '2-digit', 
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    
+    const clienteNombre = transaction.beneficiarioNombre || 'Usuario Actual';
+    const descripcion = transaction.descripcion || 'N/A';
+    const cuentaDestino = transaction.cuentaDestinoNumero || 'N/A';
+    
+    return `%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+/Resources <<
+/Font <<
+/F1 5 0 R
+/F2 6 0 R
+>>
+>>
+>>
+endobj
+4 0 obj
+<<
+/Length 1800
+>>
+stream
+BT
+/F2 16 Tf
+72 720 Td
+(COMPROBANTE DE OPERACION) Tj
+0 -30 Td
+/F1 10 Tf
+(${new Date().toLocaleDateString('es-ES')}) Tj
+
+0 -40 Td
+/F2 12 Tf
+(INFORMACION DEL CLIENTE) Tj
+0 -20 Td
+/F1 10 Tf
+(Cliente: ${clienteNombre}) Tj
+
+0 -30 Td
+/F2 12 Tf
+(DETALLES DE LA OPERACION) Tj
+0 -20 Td
+/F1 10 Tf
+(Tipo: ${transaction.tipo}) Tj
+0 -15 Td
+(Descripcion: ${descripcion}) Tj
+
+0 -30 Td
+/F2 12 Tf
+(CUENTAS INVOLUCRADAS) Tj
+0 -20 Td
+/F1 10 Tf
+(Cuenta Origen: ${transaction.cuentaOrigenNumero}) Tj
+0 -15 Td
+(Cuenta Destino: ${cuentaDestino}) Tj
+
+0 -30 Td
+/F2 12 Tf
+(INFORMACION FINANCIERA) Tj
+0 -20 Td
+/F1 10 Tf
+(Monto: ${transaction.moneda} ${transaction.monto.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}) Tj
+0 -15 Td
+(Comision: ${transaction.moneda} ${transaction.comision.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}) Tj
+0 -15 Td
+/F2 11 Tf
+(TOTAL: ${transaction.moneda} ${transaction.montoTotal.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}) Tj
+
+0 -30 Td
+/F2 12 Tf
+(ESTADO Y FECHAS) Tj
+0 -20 Td
+/F1 10 Tf
+(Estado: ${transaction.estado}) Tj
+0 -15 Td
+(Fecha: ${fechaFormateada}) Tj
+0 -15 Td
+(Referencia: ${transaction.numeroReferencia}) Tj
+
+0 -50 Td
+/F1 8 Tf
+(Este es un comprobante valido de la transaccion realizada.) Tj
+0 -12 Td
+(Conserve este documento para sus registros.) Tj
+0 -20 Td
+(Sistema Bancario - ${new Date().getFullYear()}) Tj
+ET
+endstream
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+6 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Bold
+>>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000010 00000 n 
+0000000056 00000 n 
+0000000111 00000 n 
+0000000246 00000 n 
+0000002096 00000 n 
+0000002163 00000 n 
+trailer
+<<
+/Size 7
+/Root 1 0 R
+>>
+startxref
+2234
+%%EOF`;
+  }
+
+  private generateMockCSV(): string {
+    // Generar extracto CSV simulado
+    let csv = 'Fecha,Tipo,Descripcion,Monto,Moneda,Estado,Referencia\n';
+    
+    this.filteredTransactions.forEach(transaction => {
+      const fecha = new Date(transaction.fecha).toISOString().split('T')[0];
+      const descripcion = transaction.descripcion || transaction.beneficiarioNombre || 'N/A';
+      csv += `${fecha},"${transaction.tipo}","${descripcion}",${transaction.monto},${transaction.moneda},"${transaction.estado}","${transaction.numeroReferencia}"\n`;
+    });
+    
+    return csv;
+  }
+
+  private generateTransactionLines(): string {
+    // Generar líneas de transacciones para el PDF del extracto
+    let lines = '';
+    
+    this.filteredTransactions.slice(0, 15).forEach((transaction, index) => {
+      const fecha = new Date(transaction.fecha).toLocaleDateString('es-ES');
+      const tipo = transaction.tipo.substring(0, 15).padEnd(15);
+      const beneficiario = (transaction.beneficiarioNombre || 'N/A').substring(0, 20).padEnd(20);
+      const monto = `${transaction.moneda} ${transaction.monto.toLocaleString('es-ES', { minimumFractionDigits: 2 })}`.padEnd(12);
+      const estado = transaction.estado.substring(0, 10);
+      
+      lines += `0 -12 Td\n(${fecha} ${tipo} ${beneficiario} ${monto} ${estado}) Tj\n`;
+    });
+    
+    if (this.filteredTransactions.length > 15) {
+      lines += `0 -15 Td\n(... y ${this.filteredTransactions.length - 15} transacciones mas) Tj\n`;
+    }
+    
+    return lines;
+  }
+
+  private generateMockStatementPDF(): string {
+    // Generar extracto PDF completo con detalles de cada transacción
+    const dateRange = `${this.startDate.toLocaleDateString('es-ES')} - ${this.endDate.toLocaleDateString('es-ES')}`;
+    
+    // Calcular totales
+    const totalCreditos = this.filteredTransactions
+      .filter(t => t.monto > 0)
+      .reduce((sum, t) => sum + t.monto, 0);
+    
+    const totalDebitos = this.filteredTransactions
+      .filter(t => t.monto < 0)
+      .reduce((sum, t) => sum + Math.abs(t.monto), 0);
+    
+    return `%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+/Resources <<
+/Font <<
+/F1 5 0 R
+/F2 6 0 R
+>>
+>>
+>>
+endobj
+4 0 obj
+<<
+/Length 1200
+>>
+stream
+BT
+/F2 16 Tf
+72 720 Td
+(EXTRACTO BANCARIO DETALLADO) Tj
+0 -30 Td
+/F1 10 Tf
+(Periodo: ${dateRange}) Tj
+0 -15 Td
+(Fecha de emision: ${new Date().toLocaleDateString('es-ES')}) Tj
+
+0 -30 Td
+/F2 12 Tf
+(RESUMEN DEL PERIODO) Tj
+0 -20 Td
+/F1 10 Tf
+(Total de transacciones: ${this.filteredTransactions.length}) Tj
+0 -15 Td
+(Total creditos: CRC ${totalCreditos.toLocaleString('es-ES', { minimumFractionDigits: 2 })}) Tj
+0 -15 Td
+(Total debitos: CRC ${totalDebitos.toLocaleString('es-ES', { minimumFractionDigits: 2 })}) Tj
+
+0 -30 Td
+/F2 12 Tf
+(DETALLE DE TRANSACCIONES) Tj
+0 -20 Td
+/F1 8 Tf
+(Fecha        Tipo                Beneficiario           Monto        Estado) Tj
+0 -12 Td
+(-------------------------------------------------------------------------------) Tj
+${this.generateTransactionLines()}
+
+0 -30 Td
+/F1 8 Tf
+(Este extracto contiene todas las transacciones del periodo seleccionado.) Tj
+0 -12 Td
+(Sistema Bancario - ${new Date().getFullYear()}) Tj
+ET
+endstream
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+6 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Bold
+>>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000010 00000 n 
+0000000056 00000 n 
+0000000111 00000 n 
+0000000246 00000 n 
+0000001496 00000 n 
+0000001563 00000 n 
+trailer
+<<
+/Size 7
+/Root 1 0 R
+>>
+startxref
+1634
+%%EOF`;
   }
 }

@@ -1,0 +1,90 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="custom-toolbar">
+    <ion-title class="modal-title">{{ beneficiary.alias }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()" class="close-button">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <!-- Información Bancaria -->
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon [name]="getBankIcon(beneficiary.banco)" class="section-icon"></ion-icon>
+      <h3 class="section-title">Información Bancaria</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Banco</span>
+        <span class="info-value">{{ beneficiary.banco }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Cuenta</span>
+        <span class="info-value account-number">{{ beneficiary.numeroCuenta }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalles de la Cuenta -->
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="wallet" class="section-icon"></ion-icon>
+      <h3 class="section-title">Detalles de la Cuenta</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Moneda</span>
+        <span class="info-value currency">{{ beneficiary.moneda }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">País</span>
+        <div class="info-value country-info">
+          <span class="country-flag">{{ getCountryFlag(beneficiary.pais) }}</span>
+          <span>{{ beneficiary.pais }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado y Fechas -->
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="information-circle" class="section-icon"></ion-icon>
+      <h3 class="section-title">Estado y Fechas</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Estado</span>
+        <ion-badge [color]="getStatusColor(beneficiary.estado)" class="status-badge">
+          {{ beneficiary.estado }}
+        </ion-badge>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Fecha de Creación</span>
+        <span class="info-value">{{ formatDate(beneficiary.fechaCreacion) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Operaciones Pendientes -->
+  @if (beneficiary.tieneOperacionesPendientes) {
+    <div class="info-section">
+      <div class="section-header">
+        <ion-icon name="warning" class="section-icon warning-icon"></ion-icon>
+        <h3 class="section-title">Operaciones</h3>
+      </div>
+      <div class="info-item">
+        <div class="info-row">
+          <span class="info-label">Estado de Operaciones</span>
+          <ion-badge color="warning" class="status-badge">
+            Tiene operaciones pendientes
+          </ion-badge>
+        </div>
+      </div>
+    </div>
+  }
+</ion-content>
+
