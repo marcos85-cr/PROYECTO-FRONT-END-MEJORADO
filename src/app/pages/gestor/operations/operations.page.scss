@@ -87,7 +87,7 @@ ion-item ion-label p {
 }
 
 .operation-amount .amount {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--ion-color-dark);
   margin: 0 0 0.2rem 0;
@@ -103,7 +103,7 @@ ion-item ion-label p {
 }
 
 .empty-state ion-icon {
-  font-size: 4rem;
+  font-size: 3rem;
   margin-bottom: 1rem;
   color: var(--ion-color-medium);
 }
@@ -120,6 +120,52 @@ ion-item ion-label p {
   padding: 4rem 2rem;
 }
 
+// Estilos para el segmento de navegación
+ion-segment ion-label {
+  font-size: 0.9rem; 
+  font-weight: 600;
+}
+
+// Estilos específicos para el texto "Pendientes" en el resumen
+.summary-info p {
+  font-size: 1rem !important; 
+  margin: 0.2rem 0 0 0;
+}
+
+// Mejoras adicionales para el segmento
+ion-segment {
+  ion-segment-button {
+    min-width: auto;
+    flex: 1;
+    
+    ion-label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+  }
+}
+
+.estado-badge {
+  padding: 4px 6px;
+  font-size: 10px;
+  min-width: 80px;
+  text-align: center;
+  white-space: normal;
+}
+
+.estado-multilinea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 0.65;
+}
+
+.linea {
+  display: block;
+}
+
 // Mobile responsive
 @media (max-width: 768px) {
   .summary-grid {
@@ -128,5 +174,17 @@ ion-item ion-label p {
   
   ion-item {
     margin: 0.3rem 0.5rem;
+  }
+  
+  // Ajustar tamaño en móviles
+  ion-segment ion-label {
+    font-size: 0.75rem;
+  }
+  
+  // En pantallas muy pequeñas, usar texto más corto
+  @media (max-width: 480px) {
+    ion-segment ion-label {
+      font-size: 0.7rem;
+    }
   }
 }

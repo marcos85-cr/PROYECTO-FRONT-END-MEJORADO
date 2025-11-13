@@ -101,3 +101,12 @@ ion-list {
         color: var(--ion-color-medium);
     }
 }
+// Estilos para el modal de detalles de cuenta
+::ng-deep {
+    .account-detail-modal {
+        --width: 90%;
+        --max-width: 600px;
+        --height: auto;
+        --border-radius: 16px;
+    }
+}

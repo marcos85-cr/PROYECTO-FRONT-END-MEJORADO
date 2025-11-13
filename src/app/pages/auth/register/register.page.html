@@ -19,10 +19,10 @@
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
             <!-- Nombre Completo -->
-            <ion-item lines="none" class="input-item">
-                <ion-icon name="person-outline" slot="start" color="tertiary"></ion-icon>
+            <ion-item lines="none" class="input-item" color="white">
+                <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
                 <ion-input type="text" formControlName="nombre" placeholder="Nombre completo"
-                    [clearInput]="true"></ion-input>
+                    [clearInput]="true" ></ion-input>
             </ion-item>
             <div class="error-message"
                 *ngIf="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
@@ -32,8 +32,8 @@
             </div>
 
             <!-- Identificación -->
-            <ion-item lines="none" class="input-item">
-                <ion-icon name="card-outline" slot="start" color="tertiary"></ion-icon>
+            <ion-item lines="none" class="input-item" color="white">
+                <ion-icon name="card-outline" slot="start" color="primary"></ion-icon>
                 <ion-input type="text" formControlName="identificacion" placeholder="Identificación"
                     [clearInput]="true"></ion-input>
             </ion-item>
@@ -45,8 +45,8 @@
             </div>
 
             <!-- Teléfono -->
-            <ion-item lines="none" class="input-item">
-                <ion-icon name="call-outline" slot="start" color="tertiary"></ion-icon>
+            <ion-item lines="none" class="input-item" color="white">
+                <ion-icon name="call-outline" slot="start" color="primary"></ion-icon>
                 <ion-input type="tel" formControlName="telefono" placeholder="Teléfono" [clearInput]="true"></ion-input>
             </ion-item>
             <div class="error-message"
@@ -57,8 +57,8 @@
             </div>
 
             <!-- Email -->
-            <ion-item lines="none" class="input-item">
-                <ion-icon name="mail-outline" slot="start" color="tertiary"></ion-icon>
+            <ion-item lines="none" class="input-item" color="white">
+                <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
                 <ion-input type="email" formControlName="email" placeholder="Correo electrónico"
                     [clearInput]="true"></ion-input>
             </ion-item>
@@ -69,8 +69,8 @@
             </div>
 
             <!-- Password -->
-            <ion-item lines="none" class="input-item">
-                <ion-icon name="lock-closed-outline" slot="start" color="tertiary"></ion-icon>
+            <ion-item lines="none" class="input-item" color="white">
+                <ion-icon name="lock-closed-outline" slot="start" color="primary"></ion-icon>
                 <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password"
                     placeholder="Contraseña"></ion-input>
                 <ion-icon slot="end" [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
@@ -89,8 +89,8 @@
             </div>
 
             <!-- Confirm Password -->
-            <ion-item lines="none" class="input-item">
-                <ion-icon name="lock-closed-outline" slot="start" color="tertiary"></ion-icon>
+            <ion-item lines="none" class="input-item" color="white">
+                <ion-icon name="lock-closed-outline" slot="start" color="primary"></ion-icon>
                 <ion-input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword"
                     placeholder="Confirmar contraseña"></ion-input>
                 <ion-icon slot="end" [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"
@@ -105,7 +105,7 @@
 
             <!-- Role Selection (solo para Admin) -->
             <ion-item lines="none" class="input-item" *ngIf="canSelectRole">
-                <ion-icon name="people-outline" slot="start" color="tertiary"></ion-icon>
+                <ion-icon name="people-outline" slot="start" color="primary"></ion-icon>
                 <ion-select formControlName="role" placeholder="Seleccione rol">
                     <ion-select-option value="Cliente">Cliente</ion-select-option>
                     <ion-select-option value="Gestor">Gestor</ion-select-option>
@@ -114,7 +114,7 @@
             </ion-item>
 
             <!-- Register Button -->
-            <ion-button expand="block" type="submit" class="register-button"
+            <ion-button expand="block" type="submit" color="white" class="register-button"
                 [disabled]="registerForm.invalid || isLoading">
                 <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
                 <span *ngIf="!isLoading">Crear Cuenta</span>
@@ -125,7 +125,7 @@
                 <ion-text color="light">
                     ¿Ya tiene una cuenta?
                 </ion-text>
-                <ion-text color="tertiary" routerLink="/login">
+                <ion-text color="secondary" routerLink="/login">
                     <strong> Inicie sesión</strong>
                 </ion-text>
             </div>

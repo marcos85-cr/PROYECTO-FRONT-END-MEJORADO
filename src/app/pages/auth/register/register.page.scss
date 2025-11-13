@@ -28,7 +28,7 @@ ion-content {
 
 form {
     .input-item {
-        --background: rgba(255, 255, 255, 0.1);
+        --background: rgba(255, 255, 255, 0.0);
         --border-radius: 12px;
         --padding-start: 16px;
         --padding-end: 16px;
@@ -39,13 +39,14 @@ form {
         ion-icon {
             font-size: 1.3rem;
             margin-right: 12px;
+            color: black
         }
 
         ion-input,
         ion-select {
-            --placeholder-color: rgba(255, 255, 255, 0.6);
+            --placeholder-color: rgba(17, 17, 17, 0.445);
             --placeholder-opacity: 1;
-            --color: var(--ion-color-light);
+            --color: black;
             font-size: 1rem;
         }
 
@@ -67,16 +68,17 @@ form {
     }
 
     .register-button {
-        --background: var(--ion-color-tertiary);
+        --background:  var(--ion-color-secondary);
         --background-hover: var(--ion-color-tertiary-shade);
         --border-radius: 12px;
         --padding-top: 16px;
         --padding-bottom: 16px;
         font-size: 1.1rem;
         font-weight: 600;
+        color: white;
         margin: 2rem 0 1.5rem;
         text-transform: none;
-        box-shadow: 0 4px 12px rgba(1, 181, 170, 0.3);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
 
         ion-spinner {
             margin-right: 8px;

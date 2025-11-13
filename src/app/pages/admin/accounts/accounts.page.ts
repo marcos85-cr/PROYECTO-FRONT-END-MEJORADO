@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, AlertController, ToastController, ModalController } from '@ionic/angular';
 import { Account, AccountType } from '../../../models/account.model';
 import { AccountService } from '../../../services/account.service';
+import { AccountDetailModalComponent } from '../../../components/account-detail-modal/account-detail-modal.component';
 
 @Component({
   selector: 'app-accounts',
@@ -186,19 +187,15 @@ export class AccountsPage implements OnInit {
   }
 
   async openAccountDetail(account: Account) {
-    const alert = await this.alertController.create({
-      header: `Cuenta ${account.numeroCuenta}`,
-      message: `
-        <p><strong>Cliente:</strong> ${account.clienteNombre}</p>
-        <p><strong>Tipo:</strong> ${account.tipo}</p>
-        <p><strong>Moneda:</strong> ${account.moneda}</p>
-        <p><strong>Saldo:</strong> ${account.moneda} ${account.saldo.toFixed(2)}</p>
-        <p><strong>Estado:</strong> ${account.estado}</p>
-        <p><strong>Límite Diario:</strong> ${account.moneda} ${account.limiteDiario.toFixed(2)}</p>
-      `,
-      buttons: ['Cerrar']
+    const modal = await this.modalController.create({
+      component: AccountDetailModalComponent,
+      componentProps: {
+        account: account
+      },
+      cssClass: 'custom-modal-size'
     });
-    await alert.present();
+
+    await modal.present();
   }
 
   async blockAccount(account: Account) {

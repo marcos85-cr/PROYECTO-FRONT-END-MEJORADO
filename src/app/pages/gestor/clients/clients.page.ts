@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, AlertController, ToastController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { ClientDetailModalComponent } from '../../../components/client-detail-modal/client-detail-modal.component';
+import { ClientAccountsModalComponent } from '../../../components/client-accounts-modal/client-accounts-modal.component';
+import { ClientTransactionsModalComponent } from '../../../components/client-transactions-modal/client-transactions-modal.component';
 
 interface Client {
   id: string;
@@ -197,85 +200,51 @@ export class ClientsPage implements OnInit {
   }
 
   async openClientDetail(client: Client) {
-    const alert = await this.alertController.create({
-      header: client.nombre,
-      message: `
-        <div class="client-detail">
-          <p><strong>Email:</strong> ${client.email}</p>
-          <p><strong>Identificación:</strong> ${client.identificacion}</p>
-          <p><strong>Teléfono:</strong> ${client.telefono}</p>
-          <p><strong>Cuentas Activas:</strong> ${client.cuentasActivas}</p>
-          <p><strong>Volumen Total:</strong> ₡${client.volumenTotal.toLocaleString()}</p>
-          <p><strong>Estado:</strong> ${client.estado}</p>
-          <p><strong>Última Operación:</strong> ${new Date(client.ultimaOperacion).toLocaleDateString()}</p>
-        </div>
-      `,
-      cssClass: 'client-detail-alert',
-      buttons: [
-        {
-          text: 'Cerrar',
-          role: 'cancel'
-        },
-        {
-          text: 'Ver Cuentas',
-          handler: () => {
-            this.viewClientAccounts(client);
-          }
-        },
-        {
-          text: 'Ver Transacciones',
-          handler: () => {
-            this.viewClientTransactions(client);
-          }
-        }
-      ]
+    const modal = await this.modalController.create({
+      component: ClientDetailModalComponent,
+      componentProps: {
+        client: client,
+      },
+      cssClass: 'custom-modal-size',
     });
-    await alert.present();
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.action === 'viewAccounts') {
+      this.viewClientAccounts(client);
+    } else if (data?.action === 'viewTransactions') {
+      this.viewClientTransactions(client);
+    }
   }
 
   async viewClientAccounts(client: Client) {
-    const alert = await this.alertController.create({
-      header: `Cuentas de ${client.nombre}`,
-      message: `
-        <div class="accounts-list">
-          <div class="account-item">
-            <strong>Cuenta Ahorros CRC</strong>
-            <p>100000000001</p>
-            <p>Saldo: ₡150,000.00</p>
-          </div>
-          <div class="account-item">
-            <strong>Cuenta Corriente USD</strong>
-            <p>200000000002</p>
-            <p>Saldo: $5,000.00</p>
-          </div>
-          <div class="account-item">
-            <strong>Cuenta Inversión CRC</strong>
-            <p>300000000003</p>
-            <p>Saldo: ₡1,200,000.00</p>
-          </div>
-        </div>
-      `,
-      cssClass: 'accounts-alert',
-      buttons: [
-        {
-          text: 'Cerrar',
-          role: 'cancel'
-        },
-        {
-          text: 'Abrir Nueva Cuenta',
-          handler: () => {
-            this.openCreateAccountForClient(client);
-          }
-        }
-      ]
+    const modal = await this.modalController.create({
+      component: ClientAccountsModalComponent,
+      componentProps: {
+        client: client
+      },
+      cssClass: 'custom-modal-size'
     });
-    await alert.present();
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.action === 'openNewAccount') {
+      this.openCreateAccountForClient(client);
+    }
   }
 
   async viewClientTransactions(client: Client) {
-    await this.showToast(`Mostrando transacciones de ${client.nombre}`, 'primary');
-    // Aquí se podría navegar a una página de transacciones filtradas por cliente
-    // this.router.navigate(['/gestor/operations'], { queryParams: { clientId: client.id } });
+    const modal = await this.modalController.create({
+      component: ClientTransactionsModalComponent,
+      componentProps: {
+        client: client
+      },
+     cssClass: 'custom-modal-size'
+    });
+
+    await modal.present();
   }
 
   async openCreateAccountModal() {

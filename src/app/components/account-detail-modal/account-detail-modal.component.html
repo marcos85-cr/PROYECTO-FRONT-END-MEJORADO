@@ -1,0 +1,89 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="custom-toolbar">
+    <ion-title class="modal-title">Cuenta {{ account.numeroCuenta }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()" class="close-button">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <div class="account-header">
+    <div class="account-icon-large">
+      <ion-icon [name]="getAccountIcon(account.tipo)" [color]="getAccountColor(account.tipo)"></ion-icon>
+    </div>
+    <h2>{{ account.tipo }}</h2>
+    <p class="account-number">{{ account.numeroCuenta }}</p>
+  </div>
+
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="person" class="section-icon"></ion-icon>
+      <h3 class="section-title">Información del Cliente</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Cliente</span>
+        <span class="info-value">{{ account.clienteNombre }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">ID Cliente</span>
+        <span class="info-value identification">{{ account.clienteId }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="cash" class="section-icon"></ion-icon>
+      <h3 class="section-title">Detalles de la Cuenta</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Tipo</span>
+        <span class="info-value">
+          <ion-badge [color]="getAccountColor(account.tipo)">{{ account.tipo }}</ion-badge>
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Moneda</span>
+        <span class="info-value">
+          <ion-badge [color]="account.moneda === 'USD' ? 'success' : 'primary'">{{ account.moneda }}</ion-badge>
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Saldo</span>
+        <span class="info-value amount">{{ account.moneda }} {{ account.saldo.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Saldo Disponible</span>
+        <span class="info-value amount">{{ account.moneda }} {{ account.saldoDisponible.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Límite Diario</span>
+        <span class="info-value">{{ account.moneda }} {{ account.limiteDiario.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="section-header">
+      <ion-icon name="information-circle" class="section-icon"></ion-icon>
+      <h3 class="section-title">Estado</h3>
+    </div>
+    <div class="info-item">
+      <div class="info-row">
+        <span class="info-label">Estado</span>
+        <span class="info-value">
+          <ion-badge [color]="getStatusColor(account.estado)">{{ account.estado }}</ion-badge>
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Fecha de Apertura</span>
+        <span class="info-value">{{ account.fechaApertura | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+  </div>
+</ion-content>

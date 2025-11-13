@@ -348,8 +348,7 @@ export class HistoryPage implements OnInit {
         transaction: transaction,
         onDownload: () => this.downloadReceipt(transaction)
       },
-      breakpoints: [0, 0.75, 1],
-      initialBreakpoint: 0.75
+      cssClass: 'custom-modal-size'
     });
     
     return await modal.present();

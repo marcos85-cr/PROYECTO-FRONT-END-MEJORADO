@@ -67,6 +67,7 @@
         </ion-card>
     </div>
 
+        <!-- Lista de Operaciones -->
     <div class="operations-container">
         <!-- Lista de Operaciones -->
         <ion-list *ngIf="filteredOperations.length > 0">
@@ -84,9 +85,23 @@
                             <p class="operation-type">{{ operation.tipo }}</p>
                             <p class="operation-description">{{ operation.descripcion }}</p>
                             <div class="operation-meta">
-                                <ion-badge [color]="getStatusColor(operation.estado)">
+                                <!--<ion-badge [color]="getStatusColor(operation.estado)">
                                     {{ operation.estado }}
+                                </ion-badge>-->
+                                <ion-badge [color]="getStatusColor(operation.estado)">
+                                    <ng-container *ngIf="operation.estado === 'PendienteAprobacion'; else normalEstado">
+                                        <div class="estado-multilinea">
+                                            <span>Pendiente</span><br />
+                                            <span>Aprobación</span>
+                                        </div>
+                                    </ng-container>
+                                    <ng-template #normalEstado>
+                                        {{ operation.estado }}
+                                    </ng-template>
                                 </ion-badge>
+
+
+
                                 <span class="operation-time">{{ operation.fecha | date:'shortTime' }}</span>
                             </div>
                         </ion-label>

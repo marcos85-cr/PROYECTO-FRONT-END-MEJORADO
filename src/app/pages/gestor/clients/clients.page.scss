@@ -171,51 +171,13 @@ ion-list {
     }
 }
 
-// Estilos para los alertas
-:host ::ng-deep {
-    .client-detail-alert {
-        .alert-message {
-            .client-detail {
-                p {
-                    margin: 0.5rem 0;
-                    font-size: 0.95rem;
-
-                    strong {
-                        color: var(--ion-color-primary);
-                    }
-                }
-            }
-        }
-    }
-
-    .accounts-alert {
-        .alert-message {
-            .accounts-list {
-                .account-item {
-                    padding: 0.8rem;
-                    background: var(--ion-color-light);
-                    border-radius: 8px;
-                    margin-bottom: 0.8rem;
-
-                    strong {
-                        color: var(--ion-color-dark);
-                        font-size: 1rem;
-                    }
-
-                    p {
-                        margin: 0.3rem 0;
-                        font-size: 0.9rem;
-                        color: var(--ion-color-medium);
-
-                        &:first-of-type {
-                            font-family: 'Courier New', monospace;
-                            font-weight: 600;
-                            color: var(--ion-color-primary);
-                        }
-                    }
-                }
-            }
-        }
+// Estilos para el modal personalizado
+::ng-deep {
+    .client-detail-modal {
+        --width: 90%;
+        --max-width: 600px;
+        --height: auto;
+        --border-radius: 16px;
     }
 }
 
@@ -223,4 +185,28 @@ ion-searchbar {
     --background: rgba(255, 255, 255, 0.9);
     --border-radius: 12px;
     padding: 0.5rem;
+}
+
+// Estilos para el modal personalizado
+::ng-deep {
+    .client-detail-modal {
+        --width: 90%;
+        --max-width: 600px;
+        --height: auto;
+        --border-radius: 16px;
+    }
+
+    .client-accounts-modal {
+        --width: 90%;
+        --max-width: 700px;
+        --height: auto;
+        --border-radius: 16px;
+    }
+
+    .client-transactions-modal {
+        --width: 90%;
+        --max-width: 800px;
+        --height: auto;
+        --border-radius: 16px;
+    }
 }

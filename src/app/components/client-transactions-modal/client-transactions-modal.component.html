@@ -1,0 +1,53 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="custom-toolbar">
+    <ion-title class="modal-title">Transacciones de {{ client.nombre }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()" class="close-button">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <div class="transactions-container">
+    <div class="transaction-card" *ngFor="let transaction of transactions">
+      <div class="transaction-icon">
+        <ion-icon 
+          [name]="getTransactionIcon(transaction.tipo)" 
+          [color]="getIconColor(transaction.tipo)">
+        </ion-icon>
+      </div>
+      
+      <div class="transaction-info">
+        <div class="transaction-header">
+          <h3>{{ transaction.tipo }}</h3>
+          <span class="transaction-amount" [class.negative]="transaction.monto < 0">
+            {{ transaction.monto >= 0 ? '+' : '' }}{{ formatAmount(transaction.monto, transaction.moneda) }}
+          </span>
+        </div>
+        
+        <p class="transaction-description">{{ transaction.descripcion }}</p>
+        
+        <div class="transaction-meta">
+          <span class="transaction-date">
+            <ion-icon name="calendar-outline"></ion-icon>
+            {{ transaction.fecha | date:'dd/MM/yyyy HH:mm' }}
+          </span>
+          <span class="transaction-account">
+            <ion-icon name="card-outline"></ion-icon>
+            {{ transaction.cuenta }}
+          </span>
+          <ion-badge [color]="transaction.estado === 'Completada' ? 'success' : 'warning'" class="transaction-status">
+            {{ transaction.estado }}
+          </ion-badge>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="transactions.length === 0">
+      <ion-icon name="receipt-outline" color="medium"></ion-icon>
+      <p>No hay transacciones registradas</p>
+    </div>
+  </div>
+</ion-content>

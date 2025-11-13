@@ -1,0 +1,167 @@
+// Header del modal
+.custom-toolbar {
+  --background: #5cb3ff;
+  --color: white;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  
+  .modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  .close-button {
+    --color: white;
+    --padding: 8px;
+    
+    ion-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Contenido del modal
+.modal-content {
+  --background: #f8f9fa;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+}
+
+// Contenedor de transacciones
+.transactions-container {
+  padding: 20px 16px;
+}
+
+// Tarjeta de transacción
+.transaction-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 16px;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.transaction-icon {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 4px;
+
+  ion-icon {
+    font-size: 2rem;
+  }
+}
+
+.transaction-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    flex: 1;
+  }
+
+  .transaction-amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2ecc71;
+    white-space: nowrap;
+
+    &.negative {
+      color: #e74c3c;
+    }
+  }
+}
+
+.transaction-description {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+.transaction-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: #999;
+
+  ion-icon {
+    font-size: 0.9rem;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  .transaction-date,
+  .transaction-account {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .transaction-account {
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+  }
+
+  .transaction-status {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+}
+
+// Estado vacío
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  ion-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--ion-color-medium);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .transaction-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .transaction-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

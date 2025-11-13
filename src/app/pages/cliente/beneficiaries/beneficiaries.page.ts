@@ -285,8 +285,7 @@ export class BeneficiariesPage implements OnInit {
       componentProps: {
         beneficiary: ben
       },
-      breakpoints: [0, 0.75, 1],
-      initialBreakpoint: 0.75
+      cssClass: 'custom-modal-size' // Clase CSS personalizada para tamaño
     });
     
     return await modal.present();
