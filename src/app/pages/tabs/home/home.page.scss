@@ -9,7 +9,7 @@ ion-header {
           font-family: 'Courier New', Courier, monospace;
           font-weight: 600;
           padding: 10px;
-          color:rgba(3, 64, 233, 0.692);
+          color:rgba(3, 64, 233, 0.692); // Color del texto "Bienvenido"
         }
 
         // Estilo para "Marcos Vargas"
@@ -20,7 +20,7 @@ ion-header {
             font-size: 18px; // Tamaño del texto "Marcos Vargas"
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
-            color: white;
+            color: white; // Color del nombre del cliente
             // El color ya está definido en el HTML como "white"
           }
         }

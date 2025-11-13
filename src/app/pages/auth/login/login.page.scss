@@ -79,7 +79,10 @@ ion-item {
     margin: 2rem 0 1rem 0;
     font-weight: 600;
     text-transform: none;
-    --color: var(--ion-color-primary);
+    --color: var(--ion-color-primary); // color del texto del botón
+
+    max-width: 320px;
+    margin: 2rem auto 1.5rem auto;
 }
 
 .divider {
@@ -106,13 +109,20 @@ ion-item {
     }
 }
 
-.register-button {
+ion-button.register-button {
+    --background: rgba(194, 230, 245, 0.5); // Color de fondo del botón
+    --color: #ffffff; // Color del texto del botón
+    --background-activated: #b71c1c !important; // Color al hacer clic
+
     --border-radius: 12px;
     --border-width: 2px;
-    --border-color: var(--ion-color-light);
-    --color: var(--ion-color-primary);
+    --border-color: #ffffff;
+
     font-weight: 500;
     text-transform: none;
+
+    max-width: 320px;
+    margin: 2rem auto 1.5rem auto;
 }
 
 .footer-section {

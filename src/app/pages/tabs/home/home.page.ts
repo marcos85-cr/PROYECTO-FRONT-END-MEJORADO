@@ -32,6 +32,7 @@ export class HomePage implements OnInit, AfterContentChecked {
 
   constructor() {}
 
+  /* Inicialización de datos al cargar el componente */
   ngOnInit() {
     this.account = [
       { id: 1, acc_no: '1234567890', acc_type: 'Checking', balance: '2500.75' },
@@ -42,14 +43,11 @@ export class HomePage implements OnInit, AfterContentChecked {
     this.features = [
       {
         id: 1,
-        color: 'secondary',
-        icon: 'paper-plane-outline',
-        name: 'Enviar',
-      },
+        color: 'secondary', icon: 'paper-plane-outline', name: 'Enviar',},
       { id: 2, color: 'primary', icon: 'arrow-up-outline', name: 'Traer' },
       { id: 3, color: 'success', icon: 'add-circle-outline', name: 'Sinpe' },
       { id: 4, color: 'medium', icon: 'newspaper-outline', name: 'Pagos' },
-      { id: 5, color: 'warning', icon: 'card-outline', name: 'Tarjetas' },
+      
     ];
 
     this.transactions = [

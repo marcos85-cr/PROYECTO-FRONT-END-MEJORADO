@@ -33,7 +33,7 @@ form {
         --padding-start: 16px;
         --padding-end: 16px;
         margin-bottom: 0.8rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(87, 86, 86, 0);
         backdrop-filter: blur(10px);
 
         ion-icon {
@@ -67,21 +67,31 @@ form {
         margin: -0.5rem 0 0.8rem 1rem;
     }
 
-    .register-button {
-        --background:  var(--ion-color-secondary);
-        --background-hover: var(--ion-color-tertiary-shade);
+    ion-button.register-button {
+        // Cambia estos colores a tu gusto
+        --background: #ffffff;
+        --background-hover: #f5f5f5;
+        --background-focused: #eeeeee;
+        --background-activated: #e0e0e0;
+        
+        --color: #1565c0;
+        --color-activated: #1565c0;
+        --color-focused: #1565c0;
+
         --border-radius: 12px;
+        --box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
         --padding-top: 16px;
         --padding-bottom: 16px;
+
         font-size: 1.1rem;
         font-weight: 600;
-        color: white;
-        margin: 2rem 0 1.5rem;
         text-transform: none;
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+        max-width: 320px;
+        margin: 2rem auto 1.5rem auto;
 
         ion-spinner {
             margin-right: 8px;
+            --color: #1565c0;
         }
     }
 
