@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonTab } from '@ionic/angular/standalone';
+import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, homeOutline,cash, cashOutline, card, cardOutline, settings, settingsOutline, wallet, walletOutline } from 'ionicons/icons';
 
@@ -7,7 +7,7 @@ import { home, homeOutline,cash, cashOutline, card, cardOutline, settings, setti
   selector: 'app-tabs',
   templateUrl: './tabs.page.html',
   styleUrls: ['./tabs.page.scss'],
-  imports: [IonTab, IonTabs, IonTabBar, IonTabButton, IonIcon],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
   standalone: true
 })
 export class TabsPage implements OnInit {

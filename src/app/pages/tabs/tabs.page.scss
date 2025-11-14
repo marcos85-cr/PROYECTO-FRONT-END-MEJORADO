@@ -17,7 +17,12 @@ ion-tabs {
             --background: var(--ion-color-light);
             --color: #5f5c5c; // Color de los iconos no seleccionados
             ion-icon {
-                font-size: 1.9rem;
+                font-size: 1.4rem;
+            }
+            ion-label {
+                font-size: 0.65rem;
+                margin-top: 2px;
+                font-weight: 500;
             }
 
         }

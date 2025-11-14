@@ -1,0 +1,130 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Pagar {{ provider.nombre }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="provider-info">
+    <ion-icon [name]="provider.icon" class="provider-icon" [color]="getServiceColor(provider.tipo)"></ion-icon>
+    <h2>{{ provider.nombre }}</h2>
+    <p class="service-type">{{ provider.tipo }}</p>
+  </div>
+
+  <form>
+    <!-- Cuenta de origen -->
+    <ion-item>
+      <ion-label position="stacked">Cuenta de Origen *</ion-label>
+      <ion-select [(ngModel)]="selectedAccountId" name="account" placeholder="Seleccione una cuenta">
+        <ion-select-option *ngFor="let account of accounts" [value]="account.id">
+          {{ getAccountDisplayName(account) }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Número de referencia -->
+    <ion-item>
+      <ion-label position="stacked">Número de Referencia / Contrato *</ion-label>
+      <ion-input 
+        [(ngModel)]="numeroReferencia" 
+        name="reference"
+        type="text"
+        placeholder="Ingrese el número de referencia"
+        (ionBlur)="validateReference()"
+        [disabled]="validatingReference">
+      </ion-input>
+    </ion-item>
+
+    <ion-button 
+      expand="block" 
+      fill="outline" 
+      size="small"
+      (click)="validateReference()"
+      [disabled]="validatingReference || !numeroReferencia">
+      <ion-icon slot="start" name="checkmark-circle"></ion-icon>
+      {{ validatingReference ? 'Validando...' : 'Validar Referencia' }}
+    </ion-button>
+
+    <!-- Información validada -->
+    <ion-card *ngIf="referenceValid" class="validated-info">
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-icon name="checkmark-circle" color="success" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Referencia Válida</h3>
+            <p *ngIf="validatedName">Cliente: {{ validatedName }}</p>
+            <p>Monto a pagar: ₡{{ validatedAmount.toLocaleString('es-CR') }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Monto -->
+    <ion-item>
+      <ion-label position="stacked">Monto (₡) *</ion-label>
+      <ion-input 
+        [(ngModel)]="monto" 
+        name="amount"
+        type="number"
+        placeholder="0.00"
+        [readonly]="referenceValid">
+      </ion-input>
+    </ion-item>
+
+    <!-- Descripción opcional -->
+    <ion-item>
+      <ion-label position="stacked">Descripción (opcional)</ion-label>
+      <ion-textarea 
+        [(ngModel)]="descripcion" 
+        name="description"
+        placeholder="Agregue una nota sobre este pago"
+        rows="3">
+      </ion-textarea>
+    </ion-item>
+
+    <!-- Resumen -->
+    <ion-card class="summary-card" *ngIf="monto > 0">
+      <ion-card-header>
+        <ion-card-title>Resumen del Pago</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item lines="none">
+            <ion-label>
+              <p>Proveedor</p>
+              <h3>{{ provider.nombre }}</h3>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              <p>Referencia</p>
+              <h3>{{ numeroReferencia }}</h3>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>
+              <p>Monto Total</p>
+              <h2 class="amount">₡{{ monto.toLocaleString('es-CR') }}</h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botones de acción -->
+    <div class="button-group">
+      <ion-button expand="block" (click)="confirmPayment()" color="primary" size="large">
+        <ion-icon slot="start" name="card"></ion-icon>
+        Realizar Pago
+      </ion-button>
+      <ion-button expand="block" (click)="dismiss()" fill="outline" color="medium">
+        Cancelar
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

@@ -1,0 +1,119 @@
+<ion-header [translucent]="true" class="ion-no-border">
+    <ion-toolbar color="transparent">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/home" color="dark"></ion-back-button>
+        </ion-buttons>
+        <ion-title class="custom-title">
+            <ion-icon name="cash-outline" class="title-icon"></ion-icon>
+            Pagar Servicios
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="custom-content">
+    <!-- Gradient Background -->
+    <div class="gradient-background"></div>
+
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <div class="search-wrapper">
+            <ion-icon name="search-outline" class="search-icon"></ion-icon>
+            <input type="text" [(ngModel)]="searchTerm" (input)="filterProviders()" placeholder="Buscar servicio..."
+                class="custom-search-input" />
+            <ion-icon *ngIf="searchTerm" name="close-circle" class="clear-icon" (click)="clearSearch()">
+            </ion-icon>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-container">
+        <div class="loading-content">
+            <ion-spinner name="crescent" color="primary"></ion-spinner>
+            <p>Cargando servicios...</p>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!loading" class="content-wrapper">
+
+        <!-- Quick Stats Card -->
+        <div class="stats-card" *ngIf="filteredCategories.length > 0">
+            <div class="stat-item">
+                <ion-icon name="apps-outline" color="primary"></ion-icon>
+                <div class="stat-info">
+                    <span class="stat-value">{{ getTotalProviders() }}</span>
+                    <span class="stat-label">Servicios</span>
+                </div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <ion-icon name="folder-outline" color="success"></ion-icon>
+                <div class="stat-info">
+                    <span class="stat-value">{{ filteredCategories.length }}</span>
+                    <span class="stat-label">Categorías</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- No results -->
+        <div *ngIf="filteredCategories.length === 0" class="empty-state">
+            <div class="empty-icon-wrapper">
+                <ion-icon name="search-outline"></ion-icon>
+            </div>
+            <h3>No se encontraron servicios</h3>
+            <p>Intente con otra búsqueda</p>
+            <ion-button fill="clear" (click)="clearSearch()">
+                Limpiar búsqueda
+            </ion-button>
+        </div>
+
+        <!-- Service Categories -->
+        <div class="categories-grid">
+            <div *ngFor="let category of filteredCategories; let i = index" class="category-card"
+                [style.animation-delay.ms]="i * 100">
+
+                <!-- Category Header -->
+                <div class="category-header" (click)="toggleCategory(category)">
+                    <div class="category-info">
+                        <div class="category-icon-wrapper" [attr.data-color]="category.color">
+                            <ion-icon [name]="category.icon"></ion-icon>
+                        </div>
+                        <div class="category-text">
+                            <h3>{{ category.name }}</h3>
+                            <p>{{ getProviderCount(category) }} servicio{{ getProviderCount(category) !== 1 ? 's' : ''
+                                }}</p>
+                        </div>
+                    </div>
+                    <ion-icon [name]="category.expanded ? 'chevron-up' : 'chevron-down'" class="expand-icon">
+                    </ion-icon>
+                </div>
+
+                <!-- Providers List -->
+                <div class="providers-container" [class.expanded]="category.expanded">
+                    <div class="providers-list">
+                        <div *ngFor="let provider of category.providers" class="provider-item"
+                            (click)="openPaymentModal(provider)">
+                            <div class="provider-content">
+                                <div class="provider-icon" [attr.data-color]="category.color">
+                                    <ion-icon [name]="provider.icon || 'business-outline'"></ion-icon>
+                                </div>
+                                <div class="provider-info">
+                                    <h4>{{ provider.nombre }}</h4>
+                                    <p>{{ provider.tipo }}</p>
+                                </div>
+                            </div>
+                            <ion-icon name="chevron-forward-outline" class="action-icon"></ion-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Spacing -->
+        <div class="bottom-spacing"></div>
+    </div>
+</ion-content>

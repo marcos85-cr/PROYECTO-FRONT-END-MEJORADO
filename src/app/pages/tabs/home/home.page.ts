@@ -46,7 +46,6 @@ export class HomePage implements OnInit, AfterContentChecked {
         color: 'secondary', icon: 'paper-plane-outline', name: 'Enviar',},
       { id: 2, color: 'primary', icon: 'arrow-up-outline', name: 'Traer' },
       { id: 3, color: 'success', icon: 'add-circle-outline', name: 'Sinpe' },
-      { id: 4, color: 'medium', icon: 'newspaper-outline', name: 'Pagos' },
       
     ];
 

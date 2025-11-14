@@ -32,6 +32,11 @@ const routes: Routes = [
           import('./card/card.module').then((m) => m.CardPageModule),
       },
       {
+        path: 'cash',
+        loadChildren: () =>
+          import('./cash/cash.module').then((m) => m.CashPageModule),
+      },
+      {
         path: 'transactions',
         loadChildren: () =>
           import('./transactions/transactions.module').then(
