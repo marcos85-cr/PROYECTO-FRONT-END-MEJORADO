@@ -14,6 +14,7 @@ export interface User {
   bloqueado: boolean;
   intentosFallidos: number;
   fechaBloqueo?: Date;
+  cuentasActivas?: number;
 }
 
 export interface LoginRequest {

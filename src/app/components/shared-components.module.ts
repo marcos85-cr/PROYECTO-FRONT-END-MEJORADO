@@ -10,6 +10,7 @@ import { ClientAccountsModalComponent } from './client-accounts-modal/client-acc
 import { ClientDetailModalComponent } from './client-detail-modal/client-detail-modal.component';
 import { ClientTransactionsModalComponent } from './client-transactions-modal/client-transactions-modal.component';
 import { TransactionDetailModalComponent } from './transaction-detail-modal/transaction-detail-modal.component';
+import { UserDetailModalComponent } from './user-detail-modal/user-detail-modal.component';
 
 @NgModule({
   declarations: [],
@@ -23,7 +24,8 @@ import { TransactionDetailModalComponent } from './transaction-detail-modal/tran
     ClientAccountsModalComponent,
     ClientDetailModalComponent,
     ClientTransactionsModalComponent,
-    TransactionDetailModalComponent
+    TransactionDetailModalComponent,
+    UserDetailModalComponent
   ],
   exports: [
     ServicePaymentModalComponent,
@@ -32,7 +34,8 @@ import { TransactionDetailModalComponent } from './transaction-detail-modal/tran
     ClientAccountsModalComponent,
     ClientDetailModalComponent,
     ClientTransactionsModalComponent,
-    TransactionDetailModalComponent
+    TransactionDetailModalComponent,
+    UserDetailModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

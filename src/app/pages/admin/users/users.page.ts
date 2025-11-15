@@ -1,11 +1,9 @@
-
-// src/app/pages/admin/users/users.page.ts
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController, AlertController, ToastController } from '@ionic/angular';
+import { IonicModule, ModalController, AlertController, ToastController} from '@ionic/angular';
 import { User } from '../../../models/user.model';
+import { UserDetailModalComponent } from '../../../components/user-detail-modal/user-detail-modal.component';
 
 @Component({
   selector: 'app-users',
@@ -41,7 +39,8 @@ export class UsersPage implements OnInit {
         identificacion: '1-1111-1111',
         telefono: '8888-8888',
         bloqueado: false,
-        intentosFallidos: 0
+        intentosFallidos: 0,
+        cuentasActivas: 0
       },
       {
         id: '2',
@@ -51,7 +50,8 @@ export class UsersPage implements OnInit {
         identificacion: '2-2222-2222',
         telefono: '7777-7777',
         bloqueado: false,
-        intentosFallidos: 0
+        intentosFallidos: 0,
+        cuentasActivas: 0
       },
       {
         id: '3',
@@ -61,7 +61,8 @@ export class UsersPage implements OnInit {
         identificacion: '3-3333-3333',
         telefono: '6666-6666',
         bloqueado: false,
-        intentosFallidos: 0
+        intentosFallidos: 0,
+        cuentasActivas: 2
       }
     ] as User[];
     
@@ -112,35 +113,26 @@ export class UsersPage implements OnInit {
   }
 
   async openUserDetail(user: User) {
-    const alert = await this.alertController.create({
-      header: user.nombre,
-      message: `
-        <p><strong>Email:</strong> ${user.email}</p>
-        <p><strong>Rol:</strong> ${user.role}</p>
-        <p><strong>Identificación:</strong> ${user.identificacion}</p>
-        <p><strong>Teléfono:</strong> ${user.telefono}</p>
-        <p><strong>Estado:</strong> ${user.bloqueado ? 'Bloqueado' : 'Activo'}</p>
-      `,
-      buttons: [
-        {
-          text: 'Cerrar',
-          role: 'cancel'
-        },
-        {
-          text: user.bloqueado ? 'Desbloquear' : 'Bloquear',
-          handler: () => {
-            this.toggleUserBlock(user);
-          }
-        },
-        {
-          text: 'Editar',
-          handler: () => {
-            this.editUser(user);
-          }
-        }
-      ]
+    const modal = await this.modalController.create({
+      component: UserDetailModalComponent,
+      componentProps: {
+        user: user
+      }
     });
-    await alert.present();
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.action === 'blockToggled') {
+      // Actualizar el usuario en la lista
+      const index = this.users.findIndex(u => u.id === data.user.id);
+      if (index !== -1) {
+        this.users[index] = data.user;
+        this.filterUsers();
+      }
+    } else if (data?.action === 'edit') {
+      await this.editUser(data.user);
+    }
   }
 
   async toggleUserBlock(user: User) {

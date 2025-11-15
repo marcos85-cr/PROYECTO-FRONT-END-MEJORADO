@@ -26,16 +26,16 @@
 
     <!-- Filtros Rápidos -->
     <div class="filter-chips">
-        <ion-chip [outline]="selectedType !== 'all'" (click)="filterByType('all')">
+        <ion-chip [class.selected-chip]="selectedType !== 'all'" (click)="filterByType('all')">
             <ion-label>Todas</ion-label>
         </ion-chip>
-        <ion-chip [outline]="selectedType !== 'Ahorros'" (click)="filterByType('Ahorros')">
+        <ion-chip [class.selected-chip]="selectedType !== 'Ahorros'" (click)="filterByType('Ahorros')">
             <ion-label>Ahorros</ion-label>
         </ion-chip>
-        <ion-chip [outline]="selectedType !== 'Corriente'" (click)="filterByType('Corriente')">
+        <ion-chip [class.selected-chip]="selectedType !== 'Corriente'" (click)="filterByType('Corriente')">
             <ion-label>Corriente</ion-label>
         </ion-chip>
-        <ion-chip [outline]="selectedType !== 'Inversión'" (click)="filterByType('Inversión')">
+        <ion-chip [class.selected-chip]="selectedType !== 'Inversión'" (click)="filterByType('Inversión')">
             <ion-label>Inversión</ion-label>
         </ion-chip>
     </div>

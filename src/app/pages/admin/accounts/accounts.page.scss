@@ -6,9 +6,9 @@
     padding: 1rem;
     overflow-x: auto;
 
-    ion-chip {
-        --background: var(--ion-color-primary);
-        --color: white;
+    ion-chip.selected-chip {
+        --background: #4cb5ff !important;
+        --color: white !important;
 
         &[outline="true"] {
             --background: transparent;
