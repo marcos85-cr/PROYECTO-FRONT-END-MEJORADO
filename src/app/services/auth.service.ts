@@ -1,7 +1,8 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError } from 'rxjs';
+import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { MockAuthService } from './mock-auth.service';
 import {
@@ -18,16 +19,22 @@ export class AuthService {
   private apiUrl = environment.apiUrl || 'https://tu-api.com/api';
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
-  private useMockService = true; // Cambiar a false cuando tengas el backend
+  private useMockService = true;
+  private tokenExpirationTimer: any;
 
   constructor(
     private http: HttpClient,
-    private mockAuthService: MockAuthService
+    private mockAuthService: MockAuthService,
+    private router: Router
   ) {
-    // Inicializar desde localStorage
     const storedUser = this.loadUserFromStorage();
     this.currentUserSubject = new BehaviorSubject<User | null>(storedUser);
     this.currentUser = this.currentUserSubject.asObservable();
+
+    // Iniciar timer de expiración si hay usuario
+    if (storedUser) {
+      this.autoLogout();
+    }
   }
 
   public get currentUserValue(): User | null {
@@ -47,16 +54,28 @@ export class AuthService {
 
     // Verificar validez del token
     if (this.useMockService) {
-      const isValid = this.mockAuthService.isTokenValid(token);
-      if (!isValid) {
-        // Token expirado o inválido, limpiar storage
+      const validation = this.mockAuthService.validateToken(token);
+      if (!validation.valid) {
+        console.warn('⚠️ Token inválido o expirado al cargar');
         this.clearStorage();
         return null;
+      }
+
+      // Verificar expiración
+      if (validation.payload && validation.payload.exp) {
+        const now = Math.floor(Date.now() / 1000);
+        if (validation.payload.exp < now) {
+          console.warn('⚠️ Token expirado al cargar');
+          this.clearStorage();
+          return null;
+        }
       }
     }
 
     try {
-      return JSON.parse(storedUser);
+      const user = JSON.parse(storedUser);
+      console.log('✅ Usuario cargado desde localStorage:', user.nombre);
+      return user;
     } catch {
       this.clearStorage();
       return null;
@@ -68,9 +87,13 @@ export class AuthService {
    */
   login(credentials: LoginRequest): Observable<LoginResponse> {
     if (this.useMockService) {
-      return this.mockAuthService
-        .login(credentials)
-        .pipe(tap((response) => this.handleLoginSuccess(response)));
+      return this.mockAuthService.login(credentials).pipe(
+        tap((response) => this.handleLoginSuccess(response)),
+        catchError((error) => {
+          console.error('❌ Error en login:', error);
+          return throwError(() => error);
+        })
+      );
     }
 
     return this.http
@@ -78,7 +101,7 @@ export class AuthService {
       .pipe(
         tap((response) => this.handleLoginSuccess(response)),
         catchError((error: HttpErrorResponse) => {
-          console.warn('Backend no disponible, usando servicio mock');
+          console.warn('⚠️ Backend no disponible, usando servicio mock');
           this.useMockService = true;
           return this.mockAuthService
             .login(credentials)
@@ -95,7 +118,7 @@ export class AuthService {
     localStorage.setItem('token', response.token);
     localStorage.setItem('currentUser', JSON.stringify(response.user));
 
-    // Guardar tiempo de expiración
+    // Calcular y guardar tiempo de expiración
     if (response.expiresIn) {
       const expirationTime = Date.now() + response.expiresIn * 1000;
       localStorage.setItem('tokenExpiration', expirationTime.toString());
@@ -104,10 +127,14 @@ export class AuthService {
     // Actualizar BehaviorSubject
     this.currentUserSubject.next(response.user);
 
+    // Configurar auto-logout
+    this.autoLogout();
+
     console.log('✅ Login exitoso');
-    console.log('🔑 Token almacenado:', response.token);
+    console.log('🔑 Token almacenado');
     console.log('👤 Usuario:', response.user.nombre);
     console.log('🎭 Rol:', response.user.role);
+    console.log('⏰ Expira en:', response.expiresIn, 'segundos');
   }
 
   /**
@@ -120,7 +147,7 @@ export class AuthService {
 
     return this.http.post(`${this.apiUrl}/auth/register`, data).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.warn('Backend no disponible, usando servicio mock');
+        console.warn('⚠️ Backend no disponible, usando servicio mock');
         this.useMockService = true;
         return this.mockAuthService.register(data);
       })
@@ -133,7 +160,50 @@ export class AuthService {
   logout(): void {
     this.clearStorage();
     this.currentUserSubject.next(null);
+
+    // Limpiar timer de auto-logout
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
+
     console.log('👋 Sesión cerrada');
+    this.router.navigate(['/login']);
+  }
+
+  /**
+   * Auto-logout cuando el token expira
+   */
+  private autoLogout(): void {
+    const expirationTime = localStorage.getItem('tokenExpiration');
+    if (!expirationTime) {
+      return;
+    }
+
+    const expTime = parseInt(expirationTime, 10);
+    const now = Date.now();
+    const timeUntilExpiration = expTime - now;
+
+    if (timeUntilExpiration <= 0) {
+      console.warn('⚠️ Token ya expirado');
+      this.logout();
+      return;
+    }
+
+    // Limpiar timer anterior si existe
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
+
+    // Configurar nuevo timer
+    this.tokenExpirationTimer = setTimeout(() => {
+      console.warn('⏰ Token expirado - cerrando sesión automáticamente');
+      this.logout();
+    }, timeUntilExpiration);
+
+    console.log(
+      '⏰ Auto-logout configurado para:',
+      new Date(expTime).toLocaleTimeString()
+    );
   }
 
   /**
@@ -156,14 +226,16 @@ export class AuthService {
 
     // Verificar expiración del token
     if (this.isTokenExpired()) {
+      console.warn('⚠️ Token expirado - limpiando sesión');
       this.logout();
       return false;
     }
 
     // Verificar validez del token con el mock service
     if (this.useMockService) {
-      const isValid = this.mockAuthService.isTokenValid(token);
-      if (!isValid) {
+      const validation = this.mockAuthService.validateToken(token);
+      if (!validation.valid) {
+        console.warn('⚠️ Token inválido - limpiando sesión');
         this.logout();
         return false;
       }
@@ -182,7 +254,13 @@ export class AuthService {
     }
 
     const expTime = parseInt(expirationTime, 10);
-    return Date.now() > expTime;
+    const isExpired = Date.now() > expTime;
+
+    if (isExpired) {
+      console.warn('⚠️ Token expirado detectado');
+    }
+
+    return isExpired;
   }
 
   /**
@@ -193,7 +271,7 @@ export class AuthService {
   }
 
   /**
-   * Decodifica el token JWT (solo para mock service)
+   * Decodifica el token JWT
    */
   decodeToken(): any {
     const token = this.getToken();
@@ -235,33 +313,13 @@ export class AuthService {
   }
 
   /**
-   * Refresca el token (solo para desarrollo con mock)
-   */
-  refreshToken(): Observable<LoginResponse> | null {
-    if (!this.useMockService) {
-      return null;
-    }
-
-    const user = this.currentUserValue;
-    if (!user) {
-      return null;
-    }
-
-    // Simular refresh token generando uno nuevo
-    const credentials: LoginRequest = {
-      email: user.email,
-      password: '123456', // En producción esto vendría del refresh token
-    };
-
-    return this.mockAuthService
-      .login(credentials)
-      .pipe(tap((response) => this.handleLoginSuccess(response)));
-  }
-
-  /**
    * Obtiene información del token
    */
-  getTokenInfo(): { expiresIn: number; isExpired: boolean } | null {
+  getTokenInfo(): {
+    expiresIn: number;
+    isExpired: boolean;
+    expiresAt: Date;
+  } | null {
     const expirationTime = localStorage.getItem('tokenExpiration');
     if (!expirationTime) {
       return null;
@@ -274,6 +332,38 @@ export class AuthService {
     return {
       expiresIn: Math.floor(expiresIn / 1000), // en segundos
       isExpired: expiresIn <= 0,
+      expiresAt: new Date(expTime),
     };
+  }
+
+  /**
+   * Verifica el estado del token y muestra información de debug
+   */
+  debugTokenStatus(): void {
+    console.log('🔍 === DEBUG TOKEN STATUS ===');
+    const token = this.getToken();
+    console.log('Token existe:', !!token);
+
+    if (token) {
+      const validation = this.mockAuthService.validateToken(token);
+      console.log('Token válido:', validation.valid);
+
+      if (validation.payload) {
+        console.log('Payload:', validation.payload);
+        const exp = validation.payload.exp;
+        const now = Math.floor(Date.now() / 1000);
+        console.log('Expira en:', exp - now, 'segundos');
+        console.log('Fecha expiración:', new Date(exp * 1000).toLocaleString());
+      }
+    }
+
+    const tokenInfo = this.getTokenInfo();
+    if (tokenInfo) {
+      console.log('Token info:', tokenInfo);
+    }
+
+    console.log('Usuario actual:', this.currentUserValue);
+    console.log('Autenticado:', this.isAuthenticated());
+    console.log('=========================');
   }
 }
