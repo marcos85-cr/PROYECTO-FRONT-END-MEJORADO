@@ -6,6 +6,12 @@
         </ion-buttons>
         <ion-title>Crear Cuenta</ion-title>
     </ion-toolbar>
+    <div class="header-section">
+        <ion-avatar class="logo-avatar">
+            <img src="assets/icon/BANK.jpg" alt="Bank Logo" />
+        </ion-avatar>
+    </div>
+    
 </ion-header>
 
 <ion-content class="ion-padding" color="primary">
@@ -26,7 +32,7 @@
             </ion-item>
             <div class="error-message"
                 *ngIf="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
-                <ion-text color="danger">
+                <ion-text >
                     <small>El nombre es requerido</small>
                 </ion-text>
             </div>
@@ -39,7 +45,7 @@
             </ion-item>
             <div class="error-message"
                 *ngIf="registerForm.get('identificacion')?.invalid && registerForm.get('identificacion')?.touched">
-                <ion-text color="danger">
+                <ion-text >
                     <small>La identificación es requerida</small>
                 </ion-text>
             </div>
@@ -51,7 +57,7 @@
             </ion-item>
             <div class="error-message"
                 *ngIf="registerForm.get('telefono')?.invalid && registerForm.get('telefono')?.touched">
-                <ion-text color="danger">
+                <ion-text >
                     <small>El teléfono es requerido</small>
                 </ion-text>
             </div>
@@ -63,7 +69,7 @@
                     [clearInput]="true"></ion-input>
             </ion-item>
             <div class="error-message" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
-                <ion-text color="danger">
+                <ion-text >
                     <small>Ingrese un correo válido</small>
                 </ion-text>
             </div>
@@ -83,7 +89,7 @@
             </div>
             <div class="error-message"
                 *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-                <ion-text color="danger">
+                <ion-text >
                     <small>La contraseña no cumple los requisitos</small>
                 </ion-text>
             </div>
@@ -98,7 +104,7 @@
             </ion-item>
             <div class="error-message"
                 *ngIf="registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched">
-                <ion-text color="danger">
+                <ion-text >
                     <small>Las contraseñas no coinciden</small>
                 </ion-text>
             </div>

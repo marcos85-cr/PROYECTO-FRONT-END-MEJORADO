@@ -22,7 +22,7 @@ export class ServicePaymentService {
   private serviceProviders: ServiceProvider[] = [
     {
       id: '1',
-      nombre: 'AyA (Acueductos y Alcantarillados)',
+      nombre: 'AyA',
       tipo: ServiceType.AGUA,
       icon: 'water',
       codigoEmpresa: 'AYA001'
@@ -36,14 +36,14 @@ export class ServicePaymentService {
     },
     {
       id: '3',
-      nombre: 'ICE (Instituto Costarricense de Electricidad)',
+      nombre: 'ICE',
       tipo: ServiceType.ELECTRICIDAD,
       icon: 'flash',
       codigoEmpresa: 'ICE001'
     },
     {
       id: '4',
-      nombre: 'CNFL (Compañía Nacional de Fuerza y Luz)',
+      nombre: 'CNFL',
       tipo: ServiceType.ELECTRICIDAD,
       icon: 'flash-outline',
       codigoEmpresa: 'CNFL001'

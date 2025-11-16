@@ -29,12 +29,12 @@
 
     <!-- Número de referencia -->
     <ion-item>
-      <ion-label position="stacked">Número de Referencia / Contrato *</ion-label>
+      <ion-label position="stacked">Número de cédula *</ion-label>
       <ion-input 
         [(ngModel)]="numeroReferencia" 
         name="reference"
         type="text"
-        placeholder="Ingrese el número de referencia"
+        placeholder="Ingrese el número de cédula"
         (ionBlur)="validateReference()"
         [disabled]="validatingReference">
       </ion-input>

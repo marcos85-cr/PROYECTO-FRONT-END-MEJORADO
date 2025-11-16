@@ -92,7 +92,7 @@ export class AccountsPage implements OnInit {
   getAccountIcon(tipo: string): string {
     switch (tipo) {
       case 'Ahorros':
-        return 'piggy-bank-outline';
+        return 'cash-outline';
       case 'Corriente':
         return 'wallet-outline';
       case 'Inversión':

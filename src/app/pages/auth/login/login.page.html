@@ -24,7 +24,7 @@
                 </ion-input>
             </ion-item>
             <div class="error-message" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-                <ion-text color="light">
+                <ion-text >
                     <small>Ingrese un correo válido</small>
                 </ion-text>
             </div>
@@ -46,7 +46,7 @@
                 </ion-icon>
             </ion-item>
             <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-                <ion-text color="light">
+                <ion-text >
                     <small>La contraseña es requerida</small>
                 </ion-text>
             </div>

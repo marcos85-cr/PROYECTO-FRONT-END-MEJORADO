@@ -31,14 +31,14 @@
 
   <!-- Sección de características/iconos -->
   <ion-row class="features">
-    <swiper-container slides-per-view="3" space-between="7">
-      <swiper-slide *ngFor="let feature of features">
+    <ion-col size="3" *ngFor="let feature of features">
+      <div class="feature-item">
         <ion-button [color]="feature.color" shape="round" class="feature-btn">
           <ion-icon [name]="feature.icon" slot="icon-only"></ion-icon>
         </ion-button>
         <ion-label>{{ feature.name }}</ion-label>
-      </swiper-slide>
-    </swiper-container>
+      </div>
+    </ion-col>
   </ion-row>
 
   <!-- Botones de acción --><!-- Nueva Transferencia, Beneficiarios, Pagar Servicios, Historial -->
@@ -48,17 +48,17 @@
       Nueva Transferencia
     </ion-button>
   
-    <ion-button expand="block" routerLink="/cliente/beneficiaries" color="primary">
+    <ion-button expand="block" routerLink="./cliente/beneficiaries" color="primary">
       <ion-icon slot="start" name="people"></ion-icon>
       Beneficiarios
     </ion-button>
-  
+    <!--
     <ion-button expand="block" routerLink="/cliente/payments" color="primary">
       <ion-icon slot="start" name="card"></ion-icon>
       Pagar Servicios
-    </ion-button>
-  
-    <ion-button expand="block" routerLink="/cliente/history" color="primary" >
+    </ion-button> -->
+    
+    <ion-button expand="block" routerLink="./cliente/history" color="primary" >
       <ion-icon slot="start" name="time"></ion-icon>
       Historial
     </ion-button>

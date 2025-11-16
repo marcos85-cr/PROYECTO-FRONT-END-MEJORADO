@@ -11,6 +11,7 @@ const routes: Routes = [
     redirectTo: 'navigator',
     pathMatch: 'full',
   },
+
   {
     path: 'login',
     loadComponent: () =>
@@ -21,7 +22,7 @@ const routes: Routes = [
     loadComponent: () =>
       import('./pages/auth/register/register.page').then((m) => m.RegisterPage),
   },
-  
+
   // 🔓 ACCESO LIBRE - Rutas de Cliente
   {
     path: 'tabs',
@@ -30,8 +31,8 @@ const routes: Routes = [
     // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
     // data: { roles: ['Cliente'] },
   },
-  
-  // 🔓 ACCESO LIBRE - Rutas de Administrador  
+
+  // 🔓 ACCESO LIBRE - Rutas de Administrador
   {
     path: 'admin',
     loadChildren: () =>
@@ -39,7 +40,7 @@ const routes: Routes = [
     // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
     // data: { roles: ['Administrador'] },
   },
-  
+
   // 🔓 ACCESO LIBRE - Rutas de Gestor
   {
     path: 'gestor',
@@ -48,7 +49,7 @@ const routes: Routes = [
     // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
     // data: { roles: ['Gestor'] },
   },
-  
+
   // 🔓 ACCESO LIBRE - Páginas adicionales de Cliente
   {
     path: 'cliente',
@@ -75,7 +76,7 @@ const routes: Routes = [
           import('./pages/cliente/payments/payments.page').then(
             (m) => m.PaymentsPage
           ),
-        // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre  
+        // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
         // data: { roles: ['Cliente'] },
       },
       {

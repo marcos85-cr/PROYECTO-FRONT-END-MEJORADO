@@ -101,78 +101,59 @@ swiper-slide {
 
 // Estilos para la sección de features/iconos 
 .features {
-  width: 100%; // Ancho completo
-  margin-top: 20px;
-  padding: 0 15px;
+  width: 100%;
+  margin: 25px 0 15px 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  swiper-container {
-    height: auto;
-    padding: 10px 0;
-    
-  }
-
-  swiper-slide {
+  .feature-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: transparent;
-    backdrop-filter: none;
+    gap: 8px;
     padding: 10px;
-    min-height: auto;
-    
-// Estilos para el botón de cada feature
-    .feature-btn {
-      width: 50px;
-      height: 50px;
-      margin-bottom: 8px;
-
-      // Estilos para el icono dentro del botón
-      ion-icon {
-        font-size: 20px;
-      }
-    }
-
-    // Estilos para el label debajo del icono
-    ion-label {
-      color: var(--ion-color-light);
-      font-size: 14px;
-      font-weight: 500;
-      text-align: center;
-      margin-top: 5px; // Espaciado desde el botón
-    }
   }
 
-  // Estilos para la fila que contiene los features
-  ion-row.feature-list {
-    padding: 5vh 0; // Agregado para separar la lista de features
-    
+  .feature-btn {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    transition: all 0.3s ease;
 
-    div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-
-      // Estilos para el botón de cada feature
-      ion-button {
-        --border-radius: 10px;
-        height: 8vh;
-      }
-
-      ion-label {
-        font-size: 1rem;
-        font-weight: bold;
-      }
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
     }
+
+    ion-icon {
+      font-size: 1.6rem;
+    }
+  }
+  ion-label {
+    color: var(--ion-color-light);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.3px;
   }
 }
-
+/*
 .action-buttons {
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 50%;
+  align-items: center;
+  margin: 0 auto;
 
   // Estilos para los botones de acción
   ion-button {
@@ -181,5 +162,33 @@ swiper-slide {
     --padding-bottom: 14px;
     font-weight: 400;  // Peso de fuente ajustado
     text-transform: none;
+    width: 100%;
   }
+}*/
+
+.action-buttons {
+  margin-top: 16px;
+  //background: rgb(86, 163, 199);
+  border-radius: 12px;
+  padding: 12px;
+  //box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons ion-button {
+  width: 60%;
+  max-width: 320px;
+  margin: 0 auto;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+  font-size: 0.95rem;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --background: var(--ion-color-primary);
+  --color: white;
+}
+
+.action-buttons ion-icon {
+  font-size: 1.2rem;
 }

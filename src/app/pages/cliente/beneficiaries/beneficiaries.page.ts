@@ -201,17 +201,19 @@ export class BeneficiariesPage implements OnInit {
         {
           text: 'Crear',
           handler: async (data) => {
-            if (!data.alias || data.alias.length < 3) {
+            if (!data.alias || data.alias.length < 3 || data.alias.length > 30) {
               await this.showToast(
-                'El alias debe tener al menos 3 caracteres',
+                'El alias debe ser mayor de 3 y menor de 30 caracteres',
                 'warning'
               );
               return false;
             }
+            // Validar banco y número de cuenta
             if (!data.banco || !data.numeroCuenta) {
               await this.showToast('Complete todos los campos', 'warning');
               return false;
             }
+            // Validar número de cuenta
             if (
               data.numeroCuenta.length < 12 ||
               data.numeroCuenta.length > 20
@@ -222,6 +224,7 @@ export class BeneficiariesPage implements OnInit {
               );
               return false;
             }
+            // Validar moneda
             if (data.moneda !== 'CRC' && data.moneda !== 'USD') {
               await this.showToast('La moneda debe ser CRC o USD', 'warning');
               return false;
@@ -291,6 +294,7 @@ export class BeneficiariesPage implements OnInit {
     return await modal.present();
   }
 
+  // Editar beneficiario (solo alias)
   async editBeneficiary(ben: Beneficiary) {
     const alert = await this.alertController.create({
       header: 'Editar Beneficiario',

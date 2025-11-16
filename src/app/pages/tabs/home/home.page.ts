@@ -43,9 +43,9 @@ export class HomePage implements OnInit, AfterContentChecked {
     this.features = [
       {
         id: 1,
-        color: 'secondary', icon: 'paper-plane-outline', name: 'Enviar',},
-      { id: 2, color: 'primary', icon: 'arrow-up-outline', name: 'Traer' },
-      { id: 3, color: 'success', icon: 'add-circle-outline', name: 'Sinpe' },
+        color: 'secondary', icon: 'swap-vertical-outline', name: 'Enviar',},
+      { id: 2, color: 'primary', icon: 'download-outline', name: 'Traer' },
+      { id: 3, color: 'success', icon: 'arrow-redo-outline', name: 'Sinpe' },
       
     ];
 

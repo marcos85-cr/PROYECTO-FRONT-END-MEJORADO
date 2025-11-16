@@ -52,10 +52,10 @@ export class ServicePaymentModalComponent implements OnInit {
   }
 
   async validateReference() {
-    if (!this.numeroReferencia || this.numeroReferencia.length < 8) {
+    if (!this.numeroReferencia || this.numeroReferencia.length !== 8) {
       const alert = await this.alertCtrl.create({
         header: 'Error',
-        message: 'Ingrese un número de referencia válido (mínimo 8 dígitos)',
+        message: 'Ingrese un número de cédula válido (Tiene que tener 8 dígitos)',
         buttons: ['OK']
       });
       await alert.present();
@@ -74,13 +74,13 @@ export class ServicePaymentModalComponent implements OnInit {
           this.validatedName = result.nombre || '';
           this.monto = this.validatedAmount;
         } else {
-          this.showAlert('Referencia Inválida', 'El número de referencia no es válido o no existe.');
+          this.showAlert('Cédula Inválida', 'El número de cédula no es válido o no existe.');
         }
       },
       error: (error) => {
         this.validatingReference = false;
-        console.error('Error al validar referencia:', error);
-        this.showAlert('Error', 'No se pudo validar la referencia. Intente nuevamente.');
+        console.error('Error al validar cédula:', error);
+        this.showAlert('Error', 'No se pudo validar la cédula. Intente nuevamente.');
       }
     });
   }
@@ -92,7 +92,7 @@ export class ServicePaymentModalComponent implements OnInit {
     }
 
     if (!this.numeroReferencia) {
-      this.showAlert('Error', 'Ingrese el número de referencia');
+      this.showAlert('Error', 'Ingrese el número de cédula');
       return;
     }
 
@@ -200,4 +200,5 @@ export class ServicePaymentModalComponent implements OnInit {
     };
     return colorMap[tipo] || 'medium';
   }
+  
 }

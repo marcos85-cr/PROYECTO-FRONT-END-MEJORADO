@@ -14,7 +14,7 @@ ion-header {
 
             .title-icon {
                 font-size: 28px;
-                color: #4A90E2;
+                color: #ffffff;
             }
         }
     }
@@ -30,7 +30,7 @@ ion-header {
         left: 0;
         right: 0;
         height: 200px;
-        background: linear-gradient(180deg, #E3F2FD 0%, #f5f7fa 100%);
+        background: linear-gradient(180deg, #3880ff 30%, #94baf1 100%);
         z-index: 0;
     }
 }
@@ -121,7 +121,7 @@ ion-header {
 
 // ===== STATS CARD =====
 .stats-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3880ff 30%, #76a2ec 100%);
     border-radius: 20px;
     padding: 20px;
     margin: 16px 0;
@@ -418,4 +418,15 @@ ion-header {
 // ===== BOTTOM SPACING =====
 .bottom-spacing {
     height: 40px;
+}
+
+.payment-modal {
+    --width: 90%;
+    --height: auto;
+    --max-height: 80vh;
+    --border-radius: 16px;
+    --background: var(--ion-color-light);
+    top: 10vh;
+    bottom: auto;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }

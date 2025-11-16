@@ -61,15 +61,19 @@ ion-item {
     margin-bottom: 1rem;
 }
 
-.error-message {
+.error-message { /* color del mensaje de error */
     margin-bottom: 1rem;
     padding: 0 1rem;
+    color:#353434;
+    
     
     small {
-        background: rgba(255, 255, 255, 0.15);
+        //background: rgba(255, 255, 255, 2.8);
         padding: 0.25rem 0.5rem;
         border-radius: 4px;
         backdrop-filter: blur(10px);
+        font-size: 14px;
+        font-weight: 500;
     }
 }
 

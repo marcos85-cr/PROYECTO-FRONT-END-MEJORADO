@@ -109,8 +109,6 @@ export class CashPage implements OnInit {
         provider: provider,
       },
       cssClass: 'payment-modal',
-      breakpoints: [0, 0.5, 0.75, 1],
-      initialBreakpoint: 0.75,
     });
 
     await modal.present();
