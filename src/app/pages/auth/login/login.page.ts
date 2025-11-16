@@ -37,7 +37,8 @@ export class LoginPage implements OnInit {
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
-
+  
+  // Maneja el envío del formulario de inicio de sesión
   async onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
@@ -67,7 +68,8 @@ export class LoginPage implements OnInit {
       }
     }
   }
-
+  
+  // Muestra un toast con un mensaje y color específicos
   private async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastController.create({
       message,

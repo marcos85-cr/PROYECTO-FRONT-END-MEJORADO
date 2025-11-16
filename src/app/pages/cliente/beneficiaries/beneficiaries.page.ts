@@ -103,7 +103,7 @@ export class BeneficiariesPage implements OnInit {
           tieneOperacionesPendientes: false,
         },
       ] as Beneficiary[];
-
+      // Inicializar la lista filtrada
       this.filteredBeneficiaries = [...this.beneficiaries];
     } catch (error) {
       console.error('Error loading beneficiaries:', error);
@@ -112,7 +112,7 @@ export class BeneficiariesPage implements OnInit {
       this.isLoading = false;
     }
   }
-
+  // Método para filtrar beneficiarios
   filterBeneficiaries() {
     let filtered = [...this.beneficiaries];
 
@@ -134,12 +134,12 @@ export class BeneficiariesPage implements OnInit {
 
     this.filteredBeneficiaries = filtered;
   }
-
+  // Método para manejar el cambio en el filtro de estado
   filterByStatus(status: string) {
     this.selectedStatus = status;
     this.filterBeneficiaries();
   }
-
+  // Método para manejar el cambio en el término de búsqueda
   getStatusColor(estado: BeneficiaryStatus): string {
     switch (estado) {
       case BeneficiaryStatus.ACTIVO:
@@ -152,7 +152,7 @@ export class BeneficiariesPage implements OnInit {
         return 'medium';
     }
   }
-
+  // Abrir modal para crear nuevo beneficiario
   async openCreateModal() {
     const alert = await this.alertController.create({
       header: 'Nuevo Beneficiario',
@@ -282,6 +282,7 @@ export class BeneficiariesPage implements OnInit {
     }
   }
 
+    // Ver detalle del beneficiario
   async viewBeneficiaryDetail(ben: Beneficiary) {
     const modal = await this.modalController.create({
       component: BeneficiaryDetailModalComponent,
@@ -361,6 +362,7 @@ export class BeneficiariesPage implements OnInit {
     await alert.present();
   }
 
+  // Eliminar Beneficiario
   async deleteBeneficiary(ben: Beneficiary) {
     if (ben.tieneOperacionesPendientes) {
       await this.showToast(
@@ -369,7 +371,7 @@ export class BeneficiariesPage implements OnInit {
       );
       return;
     }
-
+    // Confirmar eliminación
     const alert = await this.alertController.create({
       header: 'Eliminar Beneficiario',
       message: `¿Está seguro de eliminar a ${ben.alias}?`,
@@ -401,6 +403,7 @@ export class BeneficiariesPage implements OnInit {
     await alert.present();
   }
 
+    // Confirmar Beneficiario
   async confirmBeneficiary(ben: Beneficiary) {
     const alert = await this.alertController.create({
       header: 'Confirmar Beneficiario',
@@ -432,7 +435,7 @@ export class BeneficiariesPage implements OnInit {
     });
     await alert.present();
   }
-
+  // Manejar refresco de la lista de beneficiarios
   async handleRefresh(event: any) {
     await this.loadBeneficiaries();
     event.target.complete();
