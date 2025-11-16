@@ -76,11 +76,20 @@
     </div>
   </div>
 
+    <!-- Botón de cerrar cuenta -->
   <div class="action-buttons">
     <ion-button expand="block" [color]="user.bloqueado ? 'success' : 'warning'" (click)="toggleBlock()">
       <ion-icon slot="start" [name]="user.bloqueado ? 'lock-open' : 'lock-closed'"></ion-icon>
       {{ user.bloqueado ? 'Desbloquear' : 'Bloquear' }} Usuario
     </ion-button>
+      <!-- Boton de Cerrar cuenta -->
+    <ion-button expand="block" [color]="cuentaCerrada ? 'danger' : 'medium'" (click)="toggleCerrarCuenta()">
+    <ion-icon slot="start" [name]="cuentaCerrada ? 'log-in-outline' : 'log-out-outline'"></ion-icon>
+    {{ cuentaCerrada ? 'Reabrir Cuenta' : 'Cerrar Cuenta' }}
+    </ion-button>
+
+
+      <!-- Botón de editar usuario -->
     <ion-button expand="block" color="primary" (click)="editUser()">
       <ion-icon slot="start" name="create"></ion-icon>
       Editar Usuario
