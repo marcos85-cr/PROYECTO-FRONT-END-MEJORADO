@@ -7,10 +7,10 @@ export enum UserRole {
 export interface User {
   id: string;
   email: string;
-  role: UserRole;
+  role: UserRole | string; // Permitir string también
   nombre: string;
-  identificacion?: string;
-  telefono?: string;
+  identificacion?: string; // ✅ Hacer opcional con ?
+  telefono?: string; // ✅ Hacer opcional con ?
   bloqueado: boolean;
   intentosFallidos: number;
   fechaBloqueo?: Date;
@@ -35,5 +35,5 @@ export interface RegisterRequest {
   nombre: string;
   identificacion: string;
   telefono: string;
-  role: UserRole;
+  role: UserRole | string; // ✅ Permitir string también
 }

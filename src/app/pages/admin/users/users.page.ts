@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController, AlertController, ToastController} from '@ionic/angular';
 import { User } from '../../../models/user.model';
 import { UserDetailModalComponent } from '../../../components/user-detail-modal/user-detail-modal.component';
+import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-users',
@@ -17,8 +19,10 @@ export class UsersPage implements OnInit {
   filteredUsers: User[] = [];
   searchTerm: string = '';
   selectedRole: string = 'all';
+  isLoading = false;
 
   constructor(
+    private userService: UserService,
     private modalController: ModalController,
     private alertController: AlertController,
     private toastController: ToastController
@@ -29,15 +33,31 @@ export class UsersPage implements OnInit {
   }
 
   async loadUsers() {
-    // Simulación de datos - reemplazar con servicio real
+    this.isLoading = true;
+    try {
+      const users = await this.userService.getAllUsers().toPromise();
+      this.users = users || [];
+      this.filteredUsers = [...this.users];
+    } catch (error) {
+      console.error('Error loading users:', error);
+      this.loadMockUsers();
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  /**
+   * Carga usuarios de prueba (fallback)
+   */
+  loadMockUsers() {
     this.users = [
       {
         id: '1',
         email: 'admin@banco.com',
         role: 'Administrador',
         nombre: 'Juan Pérez',
-        identificacion: '1-1111-1111',
-        telefono: '8888-8888',
+        identificacion: '1-1111-1111', // ✅ Siempre asignado
+        telefono: '8888-8888', // ✅ Siempre asignado
         bloqueado: false,
         intentosFallidos: 0,
         cuentasActivas: 0
@@ -47,8 +67,8 @@ export class UsersPage implements OnInit {
         email: 'gestor@banco.com',
         role: 'Gestor',
         nombre: 'María López',
-        identificacion: '2-2222-2222',
-        telefono: '7777-7777',
+        identificacion: '2-2222-2222', // ✅ Siempre asignado
+        telefono: '7777-7777', // ✅ Siempre asignado
         bloqueado: false,
         intentosFallidos: 0,
         cuentasActivas: 0
@@ -58,14 +78,13 @@ export class UsersPage implements OnInit {
         email: 'cliente@banco.com',
         role: 'Cliente',
         nombre: 'Carlos Sánchez',
-        identificacion: '3-3333-3333',
-        telefono: '6666-6666',
+        identificacion: '3-3333-3333', // ✅ Siempre asignado
+        telefono: '6666-6666', // ✅ Siempre asignado
         bloqueado: false,
         intentosFallidos: 0,
         cuentasActivas: 2
       }
-    ] as User[];
-    
+    ];
     this.filteredUsers = [...this.users];
   }
 
@@ -82,7 +101,8 @@ export class UsersPage implements OnInit {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(user =>
         user.nombre.toLowerCase().includes(term) ||
-        user.email.toLowerCase().includes(term)
+        user.email.toLowerCase().includes(term) ||
+        (user.identificacion?.includes(term) ?? false) // ✅ Manejar undefined
       );
     }
 
@@ -102,32 +122,60 @@ export class UsersPage implements OnInit {
     }
   }
 
+  /**
+   * Abre el modal para crear un nuevo usuario
+   */
   async openCreateModal() {
-    // Navegar a página de registro con modo admin
-    const alert = await this.alertController.create({
-      header: 'Crear Usuario',
-      message: 'Esta funcionalidad abrirá el formulario de registro',
-      buttons: ['OK']
-    });
-    await alert.present();
-  }
-
-  async openUserDetail(user: User) {
     const modal = await this.modalController.create({
-      component: UserDetailModalComponent,
-      componentProps: {
-        user: user
-      }
+      component: CreateUserModalComponent,
+      cssClass: 'create-user-modal'
     });
 
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
+    
+    if (data?.action === 'userCreated') {
+      // Asegurar que el nuevo usuario tenga todos los campos requeridos
+      const newUser: User = {
+        ...data.user,
+        identificacion: data.user.identificacion ?? 'N/A',
+        telefono: data.user.telefono ?? 'N/A',
+        cuentasActivas: data.user.cuentasActivas ?? 0
+      };
+      
+      this.users.push(newUser);
+      this.filterUsers();
+      await this.showToast('Usuario registrado exitosamente', 'success');
+    }
+  }
+
+  /**
+   * Abre el modal de detalle de usuario
+   */
+  async openUserDetail(user: User) {
+    const modal = await this.modalController.create({
+      component: UserDetailModalComponent,
+      componentProps: {
+        user: user
+      },
+      cssClass: 'user-detail-modal'
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    
     if (data?.action === 'blockToggled') {
-      // Actualizar el usuario en la lista
       const index = this.users.findIndex(u => u.id === data.user.id);
       if (index !== -1) {
         this.users[index] = data.user;
+        this.filterUsers();
+      }
+    } else if (data?.action === 'cuentaCerradaToggled') {
+      const index = this.users.findIndex(u => u.id === data.user.id);
+      if (index !== -1) {
+        this.users[index].bloqueado = data.estado;
         this.filterUsers();
       }
     } else if (data?.action === 'edit') {
@@ -159,6 +207,6 @@ export class UsersPage implements OnInit {
       position: 'top',
       color
     });
-    toast.present();
+    await toast.present();
   }
 }
