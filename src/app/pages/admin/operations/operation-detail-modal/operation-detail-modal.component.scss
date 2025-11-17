@@ -1,0 +1,192 @@
+.modal-content {
+  --background: #f5f7fa;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+}
+
+.operation-detail {
+  padding: 1rem;
+}
+
+.status-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+
+  ion-card-content {
+    padding: 20px;
+  }
+
+  .status-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+
+    .status-item {
+      text-align: center;
+
+      ion-badge {
+        display: block;
+        margin-bottom: 0.5rem;
+        padding: 8px 12px;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      ion-icon {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+ion-card {
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  ion-card-header {
+    padding-bottom: 8px;
+
+    ion-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  ion-card-content {
+    padding-top: 0;
+  }
+}
+
+.amount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2ecc71;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.flags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .flag-badge {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    border-radius: 16px;
+  }
+}
+
+.notes-list {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f0f0f0;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
+.timeline {
+  position: relative;
+  padding: 1rem 0;
+
+  .timeline-item {
+    padding: 1rem;
+    padding-left: 2rem;
+    border-left: 2px solid #ddd;
+    position: relative;
+    margin-bottom: 1rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -9px;
+      top: 1.5rem;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #667eea;
+      border: 2px solid white;
+    }
+
+    .time {
+      font-weight: 600;
+      color: #667eea;
+      font-size: 0.9rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.action-buttons {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 2rem;
+
+  ion-button {
+    --border-radius: 8px;
+    font-weight: 600;
+  }
+}
+
+ion-item {
+  --background: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  margin-bottom: 0.5rem;
+
+  ion-label {
+    font-weight: 500;
+    color: #666;
+  }
+
+  ion-text {
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+ion-textarea {
+  --background: var(--ion-color-light);
+  --padding-start: 12px;
+  --padding-end: 12px;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .status-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .amount {
+    font-size: 1.5rem;
+  }
+}
+

@@ -1,0 +1,203 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Detalle de Operación</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <div *ngIf="operation" class="operation-detail">
+    
+    <!-- Estado y Riesgo -->
+    <ion-card class="status-card">
+      <ion-card-content>
+        <div class="status-row">
+          <div class="status-item">
+            <ion-badge [color]="getStatusColor(operation.estado)">
+              {{ operation.estado }}
+            </ion-badge>
+            <p>Estado</p>
+          </div>
+          <div class="status-item">
+            <ion-badge [color]="getRiskColor(operation.nivelRiesgo)">
+              {{ operation.nivelRiesgo }}
+            </ion-badge>
+            <p>Nivel de Riesgo</p>
+          </div>
+          <div class="status-item">
+            <ion-icon [name]="getTypeIcon(operation.tipo)" 
+              [color]="getRiskColor(operation.nivelRiesgo)" 
+              size="large"></ion-icon>
+            <p>{{ operation.tipo }}</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Información del Cliente -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title color="primary">
+          <ion-icon name="person" slot="start"></ion-icon>
+          Cliente
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label>
+            <h3>{{ operation.clienteNombre }}</h3>
+            <p>{{ operation.clienteEmail }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Información Financiera -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title color="success">
+          <ion-icon name="cash" slot="start"></ion-icon>
+          Monto
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <h2 class="amount">{{ operation.moneda }} {{ operation.monto | number:'1.2-2' }}</h2>
+        <ion-item lines="none">
+          <ion-label>Descripción</ion-label>
+          <ion-text>{{ operation.descripcion }}</ion-text>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Detalles de la Operación -->
+    <ion-card *ngIf="operation.detalles">
+      <ion-card-header>
+        <ion-card-title color="primary">
+          <ion-icon name="document-text" slot="start"></ion-icon>
+          Detalles
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none" *ngFor="let key of getDetailKeys()">
+          <ion-label>{{ formatKey(key) }}</ion-label>
+          <ion-text slot="end">{{ operation.detalles[key] }}</ion-text>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Flags de Riesgo -->
+    <ion-card *ngIf="operation.flagsRiesgo && operation.flagsRiesgo.length > 0">
+      <ion-card-header>
+        <ion-card-title color="warning">
+          <ion-icon name="alert-circle" slot="start"></ion-icon>
+          Flags de Riesgo ({{ operation.flagsRiesgo.length }})
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="flags-container">
+          <ion-badge 
+            *ngFor="let flag of operation.flagsRiesgo"
+            color="warning"
+            class="flag-badge">
+            {{ flag }}
+          </ion-badge>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Verificación Adicional -->
+    <ion-card *ngIf="operation.requiereVerificacionAdicional">
+      <ion-card-header>
+        <ion-card-title color="tertiary">
+          <ion-icon name="shield-checkmark" slot="start"></ion-icon>
+          Verificación Adicional
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label>Tipo</ion-label>
+          <ion-text>{{ operation.verificacionAdicional?.tipo }}</ion-text>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>Estado</ion-label>
+          <ion-badge [color]="operation.verificacionAdicional?.estado === 'Completada' ? 'success' : 'warning'">
+            {{ operation.verificacionAdicional?.estado }}
+          </ion-badge>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Notas -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="document" slot="start"></ion-icon>
+          Notas
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-textarea 
+          [(ngModel)]="newNote"
+          placeholder="Agregar nota..."
+          rows="3">
+        </ion-textarea>
+        <ion-button expand="block" size="small" (click)="addNote()" class="ion-margin-top">
+          <ion-icon name="add" slot="start"></ion-icon>
+          Agregar Nota
+        </ion-button>
+        <div class="notes-list" *ngIf="operation.notas">
+          <p>{{ operation.notas }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Timeline -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="time" slot="start"></ion-icon>
+          Timeline
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="timeline">
+          <div class="timeline-item">
+            <p class="time">{{ operation.creadoEn | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p>Creada la operación</p>
+          </div>
+          <div class="timeline-item" *ngIf="operation.actualizadoEn">
+            <p class="time">{{ operation.actualizadoEn | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p>Última actualización</p>
+          </div>
+          <div class="timeline-item" *ngIf="operation.aprobadoPor">
+            <p class="time">Aprobada por: {{ operation.aprobadoPor }}</p>
+          </div>
+          <div class="timeline-item" *ngIf="operation.rechazadoPor">
+            <p class="time">Rechazada por: {{ operation.rechazadoPor }}</p>
+            <p *ngIf="operation.razonRechazo">Razón: {{ operation.razonRechazo }}</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botones de Acción -->
+    <div class="action-buttons" *ngIf="operation.estado === 'Pendiente'">
+      <ion-button expand="block" color="success" (click)="approveOperation()">
+        <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+        Aprobar Operación
+      </ion-button>
+      <ion-button expand="block" color="warning" (click)="blockOperation()">
+        <ion-icon name="lock-closed" slot="start"></ion-icon>
+        Bloquear
+      </ion-button>
+      <ion-button expand="block" color="danger" (click)="rejectOperation()">
+        <ion-icon name="close-circle" slot="start"></ion-icon>
+        Rechazar
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

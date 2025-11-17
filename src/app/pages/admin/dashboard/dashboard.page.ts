@@ -1,5 +1,5 @@
 
-
+import { HighValueOperationService } from '../../../services/high-value-operation.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -28,10 +28,11 @@ export class DashboardPage implements OnInit {
   constructor(
     private authService: AuthService,
     private transactionService: TransactionService,
+    private operationService: HighValueOperationService,  // Agregar esta línea
     private router: Router,
     private alertController: AlertController,
     private toastController: ToastController
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadUserInfo();
@@ -50,8 +51,16 @@ export class DashboardPage implements OnInit {
       totalUsers: 145,
       totalAccounts: 328,
       todayTransactions: 52,
-      pendingApprovals: 8
+      pendingApprovals: 8  // Esto ya existe
     };
+
+    // Agregar esta línea para obtener operaciones de alto valor pendientes
+    try {
+      const operations = await this.operationService.getPendingOperations().toPromise();
+      this.stats.pendingApprovals = operations?.length || 8;
+    } catch (error) {
+      console.error('Error loading operations:', error);
+    }
   }
 
   async loadPendingTransactions() {

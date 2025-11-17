@@ -1,6 +1,3 @@
-
-
-
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -29,6 +26,11 @@ const routes: Routes = [
     path: 'reports',
     loadComponent: () =>
       import('./reports/reports.page').then(m => m.ReportsPage)
+  },
+  {
+    path: 'operations', // ✅ NUEVA RUTA
+    loadComponent: () =>
+      import('./operations/operations.page').then(m => m.OperationsPage)
   }
 ];
 
