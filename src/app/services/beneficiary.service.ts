@@ -1,6 +1,3 @@
-
-
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -8,7 +5,8 @@ import { environment } from '../../environments/environment';
 import { 
   Beneficiary, 
   CreateBeneficiaryRequest, 
-  UpdateBeneficiaryRequest 
+  UpdateBeneficiaryRequest,
+  DeleteBeneficiaryResponse
 } from '../models/beneficiary.model';
 
 @Injectable({
@@ -43,11 +41,17 @@ export class BeneficiaryService {
     return this.http.put<Beneficiary>(`${this.apiUrl}/${id}`, data);
   }
 
-  deleteBeneficiary(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteBeneficiary(id: string): Observable<DeleteBeneficiaryResponse> {
+    return this.http.delete<DeleteBeneficiaryResponse>(`${this.apiUrl}/${id}`);
   }
 
   confirmBeneficiary(id: string): Observable<Beneficiary> {
     return this.http.put<Beneficiary>(`${this.apiUrl}/${id}/confirm`, {});
+  }
+
+  checkPendingOperations(id: string): Observable<{ hasPending: boolean; count: number }> {
+    return this.http.get<{ hasPending: boolean; count: number }>(
+      `${this.apiUrl}/${id}/pending-operations`
+    );
   }
 }

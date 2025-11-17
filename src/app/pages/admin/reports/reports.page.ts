@@ -1,10 +1,9 @@
-
-
-
+import { LoadingController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
+import { ReportService } from '../../../services/report.service';
 
 @Component({
   selector: 'app-reports',
@@ -26,7 +25,11 @@ export class ReportsPage implements OnInit {
 
   auditLogs: any[] = [];
 
-  constructor(private toastController: ToastController) {}
+  constructor(
+    private toastController: ToastController,
+    private reportService: ReportService,
+    private loadingController: LoadingController
+  ) {}
 
   ngOnInit() {
     this.loadReports();
@@ -136,20 +139,44 @@ export class ReportsPage implements OnInit {
   }
 
   async downloadPDF() {
-    await this.showToast('Generando reporte PDF...', 'primary');
-    // Implementar lógica de descarga PDF
-    setTimeout(async () => {
-      await this.showToast('Reporte PDF descargado', 'success');
-    }, 2000);
-  }
+    try {
+      const loading = await this.loadingController.create({
+        message: 'Generando PDF...'
+      });
+      await loading.present();
 
-  async downloadExcel() {
-    await this.showToast('Generando reporte Excel...', 'primary');
-    // Implementar lógica de descarga Excel
-    setTimeout(async () => {
-      await this.showToast('Reporte Excel descargado', 'success');
-    }, 2000);
-  }
+      const blob = this.reportService.generatePDFReport(this.reportData);
+      const filename = `reporte_operaciones_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      this.reportService.downloadFile(blob, filename);
+      
+      await loading.dismiss();
+      await this.showToast('Reporte PDF descargado exitosamente', 'success');
+    } catch (error) {
+      console.error('Error al descargar PDF:', error);
+      await this.showToast('Error al generar el PDF', 'danger');
+    }
+}
+
+async downloadExcel() {
+    try {
+      const loading = await this.loadingController.create({
+        message: 'Generando Excel...'
+      });
+      await loading.present();
+
+      const blob = this.reportService.generateExcelReport(this.reportData);
+      const filename = `reporte_operaciones_${new Date().toISOString().split('T')[0]}.csv`;
+      
+      this.reportService.downloadFile(blob, filename);
+      
+      await loading.dismiss();
+      await this.showToast('Reporte Excel descargado exitosamente', 'success');
+    } catch (error) {
+      console.error('Error al descargar Excel:', error);
+      await this.showToast('Error al generar el Excel', 'danger');
+    }
+}
 
   private async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastController.create({

