@@ -2,6 +2,10 @@
   padding: 1rem;
 }
 
+::ng-deep ion-item ion-label .op-tipo {
+  color: #fcb125 !important;
+}
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -30,7 +34,7 @@
 
     p {
       font-size: 0.75rem;
-      color: var(--ion-color-medium);
+      color: black;
       margin: 0.2rem 0 0 0;
     }
   }
@@ -41,7 +45,7 @@
 }
 
 .critical-card {
-  background: linear-gradient(135deg, #eb445a 0%, #c73c3c 100%);
+  background: linear-gradient(135deg, #e2243dee 0%, #c73c3c 100%);
   color: white;
   box-shadow: 0 4px 20px rgba(235, 68, 90, 0.3);
 

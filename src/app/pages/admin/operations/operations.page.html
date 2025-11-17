@@ -79,8 +79,8 @@
   <div class="critical-alerts" *ngIf="criticalOperations.length > 0">
     <ion-card class="critical-card">
       <ion-card-header>
-        <ion-icon name="alert-circle" color="danger"></ion-icon>
-        <ion-card-title color="danger">Operaciones Críticas</ion-card-title>
+        <ion-icon name="alert-circle" color="warning"></ion-icon>
+        <ion-card-title color="white">Operaciones Críticas</ion-card-title>
         <ion-card-subtitle>Requieren atención inmediata</ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
@@ -91,10 +91,10 @@
             (click)="openOperationDetail(op)">
             <ion-label>
               <h3>{{ op.clienteNombre }}</h3>
-              <p>{{ op.tipo }}</p>
+              <p class="op-tipo">{{ op.tipo }}</p>
               <p class="amount">{{ op.moneda }} {{ op.monto | number:'1.2-2' }}</p>
             </ion-label>
-            <ion-icon slot="end" name="chevron-forward" color="danger"></ion-icon>
+            <ion-icon slot="end" name="chevron-forward" color="white"></ion-icon>
           </ion-item>
         </ion-list>
       </ion-card-content>

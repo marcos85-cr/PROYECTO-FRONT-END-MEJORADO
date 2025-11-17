@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  
+
   <ion-card>
     <ion-card-header>
       <ion-card-title>
@@ -17,7 +17,8 @@
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p>Todas las páginas están disponibles sin necesidad de autenticación. Haz clic en cualquier enlace para explorar.</p>
+      <p>Todas las páginas están disponibles sin necesidad de autenticación. Haz clic en cualquier enlace para explorar.
+      </p>
     </ion-card-content>
   </ion-card>
 
@@ -60,7 +61,7 @@
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      
+
       <!-- Tabs principales -->
       <ion-item-group>
         <ion-item-divider>
@@ -222,6 +223,15 @@
           </ion-label>
           <ion-icon name="chevron-forward" slot="end"></ion-icon>
         </ion-item>
+
+        <ion-item button routerLink="/admin/operations">
+          <ion-icon name="alert-circle" slot="start" color="danger"></ion-icon>
+          <ion-label>
+            <h3>Operaciones de Alto Valor</h3>
+            <p>Gestionar operaciones de alto riesgo y sospechosas</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
       </ion-list>
     </ion-card-content>
   </ion-card>
@@ -234,12 +244,13 @@
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p>Para volver a habilitar la autenticación, descomenta los guards en el archivo <code>app-routing.module.ts</code></p>
+      <p>Para volver a habilitar la autenticación, descomenta los guards en el archivo
+        <code>app-routing.module.ts</code></p>
       <ion-button expand="block" fill="outline" (click)="showAuthInfo = !showAuthInfo">
         <ion-icon name="information-circle" slot="start"></ion-icon>
         Mostrar Información de Usuarios
       </ion-button>
-      
+
       <div *ngIf="showAuthInfo" class="auth-info">
         <h4>Usuarios Disponibles:</h4>
         <ul>
