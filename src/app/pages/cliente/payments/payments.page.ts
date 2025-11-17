@@ -47,7 +47,7 @@ export class PaymentsPage implements OnInit {
     this.loadMyAccounts();
     this.loadProviders();
   }
-
+  // Inicializar el formulario reactivo
   initForm() {
     this.paymentForm = this.fb.group({
       proveedorId: ['', Validators.required],
@@ -57,7 +57,7 @@ export class PaymentsPage implements OnInit {
       programado: [false],
       fechaProgramada: [null]
     });
-
+      // Validar campo fechaProgramada si programado es true
     this.paymentForm.get('programado')?.valueChanges.subscribe(value => {
       if (value) {
         this.paymentForm.get('fechaProgramada')?.setValidators(Validators.required);
@@ -67,7 +67,7 @@ export class PaymentsPage implements OnInit {
       this.paymentForm.get('fechaProgramada')?.updateValueAndValidity();
     });
   }
-
+  // Cargar las cuentas del usuario
   async loadMyAccounts() {
     try {
       // En producción usar: this.accountService.getMyAccounts().toPromise()
@@ -103,7 +103,7 @@ export class PaymentsPage implements OnInit {
       await this.showToast('Error al cargar cuentas', 'danger');
     }
   }
-
+    // Cargar proveedores de pago
   loadProviders() {
     this.providers = [
       {
@@ -144,18 +144,18 @@ export class PaymentsPage implements OnInit {
       }
     ];
   }
-
+  // Manejar cambio de proveedor
   onProviderChange() {
     const providerId = this.paymentForm.get('proveedorId')?.value;
     this.selectedProvider = this.providers.find(p => p.id === providerId) || null;
     this.paymentForm.patchValue({ numeroContrato: '' });
   }
-
+  // Validar número de contrato según el proveedor seleccionado
   validateContractNumber(contractNumber: string): boolean {
     if (!this.selectedProvider) return false;
     return this.selectedProvider.regex.test(contractNumber);
   }
-
+  // Realizar el pago
   async makePayment() {
     if (this.paymentForm.invalid) {
       await this.showToast('Complete todos los campos requeridos', 'warning');
@@ -187,7 +187,7 @@ export class PaymentsPage implements OnInit {
           : 'Pago realizado exitosamente',
         'success'
       );
-      
+        // Volver a la página anterior
       this.navCtrl.back();
     } catch (error: any) {
       console.error('Error making payment:', error);
@@ -196,7 +196,7 @@ export class PaymentsPage implements OnInit {
       this.isLoading = false;
     }
   }
-
+    // Mostrar toast
   private async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastController.create({
       message,

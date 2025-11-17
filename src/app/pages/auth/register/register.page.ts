@@ -48,7 +48,7 @@ export class RegisterPage implements OnInit {
       validators: this.passwordMatchValidator
     });
   }
-
+  // Validación personalizada para la contraseña
   passwordValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const value = control.value;
     if (!value) {
@@ -65,6 +65,7 @@ export class RegisterPage implements OnInit {
     return !valid ? { invalidPassword: true } : null;
   }
 
+  // Validador para confirmar que las contraseñas coinciden
   passwordMatchValidator(group: AbstractControl): { [key: string]: boolean } | null {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
@@ -78,7 +79,8 @@ export class RegisterPage implements OnInit {
   toggleConfirmPassword() {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
-
+  
+  // Maneja el envío del formulario de registro
   async onSubmit() {
     if (this.registerForm.valid) {
       this.isLoading = true;
@@ -96,7 +98,8 @@ export class RegisterPage implements OnInit {
       }
     }
   }
-
+  
+  // Muestra un toast con un mensaje y color específicos
   private async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastController.create({
       message,

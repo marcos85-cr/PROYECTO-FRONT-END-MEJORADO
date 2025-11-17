@@ -79,7 +79,7 @@ export class TransferPage implements OnInit {
       this.transferForm.get('fechaProgramada')?.updateValueAndValidity();
     });
   }
-
+  // Cargar cuentas del usuario
   async loadMyAccounts() {
     try {
       this.myAccounts =
@@ -89,7 +89,7 @@ export class TransferPage implements OnInit {
       await this.showToast('Error al cargar cuentas', 'danger');
     }
   }
-
+    // Cargar beneficiarios activos
   async loadBeneficiaries() {
     try {
       const allBeneficiaries =
@@ -171,7 +171,7 @@ export class TransferPage implements OnInit {
       this.isLoading = false;
     }
   }
-
+  // Ejecutar transferencia 
   async executeTransfer() {
     if (!this.preCheckResult || !this.preCheckResult.puedeEjecutar) {
       return;

@@ -191,7 +191,7 @@ export class ServicePaymentService {
   validateReference(proveedorId: string, numeroReferencia: string): Observable<{ valid: boolean; monto?: number; nombre?: string }> {
     // En producción, esto consultaría al backend que validaría con el proveedor real
     // return this.http.post<any>(`${this.apiUrl}/validate`, { proveedorId, numeroReferencia });
-    
+    // Simulación para desarrollo
     return new Observable(observer => {
       setTimeout(() => {
         // Simulación de validación

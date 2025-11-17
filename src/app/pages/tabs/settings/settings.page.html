@@ -44,6 +44,46 @@
 
 </ion-list>
 
+<!-- Información JWT (Debug) -->
+<ion-list>
+  <ion-list-header>
+    <ion-label color="medium">Información JWT (Debug)</ion-label>
+  </ion-list-header>
+
+  <ion-item lines="full" detail (click)="showTokenDetails = !showTokenDetails">
+    <ion-icon slot="start" name="key-outline"></ion-icon>
+    <ion-label>
+      Ver Token JWT
+    </ion-label>
+  </ion-item>
+
+  <ion-item lines="full" *ngIf="showTokenDetails">
+    <ion-label class="ion-text-wrap">
+      <h3>Estado del Token</h3>
+      <p><strong>Expira en:</strong> {{ getTimeToExpiration() }}</p>
+      <p><strong>Estado:</strong>
+        <ion-badge [color]="isTokenExpired() ? 'danger' : 'success'">
+          {{ isTokenExpired() ? 'Expirado' : 'Válido' }}
+        </ion-badge>
+      </p>
+    </ion-label>
+  </ion-item>
+
+  <ion-item lines="full" *ngIf="showTokenDetails">
+    <ion-label class="ion-text-wrap">
+      <pre
+        style="font-size: 10px; overflow-x: auto; background: #f5f5f5; padding: 10px; border-radius: 5px;">{{ getTokenInfo() }}</pre>
+    </ion-label>
+  </ion-item>
+
+  <ion-item lines="full" *ngIf="showTokenDetails" (click)="copyToken()">
+    <ion-icon slot="start" name="copy-outline"></ion-icon>
+    <ion-label>
+      Copiar Token
+    </ion-label>
+  </ion-item>
+</ion-list>
+
 <ion-button fill="clear" class="ion-margin" color="danger">
   <ion-icon name="log-out" slot="start"></ion-icon> Logout
 </ion-button>

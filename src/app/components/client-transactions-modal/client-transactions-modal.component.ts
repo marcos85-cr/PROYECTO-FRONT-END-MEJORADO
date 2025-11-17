@@ -123,7 +123,7 @@ export class ClientTransactionsModalComponent {
     if (tipo.includes('Pago')) return 'receipt';
     return 'swap-horizontal';
   }
-
+  // Obtener color según monto
   getTransactionColor(monto: number): string {
     return monto >= 0 ? 'success' : 'danger';
   }
