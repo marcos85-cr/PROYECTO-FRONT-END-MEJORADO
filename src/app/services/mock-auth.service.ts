@@ -1,3 +1,4 @@
+// src/app/services/mock-auth.service.ts
 
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
@@ -74,8 +75,11 @@ export class MockAuthService {
   // Secret key para generar JWT (en producción esto estaría en el backend)
   private readonly JWT_SECRET = 'mock-jwt-secret-key-2025';
 
+  // ⏰ CONFIGURACIÓN DE EXPIRACIÓN: 20 MINUTOS
+  private readonly TOKEN_EXPIRATION_SECONDS = 20 * 60; // 20 minutos en segundos
+
   /**
-   * Genera un JWT token mock
+   * Genera un JWT token mock con expiración de 20 minutos
    */
   private generateJWT(user: User): string {
     const header = {
@@ -83,13 +87,15 @@ export class MockAuthService {
       typ: 'JWT',
     };
 
+    const now = Math.floor(Date.now() / 1000);
+
     const payload = {
       sub: user.id,
       email: user.email,
       role: user.role,
       nombre: user.nombre,
-      iat: Math.floor(Date.now() / 1000), // Issued at
-      exp: Math.floor(Date.now() / 1000) + 3600 * 24, // Expira en 24 horas
+      iat: now, // Issued at (tiempo actual)
+      exp: now + this.TOKEN_EXPIRATION_SECONDS, // Expira en 20 minutos
     };
 
     // Simulación de JWT (no es un JWT real, solo para desarrollo)
@@ -99,7 +105,18 @@ export class MockAuthService {
       `${base64Header}.${base64Payload}.${this.JWT_SECRET}`
     );
 
-    return `${base64Header}.${base64Payload}.${signature}`;
+    const token = `${base64Header}.${base64Payload}.${signature}`;
+
+    // Log para debug
+    console.log('🔑 Token generado:');
+    console.log('  - Emitido en:', new Date(now * 1000).toLocaleTimeString());
+    console.log(
+      '  - Expira en:',
+      new Date(payload.exp * 1000).toLocaleTimeString()
+    );
+    console.log('  - Duración: 20 minutos');
+
+    return token;
   }
 
   /**
@@ -117,17 +134,22 @@ export class MockAuthService {
       // Verificar expiración
       const currentTime = Math.floor(Date.now() / 1000);
       if (payload.exp && payload.exp < currentTime) {
+        console.warn('⚠️ Token expirado:', {
+          expiredAt: new Date(payload.exp * 1000).toLocaleString(),
+          now: new Date(currentTime * 1000).toLocaleString(),
+        });
         return { valid: false };
       }
 
       return { valid: true, payload };
     } catch (error) {
+      console.error('❌ Error validando token:', error);
       return { valid: false };
     }
   }
 
   /**
-   * Login con generación de JWT
+   * Login con generación de JWT (20 minutos de expiración)
    */
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return of(credentials).pipe(
@@ -147,16 +169,17 @@ export class MockAuthService {
           throw new Error('Usuario bloqueado. Contacte al administrador.');
         }
 
-        // Generar JWT token
+        // Generar JWT token con 20 minutos de expiración
         const token = this.generateJWT(user);
 
-        console.log('🔐 JWT Token generado:', token);
-        console.log('👤 Usuario autenticado:', user.nombre, `(${user.role})`);
+        console.log('✅ Login exitoso');
+        console.log('👤 Usuario:', user.nombre, `(${user.role})`);
+        console.log('⏰ Token válido por: 20 minutos');
 
         return {
           token,
           user,
-          expiresIn: 3600 * 24, // 24 horas en segundos
+          expiresIn: this.TOKEN_EXPIRATION_SECONDS, // 20 minutos en segundos
         };
       })
     );
@@ -272,5 +295,12 @@ export class MockAuthService {
       user.intentosFallidos = 0;
       user.fechaBloqueo = undefined;
     }
+  }
+
+  /**
+   * Obtiene el tiempo de expiración configurado
+   */
+  getTokenExpirationTime(): number {
+    return this.TOKEN_EXPIRATION_SECONDS;
   }
 }

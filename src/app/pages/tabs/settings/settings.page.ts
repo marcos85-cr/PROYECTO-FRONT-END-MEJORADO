@@ -53,7 +53,7 @@ export class SettingsPage implements OnInit {
 
     const timeLeft = parseInt(expiration) - Date.now();
     if (timeLeft <= 0) return 'Expirado';
-
+      // Convertir el tiempo restante a horas y minutos
     const hours = Math.floor(timeLeft / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
 

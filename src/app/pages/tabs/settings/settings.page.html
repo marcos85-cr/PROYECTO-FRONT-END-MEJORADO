@@ -2,7 +2,9 @@
   <ion-toolbar color="primary">
     <ion-title color="secondary">Configuración</ion-title>
   </ion-toolbar>
+</ion-header>
 
+<ion-content>
 <ion-row class="ion-justify-content-center ion-align-items-center">
   <ion-col size="auto">
     <ion-avatar>
@@ -47,7 +49,7 @@
 <!-- Información JWT (Debug) -->
 <ion-list>
   <ion-list-header>
-    <ion-label color="medium">Información JWT (Debug)</ion-label>
+    <ion-label color="mediu">Información JWT (Debug)</ion-label>
   </ion-list-header>
 
   <ion-item lines="full" detail (click)="showTokenDetails = !showTokenDetails">
@@ -87,3 +89,4 @@
 <ion-button fill="clear" class="ion-margin" color="danger">
   <ion-icon name="log-out" slot="start"></ion-icon> Logout
 </ion-button>
+</ion-content>
