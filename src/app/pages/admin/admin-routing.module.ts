@@ -28,9 +28,14 @@ const routes: Routes = [
       import('./reports/reports.page').then(m => m.ReportsPage)
   },
   {
-    path: 'operations', // ✅ NUEVA RUTA
+    path: 'operations',
     loadComponent: () =>
       import('./operations/operations.page').then(m => m.OperationsPage)
+  },
+  {
+    path: 'clients', // ✅ NUEVA RUTA
+    loadComponent: () =>
+      import('./clients/clients.page').then(m => m.ClientsPage)
   }
 ];
 
