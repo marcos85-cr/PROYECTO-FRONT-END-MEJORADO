@@ -23,16 +23,33 @@
     }
 }
 
-:root {
-    --ion-color-primary: #1e3a8a;
-    --ion-color-primary-rgb: 30, 58, 138;
-    --ion-color-primary-contrast: #ffffff;
-}
 :host {
     ion-content {
-        --background: #dbe5dc; // Cambia este color al que prefieras
+        --background: var(--ion-color-background);
+    }
+
+    ion-toolbar {
+        --background: var(--ion-color-primary);
+        --color: var(--ion-color-primary-contrast);
+    }
+
+    ion-label {
+        color: var(--ion-text-color);
+    }
+
+    ion-list {
+        background: var(--ion-color-light);
+    }
+
+    ion-icon {
+        color: var(--ion-color-warning);
+    }
+
+    ion-item:hover {
+        background: #e6e9ed;
     }
 }
+
 
  ion-list {
      background: transparent;
