@@ -1,5 +1,3 @@
-// src/app/app-routing.module.ts
-
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
@@ -28,8 +26,6 @@ const routes: Routes = [
     path: 'tabs',
     loadChildren: () =>
       import('./pages/tabs/tabs.module').then((m) => m.TabsPageModule),
-    // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
-    // data: { roles: ['Cliente'] },
   },
 
   // 🔓 ACCESO LIBRE - Rutas de Administrador
@@ -37,8 +33,6 @@ const routes: Routes = [
     path: 'admin',
     loadChildren: () =>
       import('./pages/admin/admin.module').then((m) => m.AdminModule),
-    // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
-    // data: { roles: ['Administrador'] },
   },
 
   // 🔓 ACCESO LIBRE - Rutas de Gestor
@@ -46,8 +40,6 @@ const routes: Routes = [
     path: 'gestor',
     loadChildren: () =>
       import('./pages/gestor/gestor.module').then((m) => m.GestorModule),
-    // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
-    // data: { roles: ['Gestor'] },
   },
 
   // 🔓 ACCESO LIBRE - Páginas adicionales de Cliente
@@ -58,8 +50,6 @@ const routes: Routes = [
         path: 'transfer',
         loadComponent: () =>
           import('./pages/cliente/transfer.page').then((m) => m.TransferPage),
-        // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
-        // data: { roles: ['Cliente'] },
       },
       {
         path: 'beneficiaries',
@@ -67,8 +57,6 @@ const routes: Routes = [
           import('./pages/cliente/beneficiaries/beneficiaries.page').then(
             (m) => m.BeneficiariesPage
           ),
-        // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
-        // data: { roles: ['Cliente'] },
       },
       {
         path: 'payments',
@@ -76,8 +64,6 @@ const routes: Routes = [
           import('./pages/cliente/payments/payments.page').then(
             (m) => m.PaymentsPage
           ),
-        // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
-        // data: { roles: ['Cliente'] },
       },
       {
         path: 'history',
@@ -85,10 +71,24 @@ const routes: Routes = [
           import('./pages/cliente/history/history.page').then(
             (m) => m.HistoryPage
           ),
-        // canActivate: [AuthGuard, RoleGuard], // Deshabilitado para acceso libre
-        // data: { roles: ['Cliente'] },
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./pages/cliente/profile/profile.page').then(
+            (m) => m.ProfilePage
+          ),
       },
     ],
+  },
+
+  // ✅ RUTA DIRECTA AL PERFIL (también funciona con /profile)
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./pages/cliente/profile/profile.page').then(
+        (m) => m.ProfilePage
+      ),
   },
 
   // 🏠 PÁGINAS DE NAVEGACIÓN Y AYUDA
@@ -103,8 +103,6 @@ const routes: Routes = [
       import('./pages/test-users.page').then((m) => m.TestUsersPage),
   },
 ];
-
-
 
 @NgModule({
   imports: [

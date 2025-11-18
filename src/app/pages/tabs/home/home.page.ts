@@ -2,9 +2,6 @@ import {
   Component,
   OnInit,
   CUSTOM_ELEMENTS_SCHEMA,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
   AfterContentChecked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -13,7 +10,6 @@ import { IonicModule } from '@ionic/angular';
 import { register } from 'swiper/element/bundle';
 import { SwiperOptions } from 'swiper/types';
 import { RouterModule } from '@angular/router';
-
 
 register();
 
@@ -26,7 +22,7 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomePage implements OnInit, AfterContentChecked {
-  account: any[] = []; /* Arreglo para almacenar los datos de la cuenta */
+  account: any[] = [];
   bannerConfig: SwiperOptions = {};
   featureConfig: SwiperOptions = {};
   features: any[] = [];
@@ -34,7 +30,6 @@ export class HomePage implements OnInit, AfterContentChecked {
 
   constructor() {}
 
-  /* Inicialización de datos al cargar el componente */
   ngOnInit() {
     this.account = [
       { id: 1, acc_no: '1234567890', acc_type: 'Checking', balance: '2500.75' },
@@ -43,12 +38,9 @@ export class HomePage implements OnInit, AfterContentChecked {
     ];
 
     this.features = [
-      {
-        id: 1,
-        color: 'secondary', icon: 'swap-vertical-outline', name: 'Enviar',},
+      { id: 1, color: 'secondary', icon: 'swap-vertical-outline', name: 'Enviar' },
       { id: 2, color: 'primary', icon: 'download-outline', name: 'Traer' },
       { id: 3, color: 'success', icon: 'arrow-redo-outline', name: 'Sinpe' },
-      
     ];
 
     this.transactions = [

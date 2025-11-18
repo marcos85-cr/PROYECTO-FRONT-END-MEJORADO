@@ -1,17 +1,17 @@
-<ion-header class="ion-no-border"> <!-- Quitar la línea inferior del encabezado -->
-  <ion-toolbar color="primary"> <!-- Cambiar el color de fondo del encabezado a primario -->
-    <ion-title mode="md" class="ion-no-padding"> <!-- Quitar el padding del título -->
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title mode="md" class="ion-no-padding">
       <ion-label>
         <ion-text color="tertiary">Bienvenido</ion-text>
         <p><ion-text color="white"><strong>Marcos Vargas</strong></ion-text></p>
       </ion-label>
     </ion-title>
-    <ion-avatar slot="end">
+    <!-- AVATAR CLICKEABLE AL PERFIL -->
+    <ion-avatar slot="end" routerLink="/profile" class="avatar-clickeable">
       <img src="assets/icon/BANK.jpg" />
     </ion-avatar>
   </ion-toolbar>
 </ion-header>
-
 
 <ion-content color="primary">
 
@@ -41,7 +41,7 @@
     </ion-col>
   </ion-row>
 
-  <!-- Botones de acción --><!-- Nueva Transferencia, Beneficiarios, Pagar Servicios, Historial -->
+  <!-- Botones de acción -->
   <div class="action-buttons">
     <ion-button expand="block" routerLink="/cliente/transfer" color="primary">
       <ion-icon slot="start" name="swap-horizontal"></ion-icon>
@@ -52,15 +52,16 @@
       <ion-icon slot="start" name="people"></ion-icon>
       Beneficiarios
     </ion-button>
-    <!--
-    <ion-button expand="block" routerLink="/cliente/payments" color="primary">
-      <ion-icon slot="start" name="card"></ion-icon>
-      Pagar Servicios
-    </ion-button> -->
     
-    <ion-button expand="block" routerLink="/cliente/history" color="primary" >
+    <ion-button expand="block" routerLink="/cliente/history" color="primary">
       <ion-icon slot="start" name="time"></ion-icon>
       Historial
+    </ion-button>
+
+    <!-- BOTÓN DEL PERFIL -->
+    <ion-button expand="block" color="secondary" routerLink="/profile" color="primary">
+      <ion-icon slot="start" name="person-circle"></ion-icon>
+      Mi Perfil
     </ion-button>
   </div>
 
@@ -91,9 +92,6 @@
         </ion-text>
       </ion-item>
     </ion-item-group>
-
-
-
   </ion-list>
 
 </ion-content>

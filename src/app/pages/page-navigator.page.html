@@ -52,96 +52,105 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Páginas del Cliente -->
-  <ion-card>
-    <ion-card-header color="success">
-      <ion-card-title>
-        <ion-icon name="person" slot="start"></ion-icon>
-        👤 Área del Cliente
-      </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
+<!-- Páginas del Cliente -->
+<ion-card>
+  <ion-card-header color="success">
+    <ion-card-title>
+      <ion-icon name="person" slot="start"></ion-icon>
+      👤 Área del Cliente
+    </ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
 
-      <!-- Tabs principales -->
-      <ion-item-group>
-        <ion-item-divider>
-          <ion-label>Dashboard Principal</ion-label>
-        </ion-item-divider>
-        <ion-item button routerLink="/tabs/home">
-          <ion-icon name="home" slot="start" color="success"></ion-icon>
-          <ion-label>
-            <h3>Home</h3>
-            <p>Dashboard principal del cliente</p>
-          </ion-label>
-          <ion-icon name="chevron-forward" slot="end"></ion-icon>
-        </ion-item>
-        <ion-item button routerLink="/tabs/card">
-          <ion-icon name="card" slot="start" color="success"></ion-icon>
-          <ion-label>
-            <h3>Tarjetas</h3>
-            <p>Información de tarjetas bancarias</p>
-          </ion-label>
-          <ion-icon name="chevron-forward" slot="end"></ion-icon>
-        </ion-item>
-        <ion-item button routerLink="/tabs/transactions">
-          <ion-icon name="swap-horizontal" slot="start" color="success"></ion-icon>
-          <ion-label>
-            <h3>Transacciones</h3>
-            <p>Historial de movimientos</p>
-          </ion-label>
-          <ion-icon name="chevron-forward" slot="end"></ion-icon>
-        </ion-item>
-        <ion-item button routerLink="/tabs/settings">
-          <ion-icon name="settings" slot="start" color="success"></ion-icon>
-          <ion-label>
-            <h3>Configuración</h3>
-            <p>Ajustes de la cuenta</p>
-          </ion-label>
-          <ion-icon name="chevron-forward" slot="end"></ion-icon>
-        </ion-item>
-      </ion-item-group>
+    <!-- Tabs principales -->
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>Dashboard Principal</ion-label>
+      </ion-item-divider>
+      <ion-item button routerLink="/tabs/home">
+        <ion-icon name="home" slot="start" color="success"></ion-icon>
+        <ion-label>
+          <h3>Home</h3>
+          <p>Dashboard principal del cliente</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+      <ion-item button routerLink="/tabs/card">
+        <ion-icon name="card" slot="start" color="success"></ion-icon>
+        <ion-label>
+          <h3>Tarjetas</h3>
+          <p>Información de tarjetas bancarias</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+      <ion-item button routerLink="/tabs/transactions">
+        <ion-icon name="swap-horizontal" slot="start" color="success"></ion-icon>
+        <ion-label>
+          <h3>Transacciones</h3>
+          <p>Historial de movimientos</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+      <ion-item button routerLink="/tabs/settings">
+        <ion-icon name="settings" slot="start" color="success"></ion-icon>
+        <ion-label>
+          <h3>Configuración</h3>
+          <p>Ajustes de la cuenta</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+    </ion-item-group>
 
-      <!-- Funcionalidades adicionales -->
-      <ion-item-group>
-        <ion-item-divider>
-          <ion-label>Operaciones Bancarias</ion-label>
-        </ion-item-divider>
-        <ion-item button routerLink="/cliente/transfer">
-          <ion-icon name="paper-plane" slot="start" color="success"></ion-icon>
-          <ion-label>
-            <h3>Transferencias</h3>
-            <p>Enviar dinero a otros usuarios</p>
-          </ion-label>
-          <ion-icon name="chevron-forward" slot="end"></ion-icon>
-        </ion-item>
-        <ion-item button routerLink="/cliente/beneficiaries">
-          <ion-icon name="people" slot="start" color="success"></ion-icon>
-          <ion-label>
-            <h3>Beneficiarios</h3>
-            <p>Gestionar contactos frecuentes</p>
-          </ion-label>
-          <ion-icon name="chevron-forward" slot="end"></ion-icon>
-        </ion-item>
-        <ion-item button routerLink="/cliente/payments">
-          <ion-icon name="cash" slot="start" color="success"></ion-icon>
-          <ion-label>
-            <h3>Pagos</h3>
-            <p>Realizar pagos de servicios</p>
-          </ion-label>
-          <ion-icon name="chevron-forward" slot="end"></ion-icon>
-        </ion-item>
-        <ion-item button routerLink="/cliente/history">
-          <ion-icon name="time" slot="start" color="success"></ion-icon>
-          <ion-label>
-            <h3>Historial</h3>
-            <p>Historial detallado de operaciones</p>
-          </ion-label>
-          <ion-icon name="chevron-forward" slot="end"></ion-icon>
-        </ion-item>
-      </ion-item-group>
+    <!-- Funcionalidades adicionales -->
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>Operaciones Bancarias</ion-label>
+      </ion-item-divider>
+      <ion-item button routerLink="/cliente/transfer">
+        <ion-icon name="paper-plane" slot="start" color="success"></ion-icon>
+        <ion-label>
+          <h3>Transferencias</h3>
+          <p>Enviar dinero a otros usuarios</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+      <ion-item button routerLink="/cliente/beneficiaries">
+        <ion-icon name="people" slot="start" color="success"></ion-icon>
+        <ion-label>
+          <h3>Beneficiarios</h3>
+          <p>Gestionar contactos frecuentes</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+      <ion-item button routerLink="/cliente/payments">
+        <ion-icon name="cash" slot="start" color="success"></ion-icon>
+        <ion-label>
+          <h3>Pagos</h3>
+          <p>Realizar pagos de servicios</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+      <ion-item button routerLink="/cliente/history">
+        <ion-icon name="time" slot="start" color="success"></ion-icon>
+        <ion-label>
+          <h3>Historial</h3>
+          <p>Historial detallado de operaciones</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+      <!-- ✅ AGREGAR ESTE NUEVO ITEM DEL PERFIL -->
+      <ion-item button routerLink="/profile">
+        <ion-icon name="person-circle" slot="start" color="success"></ion-icon>
+        <ion-label>
+          <h3>Mi Perfil</h3>
+          <p>Ver y editar información personal</p>
+        </ion-label>
+        <ion-icon name="chevron-forward" slot="end"></ion-icon>
+      </ion-item>
+    </ion-item-group>
 
-    </ion-card-content>
-  </ion-card>
+  </ion-card-content>
+</ion-card>
 
   <!-- Páginas del Gestor -->
   <ion-card>

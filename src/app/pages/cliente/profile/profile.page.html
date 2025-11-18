@@ -1,0 +1,138 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+  <div class="profile-container" *ngIf="client">
+    
+    <!-- Avatar y nombre -->
+    <div class="profile-header">
+      <ion-avatar class="profile-avatar">
+        <img [src]="'https://ui-avatars.com/api/?name=' + client.nombre + '&background=random'" />
+      </ion-avatar>
+      <h2>{{ client.nombre }}</h2>
+      <ion-badge [color]="client.estado === 'Activo' ? 'success' : 'warning'">
+        {{ client.estado }}
+      </ion-badge>
+    </div>
+
+    <!-- Card de Información -->
+    <ion-card class="profile-card">
+      <ion-card-header>
+        <ion-card-title>Información Personal</ion-card-title>
+        <ion-button 
+          fill="clear" 
+          color="primary" 
+          slot="end"
+          (click)="toggleEdit()"
+          class="edit-button">
+          <ion-icon slot="icon-only" [name]="isEditing ? 'close' : 'create'"></ion-icon>
+        </ion-button>
+      </ion-card-header>
+      <ion-card-content>
+        
+        <!-- Vista: No Editando -->
+        <div *ngIf="!isEditing" class="view-mode">
+          <div class="info-row">
+            <span class="label">Identificación:</span>
+            <span class="value">{{ client.identificacion }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Nombre:</span>
+            <span class="value">{{ client.nombre }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Teléfono:</span>
+            <span class="value">{{ client.telefono }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Correo:</span>
+            <span class="value">{{ client.correo }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Estado:</span>
+            <ion-badge [color]="client.estado === 'Activo' ? 'success' : 'warning'">
+              {{ client.estado }}
+            </ion-badge>
+          </div>
+          <div class="info-row">
+            <span class="label">Cuentas Activas:</span>
+            <span class="value">{{ client.cuentasActivas }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Saldo Total:</span>
+            <span class="value">₡{{ client.saldoTotal | number:'1.2-2' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Última Operación:</span>
+            <span class="value">{{ client.ultimaOperacion | date:'short' }}</span>
+          </div>
+        </div>
+
+        <!-- Modo Edición -->
+        <form [formGroup]="profileForm" *ngIf="isEditing" class="edit-mode">
+          <ion-item>
+            <ion-label position="stacked">Nombre Completo</ion-label>
+            <ion-input 
+              formControlName="nombre" 
+              placeholder="Ingrese su nombre">
+            </ion-input>
+          </ion-item>
+          <div class="error-text" *ngIf="profileForm.get('nombre')?.invalid && profileForm.get('nombre')?.touched">
+            <small>El nombre debe tener al menos 3 caracteres</small>
+          </div>
+
+          <ion-item>
+            <ion-label position="stacked">Teléfono</ion-label>
+            <ion-input 
+              formControlName="telefono" 
+              type="tel"
+              placeholder="Formato: 8888-9999">
+            </ion-input>
+          </ion-item>
+          <div class="error-text" *ngIf="profileForm.get('telefono')?.invalid && profileForm.get('telefono')?.touched">
+            <small>Formato: 8888-9999</small>
+          </div>
+
+          <ion-item>
+            <ion-label position="stacked">Correo</ion-label>
+            <ion-input 
+              formControlName="correo" 
+              type="email"
+              placeholder="Ingrese su correo">
+            </ion-input>
+          </ion-item>
+          <div class="error-text" *ngIf="profileForm.get('correo')?.invalid && profileForm.get('correo')?.touched">
+            <small>Ingrese un correo válido</small>
+          </div>
+
+          <div class="button-group">
+            <ion-button 
+              expand="block" 
+              color="success"
+              (click)="saveProfile()"
+              [disabled]="profileForm.invalid || isLoading">
+              <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+              <span *ngIf="!isLoading">Guardar Cambios</span>
+            </ion-button>
+            <ion-button 
+              expand="block" 
+              fill="outline"
+              (click)="toggleEdit()">
+              Cancelar
+            </ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+  <!-- Loading -->
+  <ion-spinner *ngIf="isLoading && !client" name="crescent" color="primary" class="loading-spinner"></ion-spinner>
+</ion-content>
