@@ -47,7 +47,7 @@ export class ReportService {
    * Genera y descarga reporte en Excel (CSV)
    */
   generateExcelReport(reportData: any): Blob {
-    const csvContent = this.generateCSVContent(reportData);
+    const csvContent = '\uFEFF' +this.generateCSVContent(reportData);
     return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   }
 
@@ -151,20 +151,21 @@ export class ReportService {
   private convertTextToPDF(text: string): string {
     // Crear un PDF básico con el texto
     const lines = text.split('\n');
-    let yPosition = 750;
+    const startY = 750; // posición inicial fija
+    let yPosition = startY;
     let pdfContent = '';
 
     lines.forEach((line: string) => {
       if (yPosition < 50) {
         // Nueva página
         pdfContent += 'ET\nendstream\nendobj\n';
-        yPosition = 750;
+        yPosition = startY;
       }
       pdfContent += `(${this.escapePDFText(line)}) Tj\n0 -15 Td\n`;
       yPosition -= 15;
     });
 
-    const stream = `BT\n/F1 10 Tf\n50 ${yPosition + 15} Td\n${pdfContent}ET\n`;
+    const stream = `BT\n/F1 10 Tf\n50 ${startY} Td\n${pdfContent}ET\n`;
 
     let pdf = '%PDF-1.4\n';
     pdf += '1 0 obj\n<</Type/Catalog/Pages 2 0 R>>\nendobj\n';
