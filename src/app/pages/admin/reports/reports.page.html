@@ -10,88 +10,85 @@
 <ion-content color="secondary">
     <div class="reports-container">
 
-        <!-- Selector de Rango de Fechas -->
         <ion-card>
             <ion-card-header>
                 <ion-card-title>Período de Reporte</ion-card-title>
+                <ion-card-subtitle>
+                    Reportes desde: <strong>{{ reportData.periodoInicio }}</strong>
+                    hasta: <strong>{{ reportData.periodoFin }}</strong>
+                </ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
                 <ion-item lines="none">
                     <ion-label position="stacked">Fecha Inicio</ion-label>
-                    <ion-datetime [(ngModel)]="startDate" presentation="date"
+                    <ion-datetime [(ngModel)]="startDate" displayFormat="YYYY-MM-DD"
                         (ionChange)="loadReports()"></ion-datetime>
                 </ion-item>
                 <ion-item lines="none">
                     <ion-label position="stacked">Fecha Fin</ion-label>
-                    <ion-datetime [(ngModel)]="endDate" presentation="date" (ionChange)="loadReports()"></ion-datetime>
+                    <ion-datetime [(ngModel)]="endDate" displayFormat="YYYY-MM-DD" (ionChange)="loadReports()"></ion-datetime>
                 </ion-item>
             </ion-card-content>
         </ion-card>
 
-        <!-- Resumen de Operaciones -->
         <ion-card>
             <ion-card-header>
                 <ion-card-title>Resumen de Operaciones</ion-card-title>
+                <ion-card-subtitle>Datos del período {{ reportData.periodoInicio }} - {{ reportData.periodoFin }}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <ion-icon name="swap-horizontal" color="primary"></ion-icon>
-                        <h3>{{ reportData.totalTransactions }}</h3>
-                        <p>Transacciones</p>
-                    </div>
-                    <div class="stat-item">
-                        <ion-icon name="cash" color="success"></ion-icon>
-                        <h3>₡{{ reportData.totalVolume | number:'1.2-2' }}</h3>
-                        <p>Volumen Total</p>
-                    </div>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="6">
+                            <div class="summary-box">
+                                <ion-icon name="swap-horizontal" color="primary"></ion-icon>
+                                <h3>{{ reportData.totalTransactions | number }}</h3>
+                                <p>Transacciones</p>
+                            </div>
+                        </ion-col>
+                        <ion-col size="6">
+                            <div class="summary-box">
+                                <ion-icon name="cash" color="success"></ion-icon>
+                                <h3>{{ reportData.totalVolume | currency:'USD':'symbol':'1.0-0' }}</h3>
+                                <p>Volumen Total</p>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Top Clientes</ion-card-title>
+                <ion-card-subtitle>Clientes por volumen de operación</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item *ngFor="let client of reportData.topClients" lines="full">
+                        <ion-label>
+                            <h3>{{ client.nombre }}</h3>
+                            <p>Volumen: {{ client.volumen | currency:'USD':'symbol':'1.0-0' }}</p>
+                            <p>Transacciones: {{ client.transacciones }}</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Volumen Diario</ion-card-title>
+                <ion-card-subtitle>Distribución en el período</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <div class="chart-placeholder">
+                    [GRÁFICO DE VOLUMEN AQUÍ]
+                    <p class="placeholder-text">Datos: {{ reportData.dailyVolume.length }} días de registro.</p>
                 </div>
             </ion-card-content>
         </ion-card>
 
-        <!-- Top 10 Clientes -->
-        <ion-card>
-            <ion-card-header>
-                <ion-card-title>Top 10 Clientes por Volumen</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-                <ion-list>
-                    <ion-item *ngFor="let client of reportData.topClients; let i = index" lines="full">
-                        <ion-label slot="start">
-                            <ion-badge color="primary">{{ i + 1 }}</ion-badge>
-                        </ion-label>
-                        <ion-label>
-                            <h3>{{ client.nombre }}</h3>
-                            <p>{{ client.transacciones }} transacciones</p>
-                        </ion-label>
-                        <ion-text slot="end" color="success">
-                            <strong>₡{{ client.volumen | number:'1.2-2' }}</strong>
-                        </ion-text>
-                    </ion-item>
-                </ion-list>
-            </ion-card-content>
-        </ion-card>
-
-        <!-- Volumen Diario -->
-        <ion-card>
-            <ion-card-header>
-                <ion-card-title>Volumen por Día</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-                <ion-list>
-                    <ion-item *ngFor="let day of reportData.dailyVolume" lines="full">
-                        <ion-label>
-                            <h3>{{ day.fecha | date:'mediumDate' }}</h3>
-                        </ion-label>
-                        <ion-text slot="end">
-                            <strong>₡{{ day.monto | number:'1.2-2' }}</strong>
-                        </ion-text>
-                    </ion-item>
-                </ion-list>
-            </ion-card-content>
-        </ion-card>
-
-        <!-- Registro de Auditoría -->
         <ion-card>
             <ion-card-header>
                 <ion-card-title>Registro de Auditoría</ion-card-title>
@@ -112,7 +109,6 @@
             </ion-card-content>
         </ion-card>
 
-        <!-- Botones de Descarga -->
         <div class="download-buttons">
             <ion-button expand="block" color="danger" (click)="downloadPDF()">
                 <ion-icon slot="start" name="document-text"></ion-icon>

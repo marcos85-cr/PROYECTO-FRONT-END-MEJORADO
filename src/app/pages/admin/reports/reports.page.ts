@@ -13,14 +13,19 @@ import { ReportService } from '../../../services/report.service';
   imports: [CommonModule, FormsModule, IonicModule]
 })
 export class ReportsPage implements OnInit {
-  startDate: string = new Date().toISOString();
-  endDate: string = new Date().toISOString();
+  // CORRECCIÓN 1: Inicializamos las fechas para solo incluir el formato 'YYYY-MM-DD'
+  // Esto previene conflictos con el componente ion-datetime.
+  startDate: string = new Date().toISOString().split('T')[0];
+  endDate: string = new Date().toISOString().split('T')[0];
   
   reportData = {
     totalTransactions: 0,
     totalVolume: 0,
     topClients: [] as any[],
-    dailyVolume: [] as any[]
+    dailyVolume: [] as any[],
+    // AÑADIDO: Guardar las fechas de forma legible para el PDF
+    periodoInicio: '',
+    periodoFin: ''
   };
 
   auditLogs: any[] = [];
@@ -42,100 +47,41 @@ export class ReportsPage implements OnInit {
       totalTransactions: 1250,
       totalVolume: 45780000,
       topClients: [
-        { nombre: 'Juan Pérez', transacciones: 45, volumen: 5600000 },
-        { nombre: 'María López', transacciones: 38, volumen: 4800000 },
-        { nombre: 'Carlos Sánchez', transacciones: 32, volumen: 3900000 },
-        { nombre: 'Ana Rodríguez', transacciones: 28, volumen: 3200000 },
-        { nombre: 'Pedro Martínez', transacciones: 25, volumen: 2800000 },
-        { nombre: 'Laura García', transacciones: 22, volumen: 2500000 },
-        { nombre: 'José Hernández', transacciones: 20, volumen: 2200000 },
-        { nombre: 'Sofia Ramírez', transacciones: 18, volumen: 1900000 },
-        { nombre: 'Diego Torres', transacciones: 15, volumen: 1600000 },
-        { nombre: 'Lucía Flores', transacciones: 12, volumen: 1400000 }
+        { nombre: 'Cliente A', volumen: 25000000, transacciones: 500 },
+        { nombre: 'Cliente B', volumen: 12000000, transacciones: 300 },
+        { nombre: 'Cliente C', volumen: 8780000, transacciones: 450 },
       ],
       dailyVolume: [
-        { fecha: new Date('2025-11-01'), monto: 1500000 },
-        { fecha: new Date('2025-11-02'), monto: 1800000 },
-        { fecha: new Date('2025-11-03'), monto: 1200000 },
-        { fecha: new Date('2025-11-04'), monto: 2100000 },
-        { fecha: new Date('2025-11-05'), monto: 1900000 }
-      ]
+        { fecha: '2025-11-15', volumen: 15000000 },
+        { fecha: '2025-11-16', volumen: 12000000 },
+        { fecha: '2025-11-17', volumen: 18780000 },
+      ],
+      // ACTUALIZACIÓN DE FECHAS: Convertir las fechas ISO a un formato más legible
+      // para que el PDF y la interfaz puedan leerlas.
+      periodoInicio: new Date(this.startDate).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+      periodoFin: new Date(this.endDate).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' })
     };
   }
 
   loadAuditLogs() {
-    // Simulación de logs de auditoría
+    // Simulación de registros de auditoría
     this.auditLogs = [
-      {
-        id: '1',
-        accion: 'CREAR_USUARIO',
-        usuario: 'admin@banco.com',
-        descripcion: 'Creó usuario gestor@banco.com',
-        fecha: new Date('2025-11-08T10:30:00')
-      },
-      {
-        id: '2',
-        accion: 'APERTURA_CUENTA',
-        usuario: 'gestor@banco.com',
-        descripcion: 'Abrió cuenta 100000000001 para cliente Carlos Sánchez',
-        fecha: new Date('2025-11-08T09:15:00')
-      },
-      {
-        id: '3',
-        accion: 'TRANSFERENCIA',
-        usuario: 'cliente@banco.com',
-        descripcion: 'Realizó transferencia de ₡50,000',
-        fecha: new Date('2025-11-08T08:45:00')
-      },
-      {
-        id: '4',
-        accion: 'PAGO_SERVICIO',
-        usuario: 'cliente@banco.com',
-        descripcion: 'Pagó servicio de electricidad',
-        fecha: new Date('2025-11-07T16:20:00')
-      },
-      {
-        id: '5',
-        accion: 'CAMBIO_PARAMETROS',
-        usuario: 'admin@banco.com',
-        descripcion: 'Actualizó límite diario de transferencias',
-        fecha: new Date('2025-11-07T14:00:00')
-      }
+      { id: 1, usuario: 'Admin', accion: 'LOGIN_EXITOSO', descripcion: 'Acceso desde IP 192.168.1.1', fecha: new Date() },
+      { id: 2, usuario: 'User01', accion: 'TRANSACCION_FALLIDA', descripcion: 'Monto supera límite diario.', fecha: new Date(new Date().getTime() - 3600000) },
+      { id: 3, usuario: 'Admin', accion: 'USUARIO_CREADO', descripcion: 'Nuevo usuario "User02" creado.', fecha: new Date(new Date().getTime() - 7200000) },
     ];
   }
 
   getAuditIcon(accion: string): string {
-    switch (accion) {
-      case 'CREAR_USUARIO':
-        return 'person-add';
-      case 'APERTURA_CUENTA':
-        return 'wallet';
-      case 'TRANSFERENCIA':
-        return 'swap-horizontal';
-      case 'PAGO_SERVICIO':
-        return 'card';
-      case 'CAMBIO_PARAMETROS':
-        return 'settings';
-      default:
-        return 'information-circle';
-    }
+    if (accion.includes('EXITOSO')) return 'checkmark-circle';
+    if (accion.includes('FALLIDA')) return 'close-circle';
+    return 'information-circle';
   }
 
   getAuditColor(accion: string): string {
-    switch (accion) {
-      case 'CREAR_USUARIO':
-        return 'success';
-      case 'APERTURA_CUENTA':
-        return 'primary';
-      case 'TRANSFERENCIA':
-        return 'tertiary';
-      case 'PAGO_SERVICIO':
-        return 'warning';
-      case 'CAMBIO_PARAMETROS':
-        return 'danger';
-      default:
-        return 'medium';
-    }
+    if (accion.includes('EXITOSO')) return 'success';
+    if (accion.includes('FALLIDA')) return 'danger';
+    return 'primary';
   }
 
   async downloadPDF() {
@@ -145,6 +91,9 @@ export class ReportsPage implements OnInit {
       });
       await loading.present();
 
+      // CORRECCIÓN 2: Llama a loadReports() para asegurar que las fechas del PDF (periodoInicio/Fin) estén actualizadas
+      this.loadReports(); 
+      
       const blob = this.reportService.generatePDFReport(this.reportData);
       const filename = `reporte_operaciones_${new Date().toISOString().split('T')[0]}.pdf`;
       
@@ -165,6 +114,9 @@ async downloadExcel() {
       });
       await loading.present();
 
+      // Llama a loadReports() para asegurar que los datos estén actualizados
+      this.loadReports();
+
       const blob = this.reportService.generateExcelReport(this.reportData);
       const filename = `reporte_operaciones_${new Date().toISOString().split('T')[0]}.csv`;
       
@@ -180,10 +132,9 @@ async downloadExcel() {
 
   private async showToast(message: string, color: string = 'primary') {
     const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      position: 'top',
-      color
+      message: message,
+      duration: 3000,
+      color: color
     });
     toast.present();
   }
