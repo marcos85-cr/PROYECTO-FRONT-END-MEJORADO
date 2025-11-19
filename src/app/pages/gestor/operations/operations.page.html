@@ -29,6 +29,19 @@
             </ion-segment-button>
         </ion-segment>
     </ion-toolbar>
+
+    <!-- Indicador de filtros activos -->
+    <ion-toolbar color="light" *ngIf="hasActiveFilters">
+        <ion-chip color="primary" (click)="openFilterModal()">
+            <ion-icon name="funnel"></ion-icon>
+            <ion-label>Filtros activos</ion-label>
+        </ion-chip>
+        <ion-chip color="medium" (click)="clearFilters()">
+            <ion-icon name="close-circle"></ion-icon>
+            <ion-label>Limpiar</ion-label>
+        </ion-chip>
+    </ion-toolbar>
+
 </ion-header>
 
 <ion-content color="secondary">

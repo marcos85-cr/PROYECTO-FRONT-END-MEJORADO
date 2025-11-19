@@ -188,3 +188,17 @@ ion-segment {
     }
   }
 }
+
+// Estilos para los filtros activos
+ion-toolbar[color="light"] {
+  padding: 0 1rem;
+
+  ion-chip {
+    margin: 0.5rem 0.5rem 0.5rem 0;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
