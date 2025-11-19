@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-import { jsPDF } from 'jspdf'; 
 @Injectable({
   providedIn: 'root',
 })
@@ -11,8 +10,6 @@ export class ReportService {
   private apiUrl = `${environment.apiUrl}/reports`;
 
   constructor(private http: HttpClient) {}
-
-  // ... (Funciones de descarga de statement y receipt se mantienen iguales) ...
 
   downloadStatement(
     accountId: string,
@@ -39,23 +36,18 @@ export class ReportService {
   }
 
   /**
-   * Genera y descarga reporte en PDF usando jsPDF
-   * @param reportData Datos del reporte.
-   * @returns El objeto Blob del PDF generado.
+   * Genera y descarga reporte en PDF
    */
   generatePDFReport(reportData: any): Blob {
-    // 1. Obtener el ArrayBuffer del PDF generado por jsPDF
-    const pdfArrayBuffer = this.generatePDFContent(reportData);
-    
-    // 2. Crear un Blob a partir del ArrayBuffer para la descarga
-    return new Blob([pdfArrayBuffer], { type: 'application/pdf' });
+    const pdfContent = this.generatePDFContent(reportData);
+    return new Blob([pdfContent], { type: 'application/pdf' });
   }
 
   /**
    * Genera y descarga reporte en Excel (CSV)
    */
   generateExcelReport(reportData: any): Blob {
-    const csvContent = '\uFEFF' + this.generateCSVContent(reportData);
+    const csvContent = '\uFEFF' +this.generateCSVContent(reportData);
     return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   }
 
@@ -94,141 +86,121 @@ export class ReportService {
   }
 
   /**
-   * Genera el contenido PDF formateado usando jsPDF.
-   * La función devuelve un ArrayBuffer, no un string.
+   * Genera contenido PDF formateado
    */
-  private generatePDFContent(reportData: any): ArrayBuffer {
-    const doc = new jsPDF('p', 'mm', 'a4');
-    let y = 20; // Posición inicial Y
-    const margenX = 15;
-    const anchoPagina = 210; // Ancho A4 en mm
+  private generatePDFContent(reportData: any): string {
+    let pdfText = '';
 
-    // --- Función de utilería para verificar salto de página ---
-    const checkPageBreak = (requiredSpace: number) => {
-      // 280 mm es aproximadamente el límite de la página A4.
-      if (y + requiredSpace > 280) {
-        doc.addPage();
-        y = 20; // Resetear Y para la nueva página
-        doc.setFontSize(10);
-        doc.text(`... Continuación del Reporte - Página ${doc.internal.pages.length - 1}`, anchoPagina - margenX, 10, { align: 'right' });
-      }
-    };
-    // -----------------------------------------------------------
+    pdfText += '========================================\n';
+    pdfText += '    RF-G1 REPORTES DE OPERACIONES\n';
+    pdfText += '========================================\n\n';
 
-    // --- TÍTULO ---
-    doc.setFontSize(22);
-    doc.text('RF-G1 REPORTE DE OPERACIONES', anchoPagina / 2, y, { align: 'center' });
-    y += 10;
-    
-    doc.setFontSize(10);
-    doc.text(`Periodo: ${reportData.startDate} - ${reportData.endDate}`, margenX, y);
-    doc.text(`Fecha de Generación: ${new Date().toLocaleString('es-ES')}`, anchoPagina - margenX, y, { align: 'right' });
-    y += 5;
-    doc.line(margenX, y, anchoPagina - margenX, y); // Línea separadora
-    y += 10;
+    pdfText += `Periodo: ${reportData.startDate} - ${reportData.endDate}\n`;
+    pdfText += `Fecha de Generacion: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES')}\n\n`;
 
-    // --- 1. TOTALES DE OPERACIONES ---
-    doc.setFontSize(16);
-    doc.text('1. TOTALES DE OPERACIONES', margenX, y);
-    y += 8;
+    // Totales
+    pdfText += '• TOTALES DE OPERACIONES POR PERIODO\n';
+    pdfText += '----------------------------------------\n';
+    pdfText += `  Total de Transacciones: ${reportData.totalTransactions}\n`;
+    pdfText += `  Volumen Total: $${reportData.totalVolume.toLocaleString('es-ES')}\n\n`;
 
-    doc.setFontSize(12);
-    doc.text(`Total de Transacciones: ${reportData.totalTransactions}`, margenX, y);
-    doc.text(`Volumen Total: $${reportData.totalVolume.toLocaleString('es-ES')}`, 80, y);
-    y += 10;
-    
-    // --- 2. TOP 10 CLIENTES POR VOLUMEN ---
-    checkPageBreak(50); // Verificar espacio para el encabezado de la tabla
-
-    doc.setFontSize(16);
-    doc.text('2. TOP 10 CLIENTES POR VOLUMEN', margenX, y);
-    y += 8;
-
-    // Simulación de una tabla usando texto
-    const colNames = ['#', 'NOMBRE', 'TRANSACCIONES', 'VOLUMEN'];
-    const colWidths = [10, 80, 40, 50];
-    let x = margenX;
-
-    doc.setFontSize(10);
-    doc.setFont('Helvetica', 'bold');
-    colNames.forEach((name, index) => {
-        doc.text(name, x, y);
-        x += colWidths[index];
-    });
-    doc.setFont('Helvetica', 'normal');
-    y += 5;
-
+    // Top 10 Clientes
+    pdfText += '• TOP 10 CLIENTES POR VOLUMEN\n';
+    pdfText += '----------------------------------------\n';
     reportData.topClients.forEach((client: any, index: number) => {
-        checkPageBreak(5); // Verificar si hay espacio para la fila
-        x = margenX;
-        
-        doc.text(`${index + 1}`, x, y);
-        x += colWidths[0];
-        doc.text(client.nombre, x, y);
-        x += colWidths[1];
-        doc.text(`${client.transacciones}`, x, y, { align: 'right' });
-        x += colWidths[2];
-        doc.text(`$${client.volumen.toLocaleString('es-ES')}`, x, y, { align: 'right' });
-        y += 5;
+      pdfText += `  ${index + 1}. ${client.nombre}\n`;
+      pdfText += `     Transacciones: ${client.transacciones}\n`;
+      pdfText += `     Volumen: $${client.volumen.toLocaleString('es-ES')}\n\n`;
     });
-    y += 5;
 
-    // --- 3. VOLUMEN POR DÍA ---
-    checkPageBreak(30);
-
-    doc.setFontSize(16);
-    doc.text('3. VOLUMEN POR DÍA', margenX, y);
-    y += 8;
-
+    // Volumen diario
+    pdfText += '• VOLUMEN POR DIA\n';
+    pdfText += '----------------------------------------\n';
     reportData.dailyVolume.forEach((day: any) => {
-        checkPageBreak(5);
-        const fecha = new Date(day.fecha).toLocaleDateString('es-ES');
-        doc.setFontSize(10);
-        doc.text(`Fecha: ${fecha}`, margenX, y);
-        doc.text(`Monto: $${day.monto.toLocaleString('es-ES')}`, 60, y);
-        y += 5;
+      const fecha = new Date(day.fecha).toLocaleDateString('es-ES');
+      pdfText += `  ${fecha}: $${day.monto.toLocaleString('es-ES')}\n`;
     });
-    y += 5;
+    pdfText += '\n';
 
-
-    // --- 4. REGISTRO DE AUDITORÍA ---
-    checkPageBreak(30);
-
-    doc.setFontSize(16);
-    doc.text('4. REGISTRO DE AUDITORÍA', margenX, y);
-    y += 8;
-
+    // Registro de Auditoria
+    pdfText += '• REGISTRO DE AUDITORIA - MOVIMIENTOS\n';
+    pdfText += '----------------------------------------\n';
     if (reportData.auditLogs && reportData.auditLogs.length > 0) {
-        reportData.auditLogs.forEach((log: any) => {
-            checkPageBreak(25); // Espacio necesario para un log
-            doc.setFontSize(10);
-            doc.setFont('Helvetica', 'bold');
-            doc.text(`Acción: ${log.accion} (${log.usuario})`, margenX, y);
-            doc.text(`Fecha: ${new Date(log.fecha).toLocaleString('es-ES')}`, anchoPagina - margenX, y, { align: 'right' });
-            y += 5;
-
-            doc.setFont('Helvetica', 'normal');
-            // Usar doc.splitTextToSize para manejar líneas largas
-            const descLines = doc.splitTextToSize(`Descripción: ${log.descripcion}`, anchoPagina - (2 * margenX));
-            doc.text(descLines, margenX, y);
-            y += (descLines.length * 5) + 2; // Ajustar posición Y por número de líneas
-            doc.line(margenX, y, anchoPagina - margenX, y); // Separador
-            y += 5;
-        });
+      reportData.auditLogs.forEach((log: any) => {
+        pdfText += `  Accion: ${log.accion}\n`;
+        pdfText += `  Usuario: ${log.usuario}\n`;
+        pdfText += `  Descripcion: ${log.descripcion}\n`;
+        pdfText += `  Fecha: ${new Date(log.fecha).toLocaleString('es-ES')}\n`;
+        pdfText += '  ---\n';
+      });
     } else {
-        doc.setFontSize(12);
-        doc.text('Sin registros de auditoría para este periodo.', margenX, y);
-        y += 10;
+      pdfText += '  Sin registros de auditoria\n';
     }
 
-    // Exportar el PDF como ArrayBuffer
-    return doc.output('arraybuffer');
+    pdfText += '\n========================================\n';
+    pdfText += 'Fin del Reporte\n';
+    pdfText += '========================================\n';
+
+    // Convertir a PDF básico (texto plano)
+    return this.convertTextToPDF(pdfText);
   }
 
+  /**
+   * Convierte texto a PDF válido
+   */
+  private convertTextToPDF(text: string): string {
+    // Crear un PDF básico con el texto
+    const lines = text.split('\n');
+    const startY = 750; // posición inicial fija
+    let yPosition = startY;
+    let pdfContent = '';
 
-  // ... (La función escapePDFText ya no es necesaria y la eliminamos) ...
-  // ... (La función convertTextToPDF ya no es necesaria y la eliminamos) ...
+    lines.forEach((line: string) => {
+      if (yPosition < 50) {
+        // Nueva página
+        pdfContent += 'ET\nendstream\nendobj\n';
+        yPosition = startY;
+      }
+      pdfContent += `(${this.escapePDFText(line)}) Tj\n0 -15 Td\n`;
+      yPosition -= 15;
+    });
 
+    const stream = `BT\n/F1 10 Tf\n50 ${startY} Td\n${pdfContent}ET\n`;
+
+    let pdf = '%PDF-1.4\n';
+    pdf += '1 0 obj\n<</Type/Catalog/Pages 2 0 R>>\nendobj\n';
+    pdf += '2 0 obj\n<</Type/Pages/Kids[3 0 R]/Count 1>>\nendobj\n';
+    pdf += '3 0 obj\n<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>\nendobj\n';
+    pdf += `4 0 obj\n<</Length ${stream.length}>>\nstream\n${stream}endstream\nendobj\n`;
+    pdf += '5 0 obj\n<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>\nendobj\n';
+    pdf += 'xref\n0 6\n0000000000 65535 f\n0000000009 00000 n\n0000000056 00000 n\n0000000115 00000 n\n0000000273 00000 n\n0000000455 00000 n\n';
+    pdf += 'trailer\n<</Size 6/Root 1 0 R>>\n';
+    pdf += 'startxref\n580\n%%EOF';
+
+    return pdf;
+  }
+
+  /**
+   * Escapa caracteres especiales para PDF
+   */
+  private escapePDFText(text: string): string {
+    return text
+      .replace(/\\/g, '\\\\')
+      .replace(/\(/g, '\\(')
+      .replace(/\)/g, '\\)')
+      .replace(/á/g, 'a')
+      .replace(/é/g, 'e')
+      .replace(/í/g, 'i')
+      .replace(/ó/g, 'o')
+      .replace(/ú/g, 'u')
+      .replace(/Á/g, 'A')
+      .replace(/É/g, 'E')
+      .replace(/Í/g, 'I')
+      .replace(/Ó/g, 'O')
+      .replace(/Ú/g, 'U')
+      .replace(/ñ/g, 'n')
+      .replace(/Ñ/g, 'N');
+  }
 
   /**
    * Descarga un archivo
@@ -242,5 +214,5 @@ export class ReportService {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
-  }
+  }
 }
