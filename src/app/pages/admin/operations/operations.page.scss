@@ -240,3 +240,302 @@ ion-item-divider {
   font-size: 1.2rem;
   color: var(--ion-color-medium);
 }
+//////////////////////////////////////////////////////////////////
+
+// ============================================
+// Estilos para los modales de filtro
+// ============================================
+
+::ng-deep {
+
+  // Estilo general del alert de filtros
+  .filter-alert {
+    --backdrop-opacity: 0.6;
+
+    .alert-wrapper {
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+
+      .alert-head {
+        padding: 20px 20px 10px 20px;
+        background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
+        border-radius: 16px 16px 0 0;
+
+        .alert-title {
+          color: white;
+          font-size: 1.2rem;
+          font-weight: 700;
+          text-align: center;
+        }
+
+        .alert-message {
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 0.9rem;
+          text-align: center;
+          margin-top: 5px;
+        }
+      }
+
+      .alert-message {
+        padding: 15px 20px;
+        background: var(--ion-color-light);
+        color: var(--ion-color-medium);
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      .alert-input-group {
+        padding: 15px 20px;
+
+        .alert-input-wrapper {
+          margin-bottom: 15px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          input {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+
+            &:focus {
+              border-color: var(--ion-color-primary);
+              background: rgba(var(--ion-color-primary-rgb), 0.05);
+            }
+
+            &::placeholder {
+              color: #999;
+            }
+          }
+        }
+      }
+
+      .alert-radio-group {
+        padding: 10px 0;
+        max-height: 400px;
+        overflow-y: auto;
+
+        .alert-radio-button {
+          padding: 12px 20px;
+          transition: all 0.2s ease;
+          border-left: 3px solid transparent;
+
+          &:hover {
+            background: rgba(var(--ion-color-primary-rgb), 0.05);
+          }
+
+          .alert-radio-label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--ion-color-dark);
+          }
+
+          .alert-radio-icon {
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+
+            .alert-radio-inner {
+              background: var(--ion-color-primary);
+              border-radius: 50%;
+              width: 10px;
+              height: 10px;
+            }
+          }
+
+          &[aria-checked="true"] {
+            background: rgba(var(--ion-color-primary-rgb), 0.08);
+            border-left-color: var(--ion-color-primary);
+
+            .alert-radio-icon {
+              border-color: var(--ion-color-primary);
+            }
+
+            .alert-radio-label {
+              color: var(--ion-color-primary);
+              font-weight: 600;
+            }
+          }
+        }
+
+        // Estilo especial para "Todos"
+        .filter-radio-all {
+          .alert-radio-label {
+            color: var(--ion-color-medium);
+            font-weight: 600;
+          }
+
+          &[aria-checked="true"] {
+            background: rgba(var(--ion-color-primary-rgb), 0.1);
+
+            .alert-radio-label {
+              color: var(--ion-color-primary);
+            }
+          }
+        }
+
+        // Estilos por nivel de riesgo
+        .filter-radio-bajo[aria-checked="true"] {
+          border-left-color: var(--ion-color-success);
+
+          .alert-radio-label {
+            color: var(--ion-color-success);
+          }
+
+          .alert-radio-icon {
+            border-color: var(--ion-color-success);
+
+            .alert-radio-inner {
+              background: var(--ion-color-success);
+            }
+          }
+        }
+
+        .filter-radio-medio[aria-checked="true"] {
+          border-left-color: var(--ion-color-primary);
+
+          .alert-radio-label {
+            color: var(--ion-color-primary);
+          }
+        }
+
+        .filter-radio-alto[aria-checked="true"] {
+          border-left-color: var(--ion-color-warning);
+
+          .alert-radio-label {
+            color: var(--ion-color-warning);
+          }
+
+          .alert-radio-icon {
+            border-color: var(--ion-color-warning);
+
+            .alert-radio-inner {
+              background: var(--ion-color-warning);
+            }
+          }
+        }
+
+        .filter-radio-crítico[aria-checked="true"] {
+          border-left-color: var(--ion-color-danger);
+
+          .alert-radio-label {
+            color: var(--ion-color-danger);
+          }
+
+          .alert-radio-icon {
+            border-color: var(--ion-color-danger);
+
+            .alert-radio-inner {
+              background: var(--ion-color-danger);
+            }
+          }
+        }
+      }
+
+      .alert-button-group {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-radius: 0 0 16px 16px;
+
+        button {
+          border-radius: 8px;
+          font-weight: 600;
+          text-transform: none;
+          font-size: 0.95rem;
+          padding: 10px 20px;
+          margin: 5px;
+          transition: all 0.3s ease;
+
+          &.alert-button-clear {
+            background: var(--ion-color-danger);
+            color: white;
+
+            &:hover {
+              background: var(--ion-color-danger-shade);
+              transform: translateY(-2px);
+              box-shadow: 0 4px 12px rgba(var(--ion-color-danger-rgb), 0.4);
+            }
+          }
+
+          &.alert-button-cancel {
+            background: transparent;
+            color: var(--ion-color-medium);
+
+            &:hover {
+              background: rgba(0, 0, 0, 0.05);
+            }
+          }
+
+          &.alert-button-back {
+            background: var(--ion-color-light);
+            color: var(--ion-color-dark);
+
+            &:hover {
+              background: var(--ion-color-light-shade);
+            }
+          }
+
+          &.alert-button-next,
+          &.alert-button-apply {
+            background: var(--ion-color-primary);
+            color: white;
+
+            &:hover {
+              background: var(--ion-color-primary-shade);
+              transform: translateY(-2px);
+              box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.4);
+            }
+          }
+
+          &.alert-button-apply {
+            background: var(--ion-color-success);
+
+            &:hover {
+              background: var(--ion-color-success-shade);
+              box-shadow: 0 4px 12px rgba(var(--ion-color-success-rgb), 0.4);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Animaciones
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .filter-alert .alert-wrapper {
+    animation: fadeIn 0.3s ease;
+  }
+}
+
+// Estilos para el badge de filtros activos (opcional)
+.filter-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--ion-color-danger);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+}

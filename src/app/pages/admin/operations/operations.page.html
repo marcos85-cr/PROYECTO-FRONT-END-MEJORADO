@@ -5,8 +5,12 @@
     </ion-buttons>
     <ion-title>Operaciones de Alto Valor</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="openFilterModal()">
+      <ion-button (click)="openFilterModal()" style="position: relative;">
         <ion-icon slot="icon-only" name="filter-outline"></ion-icon>
+        <ion-badge *ngIf="getActiveFiltersCount() > 0" color="danger"
+          style="position: absolute; top: 5px; right: 5px; font-size: 0.65rem; min-width: 16px; height: 16px;">
+          {{ getActiveFiltersCount() }}
+        </ion-badge>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

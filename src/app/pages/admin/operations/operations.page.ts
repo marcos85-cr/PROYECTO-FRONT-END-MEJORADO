@@ -6,6 +6,8 @@ import { HighValueOperation, HighValueOperationStatus, RiskLevel } from '../../.
 import { HighValueOperationService } from '../../../services/high-value-operation.service';
 import { OperationDetailModalComponent } from './operation-detail-modal/operation-detail-modal.component';
 
+
+
 interface OperationGroup {
   date: Date;
   operations: HighValueOperation[];
@@ -16,7 +18,7 @@ interface OperationGroup {
   templateUrl: './operations.page.html',
   styleUrls: ['./operations.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule],
 })
 export class OperationsPage implements OnInit {
   operations: HighValueOperation[] = [];
@@ -33,6 +35,13 @@ export class OperationsPage implements OnInit {
   highRiskCount = 0;
   totalVolume = 0;
 
+  activeFilters: {
+    minAmount?: number;
+    maxAmount?: number;
+    riskLevel?: string;
+    operationType?: string;
+  } = {};
+
   constructor(
     private operationService: HighValueOperationService,
     private alertCtrl: AlertController,
@@ -48,9 +57,11 @@ export class OperationsPage implements OnInit {
   async loadOperations() {
     this.isLoading = true;
     try {
-      const operations = await this.operationService.getAllOperations().toPromise();
+      const operations = await this.operationService
+        .getAllOperations()
+        .toPromise();
       this.operations = operations || [];
-      this.filteredOperations = [...this.operations];
+      this.applyAllFilters();
       this.calculateStatistics();
       this.groupOperationsByDate();
       this.identifyCriticalOperations();
@@ -81,17 +92,21 @@ export class OperationsPage implements OnInit {
         detalles: {
           cuentaOrigen: '100000000001',
           banco: 'SWIFT CODE XYZ',
-          pais: 'Estados Unidos'
+          pais: 'Estados Unidos',
         },
-        flagsRiesgo: ['Monto inusual', 'Transferencia internacional', 'Primer destino'],
+        flagsRiesgo: [
+          'Monto inusual',
+          'Transferencia internacional',
+          'Primer destino',
+        ],
         notas: '',
         creadoEn: new Date(),
         actualizadoEn: new Date(),
         requiereVerificacionAdicional: true,
         verificacionAdicional: {
           tipo: 'Llamada telefónica',
-          estado: 'Pendiente'
-        }
+          estado: 'Pendiente',
+        },
       },
       {
         id: '2',
@@ -106,13 +121,13 @@ export class OperationsPage implements OnInit {
         descripcion: 'Retiro de efectivo en sucursal',
         detalles: {
           cuentaOrigen: '100000000002',
-          sucursal: 'San José Central'
+          sucursal: 'San José Central',
         },
         flagsRiesgo: ['Monto grande', 'Retiro en efectivo'],
         notas: '',
         creadoEn: new Date(),
         actualizadoEn: new Date(),
-        requiereVerificacionAdicional: false
+        requiereVerificacionAdicional: false,
       },
       {
         id: '3',
@@ -127,9 +142,13 @@ export class OperationsPage implements OnInit {
         descripcion: 'Transferencia múltiple a varias cuentas',
         detalles: {
           cuentaOrigen: '100000000003',
-          numeroTransferencias: 15
+          numeroTransferencias: 15,
         },
-        flagsRiesgo: ['Volumen excepcional', 'Múltiples destinos', 'Patrón inusual'],
+        flagsRiesgo: [
+          'Volumen excepcional',
+          'Múltiples destinos',
+          'Patrón inusual',
+        ],
         razonBloqueo: 'Patrón sospechoso detectado',
         notas: 'Bloqueado automáticamente por sistema de detección de fraude',
         creadoEn: new Date(Date.now() - 86400000),
@@ -137,8 +156,8 @@ export class OperationsPage implements OnInit {
         requiereVerificacionAdicional: true,
         verificacionAdicional: {
           tipo: 'Investigación de fraude',
-          estado: 'Pendiente'
-        }
+          estado: 'Pendiente',
+        },
       },
       {
         id: '4',
@@ -153,17 +172,17 @@ export class OperationsPage implements OnInit {
         descripcion: 'Transferencia para nómina de empleados',
         detalles: {
           cuentaOrigen: '100000000004',
-          numeroTransferencias: 25
+          numeroTransferencias: 25,
         },
         flagsRiesgo: ['Volumen alto'],
         notas: 'Aprobado - Operación comercial legítima',
         creadoEn: new Date(Date.now() - 172800000),
         actualizadoEn: new Date(Date.now() - 86400000),
         aprobadoPor: 'admin@banco.com',
-        requiereVerificacionAdicional: false
-      }
+        requiereVerificacionAdicional: false,
+      },
     ];
-    this.filteredOperations = [...this.operations];
+    this.applyAllFilters();
     this.calculateStatistics();
     this.groupOperationsByDate();
     this.identifyCriticalOperations();
@@ -173,10 +192,18 @@ export class OperationsPage implements OnInit {
    * Calcula estadísticas
    */
   calculateStatistics() {
-    this.pendingCount = this.operations.filter(op => op.estado === 'Pendiente').length;
-    this.blockedCount = this.operations.filter(op => op.estado === 'Bloqueada').length;
-    this.criticalCount = this.operations.filter(op => op.nivelRiesgo === 'Crítico').length;
-    this.highRiskCount = this.operations.filter(op => op.nivelRiesgo === 'Alto' || op.nivelRiesgo === 'Crítico').length;
+    this.pendingCount = this.operations.filter(
+      (op) => op.estado === 'Pendiente'
+    ).length;
+    this.blockedCount = this.operations.filter(
+      (op) => op.estado === 'Bloqueada'
+    ).length;
+    this.criticalCount = this.operations.filter(
+      (op) => op.nivelRiesgo === 'Crítico'
+    ).length;
+    this.highRiskCount = this.operations.filter(
+      (op) => op.nivelRiesgo === 'Alto' || op.nivelRiesgo === 'Crítico'
+    ).length;
     this.totalVolume = this.operations.reduce((sum, op) => sum + op.monto, 0);
   }
 
@@ -186,7 +213,7 @@ export class OperationsPage implements OnInit {
   groupOperationsByDate() {
     const groups: { [key: string]: HighValueOperation[] } = {};
 
-    this.filteredOperations.forEach(operation => {
+    this.filteredOperations.forEach((operation) => {
       const date = new Date(operation.creadoEn);
       const key = date.toDateString();
 
@@ -197,11 +224,12 @@ export class OperationsPage implements OnInit {
     });
 
     this.groupedOperations = Object.keys(groups)
-      .map(key => ({
+      .map((key) => ({
         date: new Date(key),
-        operations: groups[key].sort((a, b) => 
-          new Date(b.creadoEn).getTime() - new Date(a.creadoEn).getTime()
-        )
+        operations: groups[key].sort(
+          (a, b) =>
+            new Date(b.creadoEn).getTime() - new Date(a.creadoEn).getTime()
+        ),
       }))
       .sort((a, b) => b.date.getTime() - a.date.getTime());
   }
@@ -211,19 +239,68 @@ export class OperationsPage implements OnInit {
    */
   identifyCriticalOperations() {
     this.criticalOperations = this.operations.filter(
-      op => op.nivelRiesgo === 'Crítico' && op.estado !== 'Aprobada'
+      (op) => op.nivelRiesgo === 'Crítico' && op.estado !== 'Aprobada'
     );
   }
 
   filterOperations() {
-    if (this.selectedStatus === 'all') {
-      this.filteredOperations = [...this.operations];
-    } else {
-      this.filteredOperations = this.operations.filter(
-        op => op.estado === this.selectedStatus
+    this.applyAllFilters();
+    this.groupOperationsByDate();
+  }
+
+  /**
+   * Aplica todos los filtros (estado + filtros avanzados)
+   */
+  applyAllFilters() {
+    let filtered = [...this.operations];
+
+    // Filtro por estado del segmento
+    if (this.selectedStatus !== 'all') {
+      filtered = filtered.filter((op) => op.estado === this.selectedStatus);
+    }
+
+    // Filtro de monto mínimo
+    if (
+      this.activeFilters.minAmount !== undefined &&
+      this.activeFilters.minAmount !== null
+    ) {
+      filtered = filtered.filter(
+        (op) => op.monto >= this.activeFilters.minAmount!
       );
     }
-    this.groupOperationsByDate();
+
+    // Filtro de monto máximo
+    if (
+      this.activeFilters.maxAmount !== undefined &&
+      this.activeFilters.maxAmount !== null
+    ) {
+      filtered = filtered.filter(
+        (op) => op.monto <= this.activeFilters.maxAmount!
+      );
+    }
+
+    // Filtro de nivel de riesgo
+    if (this.activeFilters.riskLevel && this.activeFilters.riskLevel !== '') {
+      filtered = filtered.filter(
+        (op) =>
+          op.nivelRiesgo.toLowerCase() ===
+          this.activeFilters.riskLevel!.toLowerCase()
+      );
+    }
+
+    // Filtro de tipo de operación
+    if (
+      this.activeFilters.operationType &&
+      this.activeFilters.operationType !== ''
+    ) {
+      filtered = filtered.filter((op) =>
+        op.tipo
+          .toLowerCase()
+          .includes(this.activeFilters.operationType!.toLowerCase())
+      );
+    }
+
+    this.filteredOperations = filtered;
   }
 
   getOperationIcon(tipo: string): string {
@@ -292,15 +369,19 @@ export class OperationsPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: OperationDetailModalComponent,
       componentProps: {
-        operation: operation
+        operation: operation,
       },
-      cssClass: 'operation-detail-modal'
+      cssClass: 'operation-detail-modal',
     });
 
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
-    if (data?.action === 'approved' || data?.action === 'rejected' || data?.action === 'blocked') {
+    if (
+      data?.action === 'approved' ||
+      data?.action === 'rejected' ||
+      data?.action === 'blocked'
+    ) {
       this.loadOperations();
     }
   }
@@ -308,28 +389,34 @@ export class OperationsPage implements OnInit {
   async quickApprove(operation: HighValueOperation) {
     const alert = await this.alertCtrl.create({
       header: 'Aprobar Rápidamente',
-      message: `Aprobar operación de ${operation.moneda} ${operation.monto.toLocaleString()}?`,
+      message: `Aprobar operación de ${
+        operation.moneda
+      } ${operation.monto.toLocaleString()}?`,
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Aprobar',
           handler: async () => {
             await this.executeApprove(operation);
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }
 
   async executeApprove(operation: HighValueOperation) {
     try {
-      const loading = await this.loadingCtrl.create({ message: 'Aprobando...' });
+      const loading = await this.loadingCtrl.create({
+        message: 'Aprobando...',
+      });
       await loading.present();
 
-      await this.operationService.approveOperation({
-        operacionId: operation.id
-      }).toPromise();
+      await this.operationService
+        .approveOperation({
+          operacionId: operation.id,
+        })
+        .toPromise();
 
       await loading.dismiss();
       await this.showToast('Operación aprobada', 'success');
@@ -347,8 +434,8 @@ export class OperationsPage implements OnInit {
         {
           name: 'razon',
           type: 'textarea',
-          placeholder: 'Motivo (requerido)'
-        }
+          placeholder: 'Motivo (requerido)',
+        },
       ],
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
@@ -361,22 +448,26 @@ export class OperationsPage implements OnInit {
             }
             await this.executeReject(operation, data.razon);
             return true;
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }
 
   async executeReject(operation: HighValueOperation, razon: string) {
     try {
-      const loading = await this.loadingCtrl.create({ message: 'Rechazando...' });
+      const loading = await this.loadingCtrl.create({
+        message: 'Rechazando...',
+      });
       await loading.present();
 
-      await this.operationService.rejectOperation({
-        operacionId: operation.id,
-        razon
-      }).toPromise();
+      await this.operationService
+        .rejectOperation({
+          operacionId: operation.id,
+          razon,
+        })
+        .toPromise();
 
       await loading.dismiss();
       await this.showToast('Operación rechazada', 'success');
@@ -394,8 +485,8 @@ export class OperationsPage implements OnInit {
         {
           name: 'razon',
           type: 'textarea',
-          placeholder: 'Motivo (requerido)'
-        }
+          placeholder: 'Motivo (requerido)',
+        },
       ],
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
@@ -408,22 +499,26 @@ export class OperationsPage implements OnInit {
             }
             await this.executeBlock(operation, data.razon);
             return true;
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }
 
   async executeBlock(operation: HighValueOperation, razon: string) {
     try {
-      const loading = await this.loadingCtrl.create({ message: 'Bloqueando...' });
+      const loading = await this.loadingCtrl.create({
+        message: 'Bloqueando...',
+      });
       await loading.present();
 
-      await this.operationService.blockOperation({
-        operacionId: operation.id,
-        razon
-      }).toPromise();
+      await this.operationService
+        .blockOperation({
+          operacionId: operation.id,
+          razon,
+        })
+        .toPromise();
 
       await loading.dismiss();
       await this.showToast('Operación bloqueada', 'success');
@@ -434,42 +529,178 @@ export class OperationsPage implements OnInit {
   }
 
   async openFilterModal() {
-    const alert = await this.alertCtrl.create({
-      header: 'Filtrar Operaciones',
+    // Obtener tipos únicos de operaciones dinámicamente
+    const operationTypes = [
+      ...new Set(this.operations.map((op) => op.tipo)),
+    ].sort();
+
+    // Niveles de riesgo disponibles
+    const riskLevels = ['Bajo', 'Medio', 'Alto', 'Crítico'];
+
+    // PASO 1: Filtros de monto
+    const amountAlert = await this.alertCtrl.create({
+      header: 'Filtrar por Monto',
+      message: 'Ingrese el rango de montos (opcional)',
+      cssClass: 'filter-alert',
       inputs: [
         {
           name: 'minAmount',
           type: 'number',
-          placeholder: 'Monto Mínimo'
+          placeholder: 'Monto Mínimo (CRC)',
+          value: this.activeFilters?.minAmount || '',
+          cssClass: 'filter-input',
         },
         {
           name: 'maxAmount',
           type: 'number',
-          placeholder: 'Monto Máximo'
+          placeholder: 'Monto Máximo (CRC)',
+          value: this.activeFilters?.maxAmount || '',
+          cssClass: 'filter-input',
         },
-        {
-          name: 'riskLevel',
-          type: 'text',
-          placeholder: 'Nivel de Riesgo (Bajo/Medio/Alto/Crítico)'
-        }
       ],
       buttons: [
         {
-          text: 'Limpiar',
+          text: 'Limpiar Todo',
+          cssClass: 'alert-button-clear',
           handler: () => {
-            this.filterOperations();
-          }
+            this.activeFilters = {};
+            this.applyAllFilters();
+            this.groupOperationsByDate();
+            this.showToast('Filtros eliminados', 'primary');
+          },
         },
         {
-          text: 'Aplicar',
-          handler: (data) => {
-            // Implementar lógica de filtrado avanzado
-            this.showToast('Filtros aplicados', 'primary');
-          }
-        }
-      ]
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'alert-button-cancel',
+        },
+        {
+          text: 'Siguiente',
+          cssClass: 'alert-button-next',
+          handler: async (amountData) => {
+            // Guardar filtros de monto
+            this.activeFilters.minAmount = amountData.minAmount
+              ? parseFloat(amountData.minAmount)
+              : undefined;
+            this.activeFilters.maxAmount = amountData.maxAmount
+              ? parseFloat(amountData.maxAmount)
+              : undefined;
+
+            // PASO 2: Filtro de Nivel de Riesgo
+            const riskAlert = await this.alertCtrl.create({
+              header: 'Filtrar por Nivel de Riesgo',
+              message: 'Seleccione un nivel de riesgo',
+              cssClass: 'filter-alert risk-alert',
+              inputs: [
+                {
+                  name: 'riskLevel',
+                  type: 'radio',
+                  label: '✓ Todos los niveles',
+                  value: '',
+                  checked: !this.activeFilters?.riskLevel,
+                  cssClass: 'filter-radio-all',
+                },
+                ...riskLevels.map((level) => ({
+                  name: 'riskLevel',
+                  type: 'radio' as const,
+                  label: level,
+                  value: level,
+                  checked: this.activeFilters?.riskLevel === level,
+                  cssClass: `filter-radio-${level.toLowerCase()}`,
+                })),
+              ],
+              buttons: [
+                {
+                  text: 'Atrás',
+                  cssClass: 'alert-button-back',
+                  handler: () => {
+                    this.openFilterModal();
+                  },
+                },
+                {
+                  text: 'Siguiente',
+                  cssClass: 'alert-button-next',
+                  handler: async (riskData) => {
+                    this.activeFilters.riskLevel = riskData || '';
+
+                    // PASO 3: Filtro de Tipo de Operación
+                    const typeAlert = await this.alertCtrl.create({
+                      header: 'Filtrar por Tipo de Operación',
+                      message: 'Seleccione un tipo de operación',
+                      cssClass: 'filter-alert type-alert',
+                      inputs: [
+                        {
+                          name: 'operationType',
+                          type: 'radio',
+                          label: '✓ Todos los tipos',
+                          value: '',
+                          checked: !this.activeFilters?.operationType,
+                          cssClass: 'filter-radio-all',
+                        },
+                        ...operationTypes.map((type) => ({
+                          name: 'operationType',
+                          type: 'radio' as const,
+                          label: type,
+                          value: type,
+                          checked: this.activeFilters?.operationType === type,
+                          cssClass: 'filter-radio-type',
+                        })),
+                      ],
+                      buttons: [
+                        {
+                          text: 'Atrás',
+                          cssClass: 'alert-button-back',
+                          handler: async () => {
+                            await riskAlert.present();
+                          },
+                        },
+                        {
+                          text: 'Aplicar',
+                          cssClass: 'alert-button-apply',
+                          handler: (typeData) => {
+                            this.activeFilters.operationType = typeData || '';
+
+                            this.applyAllFilters();
+                            this.groupOperationsByDate();
+
+                            const filtersApplied = [];
+                            if (this.activeFilters.minAmount)
+                              filtersApplied.push(
+                                `Mín: ₡${this.activeFilters.minAmount.toLocaleString()}`
+                              );
+                            if (this.activeFilters.maxAmount)
+                              filtersApplied.push(
+                                `Máx: ₡${this.activeFilters.maxAmount.toLocaleString()}`
+                              );
+                            if (this.activeFilters.riskLevel)
+                              filtersApplied.push(this.activeFilters.riskLevel);
+                            if (this.activeFilters.operationType)
+                              filtersApplied.push(
+                                this.activeFilters.operationType
+                              );
+
+                            const message =
+                              filtersApplied.length > 0
+                                ? `✓ ${filtersApplied.length} filtro(s) aplicado(s)`
+                                : 'Sin filtros activos';
+
+                            this.showToast(message, 'success');
+                          },
+                        },
+                      ],
+                    });
+                    await typeAlert.present();
+                  },
+                },
+              ],
+            });
+            await riskAlert.present();
+          },
+        },
+      ],
     });
-    await alert.present();
+
+    await amountAlert.present();
   }
 
   getEmptyMessage(): string {
@@ -495,8 +726,24 @@ export class OperationsPage implements OnInit {
       message,
       duration: 2500,
       position: 'top',
-      color
+      color,
     });
     await toast.present();
+  }
+  getActiveFiltersCount(): number {
+    let count = 0;
+    if (
+      this.activeFilters.minAmount !== undefined &&
+      this.activeFilters.minAmount !== null
+    )
+      count++;
+    if (
+      this.activeFilters.maxAmount !== undefined &&
+      this.activeFilters.maxAmount !== null
+    )
+      count++;
+    if (this.activeFilters.riskLevel) count++;
+    if (this.activeFilters.operationType) count++;
+    return count;
   }
 }
