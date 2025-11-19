@@ -29,20 +29,10 @@
     </swiper-container>
   </ion-row>
 
-  <!-- Sección de características/iconos -->
-  <ion-row class="features">
-    <ion-col size="3" *ngFor="let feature of features">
-      <div class="feature-item">
-        <ion-button [color]="feature.color" shape="round" class="feature-btn">
-          <ion-icon [name]="feature.icon" slot="icon-only"></ion-icon>
-        </ion-button>
-        <ion-label>{{ feature.name }}</ion-label>
-      </div>
-    </ion-col>
-  </ion-row>
-
+  
   <!-- Botones de acción -->
-  <div class="action-buttons">
+  
+  <!--<div class="action-buttons">
     <ion-button expand="block" routerLink="/cliente/transfer" color="primary">
       <ion-icon slot="start" name="swap-horizontal"></ion-icon>
       Nueva Transferencia
@@ -56,14 +46,51 @@
     <ion-button expand="block" routerLink="/cliente/history" color="primary">
       <ion-icon slot="start" name="time"></ion-icon>
       Historial
-    </ion-button>
+    </ion-button>-->
 
     <!-- BOTÓN DEL PERFIL -->
-    <ion-button expand="block" color="secondary" routerLink="/profile" color="primary">
+    <!--<ion-button expand="block" color="secondary" routerLink="/profile" color="primary">
       <ion-icon slot="start" name="person-circle"></ion-icon>
       Mi Perfil
     </ion-button>
   </div>
+   -->
+
+  <div class="actions-buttons">
+    <button class="action-btn" routerLink="/cliente/transfer">
+      <span class="icon">
+        <ion-icon name="swap-horizontal-outline"></ion-icon>
+      </span>
+      <span>Nueva transferencia</span>
+    </button>
+
+    <button class="action-btn" routerLink="/cliente/beneficiaries">
+      <span class="icon">
+        <ion-icon name="people-outline"></ion-icon>
+      </span>
+      <span>Beneficiarios</span>
+    </button>
+
+    <button class="action-btn" routerLink="/cliente/history">
+      <span class="icon">
+        <ion-icon name="time-outline"></ion-icon>
+      </span>
+      <span>Historial</span>
+    </button>
+
+    <button class="action-btn" routerLink="/profile">
+      <span class="icon">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </span>
+      <span>Mi perfil</span>
+    </button>
+  </div>
+
+
+
+
+
+
 
   <!-- Sección de transacciones -->
   <ion-list class="transactions" *ngIf="transactions.length > 0">

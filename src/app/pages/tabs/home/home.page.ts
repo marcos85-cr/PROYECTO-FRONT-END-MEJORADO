@@ -37,13 +37,7 @@ export class HomePage implements OnInit, AfterContentChecked {
       { id: 3, acc_no: '1122334455', acc_type: 'Investment', balance: '50000.50' }
     ];
 
-    this.features = [
-      { id: 1, color: 'secondary', icon: 'swap-vertical-outline', name: 'Enviar' },
-      { id: 2, color: 'primary', icon: 'download-outline', name: 'Traer' },
-      { id: 3, color: 'success', icon: 'arrow-redo-outline', name: 'Sinpe' },
-    ];
-
-    this.transactions = [
+       this.transactions = [
       { id: 1, to: 'Pedro Sanchez', date: '2025-05-22', amount: 5000 },
       { id: 2, to: 'Marta Porras', date: '2025-03-02', amount: 7000 },
       { id: 3, to: 'Ezequiel Santos', date: '2025-07-28', amount: -3250 },
