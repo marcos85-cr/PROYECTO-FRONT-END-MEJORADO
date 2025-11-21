@@ -14,6 +14,7 @@ import {
   ValidationRule,
 } from '../../../models/service-payment.model';
 import { CreateProviderModalComponent } from './create-provider-modal/create-provider-modal.component';
+import { ProviderDetailModalComponent } from './provider-detail-modal/provider-detail-modal.component';
 
 @Component({
   selector: 'app-service-providers',
@@ -140,18 +141,15 @@ export class ServiceProvidersPage implements OnInit {
   }
 
   async openProviderDetail(provider: ServiceProvider) {
-    const alert = await this.alertController.create({
-      header: provider.nombre,
-      message: `
-        <strong>Código:</strong> ${provider.codigoEmpresa}<br>
-        <strong>Tipo:</strong> ${provider.tipo}<br>
-        <strong>Descripción:</strong> ${provider.descripcion || 'N/A'}<br><br>
-        <strong>Reglas de Validación:</strong><br>
-        ${this.getValidationDetails(provider.validationRules)}
-      `,
-      buttons: ['Cerrar'],
+    const modal = await this.modalController.create({
+      component: ProviderDetailModalComponent,
+      componentProps: {
+        provider: provider,
+      },
+      cssClass: 'provider-detail-modal',
     });
-    await alert.present();
+
+    await modal.present();
   }
 
   getValidationDetails(rules?: ValidationRule): string {

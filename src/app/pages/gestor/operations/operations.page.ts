@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import {
   IonicModule,
   AlertController,
@@ -46,7 +47,7 @@ interface OperationFilters {
   templateUrl: './operations.page.html',
   styleUrls: ['./operations.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule],
 })
 export class OperationsPage implements OnInit {
   operations: Operation[] = [];

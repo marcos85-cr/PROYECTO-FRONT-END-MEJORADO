@@ -128,3 +128,27 @@ ion-list.transactions {
         }
     }
 }
+
+// Estilos globales para Ionic Alerts con HTML
+.alert-wrapper {
+    .alert-message {
+        strong {
+            font-weight: 600;
+            color: var(--ion-color-dark);
+        }
+        
+        br {
+            display: block;
+            content: "";
+            margin-top: 0.5rem;
+        }
+        
+        p {
+            margin: 0.3rem 0;
+        }
+        
+        div {
+            margin: 0.2rem 0;
+        }
+    }
+}

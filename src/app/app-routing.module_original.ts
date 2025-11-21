@@ -8,7 +8,7 @@ import { RoleGuard } from './guards/role.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'navigator',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
@@ -91,11 +91,6 @@ const routes: Routes = [
   },
 
   // 🏠 PÁGINAS DE NAVEGACIÓN Y AYUDA
-  {
-    path: 'navigator',
-    loadComponent: () =>
-      import('./pages/page-navigator.page').then((m) => m.PageNavigatorPage),
-  },
   {
     path: 'test-users',
     loadComponent: () =>

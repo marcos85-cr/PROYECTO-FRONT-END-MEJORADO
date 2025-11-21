@@ -49,7 +49,6 @@ Todas las rutas están protegidas por:
 4. **Todas las páginas están disponibles sin autenticación**
 
 ### 📱 Enlaces Directos:
-- **Navegador Principal**: `http://localhost:8102/navigator`
 - **Usuarios de Prueba**: `http://localhost:8102/test-users`
 - **Login**: `http://localhost:8102/login`
 - **Cualquier página**: Acceso directo sin restricciones

@@ -1,0 +1,65 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>{{ provider.nombre }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="detail-container">
+    <!-- Información básica -->
+    <div class="detail-section">
+      <div class="detail-item">
+        <div class="detail-label">Código</div>
+        <div class="detail-value code">{{ provider.codigoEmpresa }}</div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-label">Tipo</div>
+        <div class="detail-value">
+          <ion-badge [color]="getTypeColor()">{{ provider.tipo }}</ion-badge>
+        </div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-label">Descripción</div>
+        <div class="detail-value">{{ provider.descripcion || 'N/A' }}</div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-label">Estado</div>
+        <div class="detail-value">
+          <ion-badge [color]="provider.activo ? 'success' : 'danger'">
+            {{ provider.activo ? 'Activo' : 'Inactivo' }}
+          </ion-badge>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reglas de validación -->
+    <div class="validation-section">
+      <h3>
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        Reglas de Validación
+      </h3>
+      <div class="validation-list">
+        <div class="validation-item" *ngFor="let rule of getValidationDetails()">
+          <ion-icon name="checkmark-circle" color="success"></ion-icon>
+          <span>{{ rule }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-button expand="block" (click)="dismiss()" color="primary">
+      Cerrar
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

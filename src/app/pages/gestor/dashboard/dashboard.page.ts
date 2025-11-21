@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { TransactionService } from '../../../services/transaction.service';
 
@@ -13,7 +13,7 @@ import { TransactionService } from '../../../services/transaction.service';
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule]
 })
 export class DashboardPage implements OnInit {
   userName: string = '';
@@ -82,6 +82,10 @@ export class DashboardPage implements OnInit {
     } catch (error) {
       await this.showToast('Error al aprobar la operación', 'danger');
     }
+  }
+
+  openAccount() {
+    this.showToast('Funcionalidad de apertura de cuenta disponible próximamente', 'primary');
   }
 
   logout() {
