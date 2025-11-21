@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { IonicModule, AlertController, ToastController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ClientDetailModalComponent } from '../../../components/client-detail-modal/client-detail-modal.component';
@@ -24,7 +25,7 @@ interface Client {
   templateUrl: './clients.page.html',
   styleUrls: ['./clients.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule]
 })
 export class ClientsPage implements OnInit {
   clients: Client[] = [];

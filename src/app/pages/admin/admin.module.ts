@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { AdminRoutingModule } from './admin-routing.module';
 import { CreateUserModalComponent } from './users/create-user-modal/create-user-modal.component';
+import { CreateProviderModalComponent } from './service-providers/create-provider-modal/create-provider-modal.component';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { CreateUserModalComponent } from './users/create-user-modal/create-user-
     ReactiveFormsModule,
     IonicModule,
     AdminRoutingModule,
-    CreateUserModalComponent
-  ]
+    CreateUserModalComponent,
+    CreateProviderModalComponent, 
+  ],
 })
-export class AdminModule { }
+export class AdminModule {}

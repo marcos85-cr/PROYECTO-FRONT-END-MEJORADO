@@ -2,6 +2,7 @@ import { LoadingController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { ReportService } from '../../../services/report.service';
 
@@ -10,7 +11,7 @@ import { ReportService } from '../../../services/report.service';
   templateUrl: './reports.page.html',
   styleUrls: ['./reports.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule]
 })
 export class ReportsPage implements OnInit {
   // CORRECCIÓN 1: Inicializamos las fechas para solo incluir el formato 'YYYY-MM-DD'

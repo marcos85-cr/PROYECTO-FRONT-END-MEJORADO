@@ -8,11 +8,19 @@ import { IonicModule, ToastController, NavController } from '@ionic/angular';
 import { AccountService } from '../../../services/account.service';
 import { Account } from '../../../models/account.model';
 
+interface ValidationRules {
+  exactLength?: number;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+}
+
 interface PaymentProvider {
   id: string;
   nombre: string;
   codigoValidacion: string;
   regex: RegExp;
+  validationRules?: ValidationRules;
 }
 
 @Component({
@@ -27,6 +35,7 @@ export class PaymentsPage implements OnInit {
   myAccounts: Account[] = [];
   providers: PaymentProvider[] = [];
   selectedProvider: PaymentProvider | null = null;
+  validationResult: { isValid: boolean; errors: string[] } | null = null;
   isLoading = false;
   minDate: string = new Date().toISOString();
   maxDate: string = '';
@@ -110,37 +119,43 @@ export class PaymentsPage implements OnInit {
         id: '1',
         nombre: 'Electricidad - ICE',
         codigoValidacion: '8-12 dígitos',
-        regex: /^\d{8,12}$/
+        regex: /^\d{8,12}$/,
+        validationRules: { minLength: 8, maxLength: 12 }
       },
       {
         id: '2',
         nombre: 'Agua - AyA',
         codigoValidacion: '10 dígitos',
-        regex: /^\d{10}$/
+        regex: /^\d{10}$/,
+        validationRules: { exactLength: 10 }
       },
       {
         id: '3',
         nombre: 'Teléfono - Kolbi',
         codigoValidacion: '8 dígitos',
-        regex: /^\d{8}$/
+        regex: /^\d{8}$/,
+        validationRules: { exactLength: 8 }
       },
       {
         id: '4',
         nombre: 'Internet - Tigo',
         codigoValidacion: '8-10 dígitos',
-        regex: /^\d{8,10}$/
+        regex: /^\d{8,10}$/,
+        validationRules: { minLength: 8, maxLength: 10 }
       },
       {
         id: '5',
         nombre: 'Cable - Cabletica',
         codigoValidacion: '12 dígitos',
-        regex: /^\d{12}$/
+        regex: /^\d{12}$/,
+        validationRules: { exactLength: 12 }
       },
       {
         id: '6',
         nombre: 'Seguro - INS',
         codigoValidacion: '9 dígitos',
-        regex: /^\d{9}$/
+        regex: /^\d{9}$/,
+        validationRules: { exactLength: 9 }
       }
     ];
   }
@@ -205,5 +220,59 @@ export class PaymentsPage implements OnInit {
       color
     });
     toast.present();
+  }
+
+  // Validar referencia/contrato según el proveedor seleccionado
+  async validateReference(): Promise<void> {
+    // Usamos el campo 'numeroContrato' definido en el formulario
+    if (!this.selectedProvider || !this.paymentForm.get('numeroContrato')?.value) {
+      return;
+    }
+
+    const numeroReferencia = this.paymentForm.get('numeroContrato')?.value;
+
+    // Validar formato localmente con la RegExp del proveedor
+    if (!this.selectedProvider.regex.test(numeroReferencia)) {
+      await this.showToast(
+        `El número de contrato no es válido. ${this.selectedProvider.codigoValidacion}`,
+        'warning'
+      );
+      return;
+    }
+
+    // Aquí podrías llamar a un servicio remoto para validación adicional si lo necesitas.
+    await this.showToast('Número de contrato válido', 'success');
+  }
+
+  // Devuelve una pista de validación basada en el proveedor
+  getValidationHint(): string {
+    if (!this.selectedProvider?.validationRules) return '';
+
+    const rules = this.selectedProvider.validationRules;
+
+    if (rules.exactLength) {
+      return `${rules.exactLength} dígitos`;
+    }
+    if (rules.minLength && rules.maxLength) {
+      return `${rules.minLength}-${rules.maxLength} caracteres`;
+    }
+    return '';
+  }
+
+  // Devuelve un placeholder para el input del número de contrato
+  getPlaceholder(): string {
+    if (!this.selectedProvider?.validationRules) {
+      return 'Ingrese el número de contrato';
+    }
+
+    const rules = this.selectedProvider.validationRules;
+
+    if (rules.exactLength) {
+      return `Ej: ${'X'.repeat(rules.exactLength)}`;
+    }
+    if (rules.minLength) {
+      return `Ej: ${'X'.repeat(rules.minLength)}`;
+    }
+    return 'Ingrese el número de contrato';
   }
 }

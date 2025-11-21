@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { IonicModule, ModalController, AlertController, ToastController} from '@ionic/angular';
 import { User } from '../../../models/user.model';
 import { UserDetailModalComponent } from '../../../components/user-detail-modal/user-detail-modal.component';
@@ -12,7 +13,7 @@ import { UserService } from '../../../services/user.service';
   templateUrl: './users.page.html',
   styleUrls: ['./users.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule]
 })
 export class UsersPage implements OnInit {
   users: User[] = [];

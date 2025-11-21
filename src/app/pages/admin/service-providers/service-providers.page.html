@@ -1,0 +1,154 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/admin/dashboard"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Proveedores de Servicios</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="openCreateProviderModal()">
+                <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+    <!-- Búsqueda y Filtros -->
+    <ion-toolbar color="secondary">
+        <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterProviders()" placeholder="Buscar proveedor..."
+            animated>
+        </ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Estadísticas -->
+    <div class="stats-section">
+        <ion-card class="stat-card">
+            <ion-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <ion-icon name="business" color="primary"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ stats.total }}</h3>
+                        <p>Total Proveedores</p>
+                    </div>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card">
+            <ion-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ stats.active }}</h3>
+                        <p>Activos</p>
+                    </div>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card">
+            <ion-card-content>
+                <div class="stat-content">
+                    <div class="stat-icon">
+                        <ion-icon name="grid" color="tertiary"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <h3>{{ stats.types }}</h3>
+                        <p>Tipos de Servicio</p>
+                    </div>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    </div>
+
+    <!-- Filtros por Tipo -->
+    <ion-segment [(ngModel)]="selectedType" (ionChange)="filterProviders()">
+        <ion-segment-button value="all">
+            <ion-label>Todos</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Agua">
+            <ion-label>Agua</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Electricidad">
+            <ion-label>Electricidad</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Telefonía">
+            <ion-label>Telefonía</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Municipalidades">
+            <ion-label>Municipales</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+
+    <!-- Lista de Proveedores -->
+    <div class="providers-container">
+        <ion-list *ngIf="filteredProviders.length > 0">
+            <ion-item-sliding *ngFor="let provider of filteredProviders">
+                <ion-item lines="full" button (click)="openProviderDetail(provider)">
+                    <ion-icon slot="start" [name]="provider.icon" [color]="getTypeColor(provider.tipo)" size="large">
+                    </ion-icon>
+
+                    <ion-label>
+                        <h2>{{ provider.nombre }}</h2>
+                        <p>{{ provider.descripcion }}</p>
+                        <p class="provider-code">Código: {{ provider.codigoEmpresa }}</p>
+                        <div class="provider-meta">
+                            <ion-badge [color]="getTypeColor(provider.tipo)">
+                                {{ provider.tipo }}
+                            </ion-badge>
+                            <ion-badge color="success" *ngIf="provider.activo">
+                                Activo
+                            </ion-badge>
+                            <ion-badge color="medium" *ngIf="!provider.activo">
+                                Inactivo
+                            </ion-badge>
+                        </div>
+                    </ion-label>
+
+                    <div slot="end" class="validation-info">
+                        <ion-text color="medium" *ngIf="provider.validationRules">
+                            <small>
+                                <ion-icon name="shield-checkmark"></ion-icon>
+                                {{ getValidationSummary(provider.validationRules) }}
+                            </small>
+                        </ion-text>
+                    </div>
+                </ion-item>
+
+                <ion-item-options side="end">
+                    <ion-item-option color="primary" (click)="editProvider(provider)">
+                        <ion-icon slot="icon-only" name="create"></ion-icon>
+                    </ion-item-option>
+                    <ion-item-option [color]="provider.activo ? 'warning' : 'success'"
+                        (click)="toggleProviderStatus(provider)">
+                        <ion-icon slot="icon-only" [name]="provider.activo ? 'pause' : 'play'">
+                        </ion-icon>
+                    </ion-item-option>
+                    <ion-item-option color="danger" (click)="deleteProvider(provider)">
+                        <ion-icon slot="icon-only" name="trash"></ion-icon>
+                    </ion-item-option>
+                </ion-item-options>
+            </ion-item-sliding>
+        </ion-list>
+
+        <!-- Sin Resultados -->
+        <div class="empty-state" *ngIf="filteredProviders.length === 0 && !isLoading">
+            <ion-icon name="business-outline" color="medium"></ion-icon>
+            <p>No se encontraron proveedores</p>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading-state" *ngIf="isLoading">
+            <ion-spinner name="crescent" color="primary"></ion-spinner>
+            <p>Cargando proveedores...</p>
+        </div>
+    </div>
+</ion-content>

@@ -1,0 +1,177 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-title>Nuevo Proveedor de Servicios</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()">
+                <ion-icon name="close" slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <form [formGroup]="providerForm" (ngSubmit)="onSubmit()">
+
+        <!-- Nombre del Proveedor -->
+        <ion-item lines="none" class="input-item">
+            <ion-icon name="business-outline" slot="start" color="primary"></ion-icon>
+            <ion-input type="text" formControlName="nombre" placeholder="Nombre del proveedor" [clearInput]="true">
+            </ion-input>
+        </ion-item>
+        <div class="error-message" *ngIf="isFieldInvalid('nombre')">
+            <ion-text color="danger">
+                <small>El nombre es requerido (mínimo 3 caracteres)</small>
+            </ion-text>
+        </div>
+
+        <!-- Tipo de Servicio -->
+        <ion-item lines="none" class="input-item">
+            <ion-icon name="apps-outline" slot="start" color="primary"></ion-icon>
+            <ion-label position="stacked">Tipo de Servicio *</ion-label>
+            <ion-select formControlName="tipo" placeholder="Seleccione el tipo">
+                <ion-select-option value="Agua">💧 Agua</ion-select-option>
+                <ion-select-option value="Electricidad">⚡ Electricidad</ion-select-option>
+                <ion-select-option value="Telefonía">📱 Telefonía</ion-select-option>
+                <ion-select-option value="Internet">🌐 Internet</ion-select-option>
+                <ion-select-option value="Cable">📺 Cable</ion-select-option>
+                <ion-select-option value="Seguro">🛡️ Seguro</ion-select-option>
+                <ion-select-option value="Municipalidades">🏛️ Municipalidades</ion-select-option>
+                <ion-select-option value="Cobro Judicial">⚖️ Cobro Judicial</ion-select-option>
+                <ion-select-option value="Otros">📋 Otros</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <div class="error-message" *ngIf="isFieldInvalid('tipo')">
+            <ion-text color="danger">
+                <small>Seleccione un tipo de servicio</small>
+            </ion-text>
+        </div>
+
+        <!-- Icono (opcional) -->
+        <ion-item lines="none" class="input-item">
+            <ion-icon name="images-outline" slot="start" color="primary"></ion-icon>
+            <ion-input type="text" formControlName="icon" placeholder="Icono (ej: water-outline)" [clearInput]="true">
+            </ion-input>
+        </ion-item>
+        <div class="info-message">
+            <ion-text color="medium">
+                <small>Nombre del icono de Ionicons (opcional)</small>
+            </ion-text>
+        </div>
+
+        <!-- Reglas de Validación -->
+        <ion-card class="validation-card">
+            <ion-card-header>
+                <ion-card-title>
+                    <ion-icon name="shield-checkmark-outline"></ion-icon>
+                    Reglas de Validación
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+
+                <!-- Tipo de Validación -->
+                <ion-item lines="none">
+                    <ion-label position="stacked">Tipo de Validación *</ion-label>
+                    <ion-select formControlName="tipoValidacion" (ionChange)="onValidationTypeChange()">
+                        <ion-select-option value="rango">Rango de dígitos (ej: 8-12)</ion-select-option>
+                        <ion-select-option value="exacto">Cantidad exacta (ej: 10)</ion-select-option>
+                        <ion-select-option value="minimo">Mínimo de dígitos (ej: mín 8)</ion-select-option>
+                        <ion-select-option value="custom">Patrón personalizado (regex)</ion-select-option>
+                    </ion-select>
+                </ion-item>
+
+                <!-- Rango de Dígitos -->
+                <div *ngIf="providerForm.get('tipoValidacion')?.value === 'rango'">
+                    <ion-row>
+                        <ion-col size="6">
+                            <ion-item lines="none">
+                                <ion-label position="stacked">Mínimo</ion-label>
+                                <ion-input type="number" formControlName="digitosMin" placeholder="8" min="1">
+                                </ion-input>
+                            </ion-item>
+                        </ion-col>
+                        <ion-col size="6">
+                            <ion-item lines="none">
+                                <ion-label position="stacked">Máximo</ion-label>
+                                <ion-input type="number" formControlName="digitosMax" placeholder="12" min="1">
+                                </ion-input>
+                            </ion-item>
+                        </ion-col>
+                    </ion-row>
+                </div>
+
+                <!-- Cantidad Exacta -->
+                <ion-item lines="none" *ngIf="providerForm.get('tipoValidacion')?.value === 'exacto'">
+                    <ion-label position="stacked">Cantidad de dígitos</ion-label>
+                    <ion-input type="number" formControlName="digitosExactos" placeholder="10" min="1">
+                    </ion-input>
+                </ion-item>
+
+                <!-- Mínimo de Dígitos -->
+                <ion-item lines="none" *ngIf="providerForm.get('tipoValidacion')?.value === 'minimo'">
+                    <ion-label position="stacked">Mínimo de dígitos</ion-label>
+                    <ion-input type="number" formControlName="digitosMin" placeholder="8" min="1">
+                    </ion-input>
+                </ion-item>
+
+                <!-- Patrón Personalizado -->
+                <ion-item lines="none" *ngIf="providerForm.get('tipoValidacion')?.value === 'custom'">
+                    <ion-label position="stacked">Expresión Regular (regex)</ion-label>
+                    <ion-input type="text" formControlName="regexCustom" placeholder="^\d{8,12}$">
+                    </ion-input>
+                </ion-item>
+
+                <!-- Vista Previa de Validación -->
+                <div class="preview-section" *ngIf="previewValidation">
+                    <ion-text color="medium">
+                        <p><strong>Vista Previa:</strong></p>
+                        <p>{{ previewValidation }}</p>
+                    </ion-text>
+                </div>
+
+                <!-- Probar Validación -->
+                <ion-item lines="none" class="test-input">
+                    <ion-label position="stacked">Probar número de contrato</ion-label>
+                    <ion-input type="text" [(ngModel)]="testContract" [ngModelOptions]="{standalone: true}"
+                        placeholder="Ingrese un número para probar" (ionInput)="testValidation()">
+                    </ion-input>
+                    <ion-icon slot="end"
+                        [name]="testResult === null ? 'help-circle-outline' : testResult ? 'checkmark-circle' : 'close-circle'"
+                        [color]="testResult === null ? 'medium' : testResult ? 'success' : 'danger'" size="large">
+                    </ion-icon>
+                </ion-item>
+                <div class="test-result" *ngIf="testResult !== null">
+                    <ion-text [color]="testResult ? 'success' : 'danger'">
+                        <small>
+                            <ion-icon [name]="testResult ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+                            {{ testResult ? 'Válido' : 'No válido' }}
+                        </small>
+                    </ion-text>
+                </div>
+
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Estado Activo -->
+        <ion-item lines="none" class="input-item">
+            <ion-icon name="power-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>Proveedor Activo</ion-label>
+            <ion-toggle formControlName="activo" slot="end" [checked]="true"></ion-toggle>
+        </ion-item>
+
+        <!-- Botones -->
+        <div class="button-group">
+            <ion-button expand="block" type="submit" color="success" [disabled]="providerForm.invalid || isLoading">
+                <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+                <span *ngIf="!isLoading">
+                    <ion-icon name="add-circle" slot="start"></ion-icon>
+                    Crear Proveedor
+                </span>
+            </ion-button>
+
+            <ion-button expand="block" fill="outline" color="medium" type="button" (click)="dismiss()">
+                Cancelar
+            </ion-button>
+        </div>
+
+    </form>
+</ion-content>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { IonicModule, AlertController, ToastController, ModalController } from '@ionic/angular';
 import { Account, AccountType } from '../../../models/account.model';
 import { AccountService } from '../../../services/account.service';
@@ -11,7 +12,7 @@ import { AccountDetailModalComponent } from '../../../components/account-detail-
   templateUrl: './accounts.page.html',
   styleUrls: ['./accounts.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule]
 })
 export class AccountsPage implements OnInit {
   accounts: Account[] = [];

@@ -1,0 +1,304 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/admin/dashboard"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Configuración del Sistema</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="secondary">
+    <div class="settings-container">
+
+        <!-- Parámetros Generales -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Parámetros Generales</ion-card-title>
+                <ion-card-subtitle>Configuración básica del sistema</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-label>
+                            <h3>Nombre del Banco</h3>
+                            <p>{{ config.bankName }}</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('bankName')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>
+                            <h3>Email de Contacto</h3>
+                            <p>{{ config.contactEmail }}</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('contactEmail')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>
+                            <h3>Teléfono de Soporte</h3>
+                            <p>{{ config.supportPhone }}</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('supportPhone')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Límites y Restricciones -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Límites de Transacciones</ion-card-title>
+                <ion-card-subtitle>Montos máximos y restricciones</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-label>
+                            <h3>Límite Diario de Transferencias</h3>
+                            <p>{{ config.dailyTransferLimit | currency:'CRC':'symbol':'1.0-0' }}</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('dailyTransferLimit')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>
+                            <h3>Monto para Operación de Alto Valor</h3>
+                            <p>{{ config.highValueThreshold | currency:'CRC':'symbol':'1.0-0' }}</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('highValueThreshold')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>
+                            <h3>Límite de Retiro en Cajero</h3>
+                            <p>{{ config.atmWithdrawalLimit | currency:'CRC':'symbol':'1.0-0' }}</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('atmWithdrawalLimit')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Seguridad -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Seguridad</ion-card-title>
+                <ion-card-subtitle>Parámetros de autenticación y bloqueo</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-label>
+                            <h3>Intentos Máximos de Login</h3>
+                            <p>{{ config.maxLoginAttempts }} intentos</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('maxLoginAttempts')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>
+                            <h3>Tiempo de Sesión</h3>
+                            <p>{{ config.sessionTimeout }} minutos</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('sessionTimeout')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-toggle [(ngModel)]="config.requireTwoFactor" (ionChange)="saveConfig()">
+                            <ion-label>
+                                <h3>Autenticación de Dos Factores</h3>
+                                <p>Requerir 2FA para operaciones sensibles</p>
+                            </ion-label>
+                        </ion-toggle>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-toggle [(ngModel)]="config.enableBiometric" (ionChange)="saveConfig()">
+                            <ion-label>
+                                <h3>Autenticación Biométrica</h3>
+                                <p>Permitir huella digital/Face ID</p>
+                            </ion-label>
+                        </ion-toggle>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Tasas e Intereses -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Tasas e Intereses</ion-card-title>
+                <ion-card-subtitle>Configuración de productos financieros</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-label>
+                            <h3>Tasa de Interés - Cuenta de Ahorros</h3>
+                            <p>{{ config.savingsInterestRate }}% anual</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('savingsInterestRate')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>
+                            <h3>Comisión por Transferencia</h3>
+                            <p>{{ config.transferFee | currency:'CRC':'symbol':'1.0-0' }}</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('transferFee')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label>
+                            <h3>Comisión por Retiro en Cajero</h3>
+                            <p>{{ config.atmFee | currency:'CRC':'symbol':'1.0-0' }}</p>
+                        </ion-label>
+                        <ion-button slot="end" fill="outline" size="small" (click)="editConfig('atmFee')">
+                            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Notificaciones -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Notificaciones</ion-card-title>
+                <ion-card-subtitle>Configuración de alertas del sistema</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-toggle [(ngModel)]="config.emailNotifications" (ionChange)="saveConfig()">
+                            <ion-label>
+                                <h3>Notificaciones por Email</h3>
+                                <p>Enviar alertas por correo electrónico</p>
+                            </ion-label>
+                        </ion-toggle>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-toggle [(ngModel)]="config.smsNotifications" (ionChange)="saveConfig()">
+                            <ion-label>
+                                <h3>Notificaciones por SMS</h3>
+                                <p>Enviar alertas por mensaje de texto</p>
+                            </ion-label>
+                        </ion-toggle>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-toggle [(ngModel)]="config.pushNotifications" (ionChange)="saveConfig()">
+                            <ion-label>
+                                <h3>Notificaciones Push</h3>
+                                <p>Alertas en dispositivo móvil</p>
+                            </ion-label>
+                        </ion-toggle>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Mantenimiento -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Mantenimiento del Sistema</ion-card-title>
+                <ion-card-subtitle>Tareas administrativas</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item button (click)="clearCache()">
+                        <ion-icon slot="start" name="trash-outline" color="warning"></ion-icon>
+                        <ion-label>
+                            <h3>Limpiar Caché</h3>
+                            <p>Eliminar datos temporales del sistema</p>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item button (click)="exportLogs()">
+                        <ion-icon slot="start" name="download-outline" color="primary"></ion-icon>
+                        <ion-label>
+                            <h3>Exportar Logs</h3>
+                            <p>Descargar registros del sistema</p>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item button (click)="runDatabaseMaintenance()">
+                        <ion-icon slot="start" name="construct-outline" color="tertiary"></ion-icon>
+                        <ion-label>
+                            <h3>Mantenimiento de Base de Datos</h3>
+                            <p>Optimizar y limpiar datos</p>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item button (click)="backupDatabase()">
+                        <ion-icon slot="start" name="save-outline" color="success"></ion-icon>
+                        <ion-label>
+                            <h3>Respaldo de Base de Datos</h3>
+                            <p>Crear copia de seguridad</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Información del Sistema -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Información del Sistema</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
+                    <ion-item>
+                        <ion-label>
+                            <p>Versión del Sistema</p>
+                            <h3>{{ systemInfo.version }}</h3>
+                        </ion-label>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>
+                            <p>Última Actualización</p>
+                            <h3>{{ systemInfo.lastUpdate | date:'medium' }}</h3>
+                        </ion-label>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>
+                            <p>Entorno</p>
+                            <h3>{{ systemInfo.environment }}</h3>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Botón de Guardar -->
+        <div class="save-section">
+            <ion-button expand="block" color="primary" (click)="saveAllConfig()">
+                <ion-icon slot="start" name="save-outline"></ion-icon>
+                Guardar Cambios
+            </ion-button>
+        </div>
+
+    </div>
+</ion-content>

@@ -28,16 +28,18 @@
                         </ion-select>
                     </ion-item>
 
-                    <ion-item lines="none" *ngIf="selectedProvider">
-                        <ion-label position="stacked">Número de Contrato *</ion-label>
-                        <ion-input type="text" formControlName="numeroContrato"
-                            [placeholder]="'Formato: ' + selectedProvider.codigoValidacion"></ion-input>
+                    <ion-item>
+                        <ion-label position="stacked">
+                            Número de Contrato / Referencia *
+                            <ion-text color="medium" *ngIf="selectedProvider?.validationRules">
+                                <small>
+                                    ({{ getValidationHint() }})
+                                </small>
+                            </ion-text>
+                        </ion-label>
+                        <ion-input formControlName="numeroReferencia" [placeholder]="getPlaceholder()" (ionBlur)="validateReference()">
+                        </ion-input>
                     </ion-item>
-                    <div class="validation-info" *ngIf="selectedProvider">
-                        <ion-text color="medium">
-                            <small>{{ selectedProvider.codigoValidacion }}</small>
-                        </ion-text>
-                    </div>
                 </ion-card-content>
             </ion-card>
 
@@ -72,6 +74,15 @@
                         <ion-datetime formControlName="fechaProgramada" presentation="date" [min]="minDate"
                             [max]="maxDate"></ion-datetime>
                     </ion-item>
+
+                    <div class="validation-errors" *ngIf="validationResult && !validationResult.isValid">
+                        <ion-text color="danger">
+                            <p *ngFor="let error of validationResult.errors">
+                                <ion-icon name="alert-circle"></ion-icon>
+                                {{ error }}
+                            </p>
+                        </ion-text>
+                    </div>
                 </ion-card-content>
             </ion-card>
 
