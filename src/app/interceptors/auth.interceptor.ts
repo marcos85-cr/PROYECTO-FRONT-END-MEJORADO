@@ -37,7 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
         },
       });
     }
-
+      // Manejar errores de respuesta
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
@@ -49,7 +49,7 @@ export class AuthInterceptor implements HttpInterceptor {
           console.warn('🚫 Sin permisos para esta acción (403)');
           this.showToast('No tiene permisos para realizar esta acción.');
         } else if (error.status === 0) {
-          // Error de conexión
+          // Error de conexión 
           console.warn('⚠️ Error de conexión');
           this.showToast('Error de conexión. Verifique su internet.');
         }
