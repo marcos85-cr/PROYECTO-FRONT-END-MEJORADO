@@ -101,7 +101,7 @@ export class ServiceProvidersPage implements OnInit {
       case ServiceType.TELEFONIA:
         return 'success';
       case ServiceType.MUNICIPALIDADES:
-        return 'tertiary';
+        return 'primary';
       case ServiceType.COBRO_JUDICIAL:
         return 'danger';
       default:

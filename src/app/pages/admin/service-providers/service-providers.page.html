@@ -58,7 +58,7 @@
             <ion-card-content>
                 <div class="stat-content">
                     <div class="stat-icon">
-                        <ion-icon name="grid" color="tertiary"></ion-icon>
+                        <ion-icon name="grid" color="primary"></ion-icon>
                     </div>
                     <div class="stat-info">
                         <h3>{{ stats.types }}</h3>
@@ -104,10 +104,11 @@
                             <ion-badge [color]="getTypeColor(provider.tipo)">
                                 {{ provider.tipo }}
                             </ion-badge>
+                            <!-- Estado Activo/Inactivo -->
                             <ion-badge color="success" *ngIf="provider.activo">
                                 Activo
                             </ion-badge>
-                            <ion-badge color="medium" *ngIf="!provider.activo">
+                            <ion-badge color="primary" *ngIf="!provider.activo">
                                 Inactivo
                             </ion-badge>
                         </div>
