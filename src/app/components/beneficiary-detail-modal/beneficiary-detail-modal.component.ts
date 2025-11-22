@@ -42,7 +42,6 @@ export class BeneficiaryDetailModalComponent {
   }
 
   getBankIcon(banco: string): string {
-    // Retornar icono según el banco
     switch (banco.toLowerCase()) {
       case 'banco nacional':
       case 'bncr':
@@ -58,7 +57,6 @@ export class BeneficiaryDetailModalComponent {
   }
 
   getCountryFlag(pais: string): string {
-    // Retornar emoji de bandera según el país
     switch (pais.toLowerCase()) {
       case 'costa rica':
         return '🇨🇷';

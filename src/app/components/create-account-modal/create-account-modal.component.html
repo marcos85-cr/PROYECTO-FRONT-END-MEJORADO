@@ -1,0 +1,109 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Abrir Nueva Cuenta</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Información del Cliente -->
+  <div class="client-info">
+    <ion-card>
+      <ion-card-content>
+        <div class="client-header">
+          <ion-avatar>
+            <img [src]="'https://ui-avatars.com/api/?name=' + client.nombre + '&background=random'" />
+          </ion-avatar>
+          <div class="client-details">
+            <h3>{{ client.nombre }}</h3>
+            <p>{{ client.email }}</p>
+            <p class="id-number">{{ client.identificacion }}</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Formulario de Creación -->
+  <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+    
+    <!-- Tipo de Cuenta -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="folder-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>Tipo de Cuenta</ion-label>
+      <ion-select formControlName="tipo" placeholder="Seleccione tipo">
+        <ion-select-option *ngFor="let type of accountTypes" [value]="type">
+          {{ type }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div class="error-message" *ngIf="isFieldInvalid('tipo')">
+      <ion-text color="danger">
+        <small>{{ getFieldError('tipo') }}</small>
+      </ion-text>
+    </div>
+
+    <!-- Moneda -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="cash-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>Moneda</ion-label>
+      <ion-select formControlName="moneda" placeholder="Seleccione moneda">
+        <ion-select-option *ngFor="let curr of currencies" [value]="curr">
+          {{ curr }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Saldo Inicial -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="wallet-outline" slot="start" color="primary"></ion-icon>
+      <ion-input 
+        type="number" 
+        formControlName="saldoInicial" 
+        placeholder="Saldo inicial"
+        [clearInput]="true"
+        min="0">
+      </ion-input>
+    </ion-item>
+    <div class="error-message" *ngIf="isFieldInvalid('saldoInicial')">
+      <ion-text color="danger">
+        <small>{{ getFieldError('saldoInicial') }}</small>
+      </ion-text>
+    </div>
+
+    <!-- Descripción (Opcional) -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
+      <ion-textarea
+        formControlName="descripcion"
+        placeholder="Descripción (opcional)"
+        rows="3">
+      </ion-textarea>
+    </ion-item>
+
+    <!-- Botones -->
+    <div class="button-group">
+      <ion-button 
+        expand="block" 
+        type="submit" 
+        color="primary"
+        [disabled]="createAccountForm.invalid || isLoading">
+        <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+        <span *ngIf="!isLoading">Crear Cuenta</span>
+      </ion-button>
+
+      <ion-button 
+        expand="block" 
+        fill="outline" 
+        color="medium" 
+        type="button"
+        (click)="dismiss()">
+        Cancelar
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

@@ -6,6 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ClientDetailModalComponent } from '../../../components/client-detail-modal/client-detail-modal.component';
 import { ClientAccountsModalComponent } from '../../../components/client-accounts-modal/client-accounts-modal.component';
 import { ClientTransactionsModalComponent } from '../../../components/client-transactions-modal/client-transactions-modal.component';
+import { CreateAccountModalComponent } from '../../../components/create-account-modal/create-account-modal.component'; // ← NUEVO IMPORT
 
 interface Client {
   id: string;
@@ -247,104 +248,31 @@ export class ClientsPage implements OnInit {
     await modal.present();
   }
 
-  async openCreateAccountModal() {
-    const alert = await this.alertController.create({
-      header: 'Seleccione Cliente',
-      message: 'Seleccione el cliente para abrir una nueva cuenta',
-      inputs: this.clients.map(client => ({
-        type: 'radio' as const,
-        label: client.nombre,
-        value: client.id
-      })),
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Siguiente',
-          handler: (clientId) => {
-            if (clientId) {
-              const client = this.clients.find(c => c.id === clientId);
-              if (client) {
-                this.openCreateAccountForClient(client);
-              }
-            }
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
-
+  /**
+   * Abre el modal para crear cuenta para un cliente específico
+   */
   async openCreateAccountForClient(client: Client) {
-    const alert = await this.alertController.create({
-      header: `Nueva Cuenta para ${client.nombre}`,
-      inputs: [
-        {
-          name: 'tipo',
-          type: 'text',
-          placeholder: 'Tipo de Cuenta (Ahorros, Corriente, etc.)'
-        },
-        {
-          name: 'moneda',
-          type: 'text',
-          placeholder: 'Moneda (CRC o USD)'
-        },
-        {
-          name: 'saldoInicial',
-          type: 'number',
-          placeholder: 'Saldo Inicial',
-          min: 0
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Crear Cuenta',
-          handler: async (data) => {
-            if (!data.tipo || !data.moneda || !data.saldoInicial) {
-              await this.showToast('Complete todos los campos', 'warning');
-              return false;
-            }
-            
-            // Validar que no tenga más de 3 cuentas del mismo tipo
-            const sameTypeCount = client.cuentasActivas; // Simplificación
-            if (sameTypeCount >= 3) {
-              await this.showToast('El cliente ya tiene el máximo de cuentas de este tipo', 'warning');
-              return false;
-            }
-
-            await this.createAccount(client, data);
-            return true;
-          }
-        }
-      ]
+    const modal = await this.modalController.create({
+      component: CreateAccountModalComponent,
+      componentProps: {
+        client: client
+      },
+      cssClass: 'create-account-modal'
     });
-    await alert.present();
-  }
 
-  async createAccount(client: Client, accountData: any) {
-    try {
-      // En producción, llamar al servicio
-      // await this.accountService.createAccount({
-      //   clienteId: client.id,
-      //   tipo: accountData.tipo,
-      //   moneda: accountData.moneda,
-      //   saldoInicial: accountData.saldoInicial
-      // }).toPromise();
+    await modal.present();
 
-      await this.showToast('Cuenta creada exitosamente', 'success');
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.action === 'accountCreated') {
+      // Actualizar número de cuentas del cliente
+      const index = this.clients.findIndex(c => c.id === client.id);
+      if (index !== -1) {
+        this.clients[index].cuentasActivas++;
+      }
       
-      // Actualizar contador de cuentas del cliente
-      client.cuentasActivas++;
       this.calculateStats();
-    } catch (error) {
-      console.error('Error creating account:', error);
-      await this.showToast('Error al crear la cuenta', 'danger');
+      await this.showToast('Cuenta creada exitosamente', 'success');
     }
   }
 
@@ -361,5 +289,5 @@ export class ClientsPage implements OnInit {
       color
     });
     await toast.present();
-    }
+  }
 }

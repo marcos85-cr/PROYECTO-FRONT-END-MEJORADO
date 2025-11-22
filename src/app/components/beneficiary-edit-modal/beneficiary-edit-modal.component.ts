@@ -109,10 +109,10 @@ export class BeneficiaryEditModalComponent {
   }
 }
 export class MiComponente {
-  beneficiary: any; // ya tendrás esto
+  beneficiary: any; 
 
   getStatusColor(estado: string | undefined): string {
-    if (!estado) return 'light'; // protege contra undefined
+    if (!estado) return 'light'; 
     switch (estado.toLowerCase()) {
       case 'activo':
         return 'success';

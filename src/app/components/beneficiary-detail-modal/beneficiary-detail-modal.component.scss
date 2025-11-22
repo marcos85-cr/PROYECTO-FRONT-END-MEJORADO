@@ -14,8 +14,6 @@ ion-modal.custom-modal-size {
   --border-radius: 12px;
 }
 
-
-// Estilos del header
 .custom-toolbar {
   --background: #5cb3ff;
   --color: white;
@@ -37,7 +35,6 @@ ion-modal.custom-modal-size {
   }
 }
 
-// Contenido del modal
 .modal-content {
    
   --background: #f8f9fa;
@@ -46,7 +43,6 @@ ion-modal.custom-modal-size {
   --padding-top: 0;
 }
 
-// Secciones de información
 .info-section {
   background: white;
   margin: 16px;
@@ -59,7 +55,6 @@ ion-modal.custom-modal-size {
   }
 }
 
-// Header de cada sección
 .section-header {
   background: #e3f2fd;
   padding: 16px 20px 12px 20px;
@@ -67,16 +62,7 @@ ion-modal.custom-modal-size {
   display: flex;
   align-items: center;
   gap: 12px;
-  /*
-  .section-icon {
-    color: #5cb3ff;
-    font-size: 1.3rem;
-    
-    &.warning-icon {
-      color: #ffc409;
-    }
-  }
-  */
+  
   .section-title {
     color: #5cb3ff;
     font-size: 1rem;
@@ -85,7 +71,6 @@ ion-modal.custom-modal-size {
   }
 }
 
-// Contenido de cada sección
 .info-item {
   padding: 0;
 }
@@ -135,7 +120,6 @@ ion-modal.custom-modal-size {
   }
 }
 
-// Información de país con bandera
 .country-info {
   display: flex;
   align-items: center;
@@ -146,7 +130,6 @@ ion-modal.custom-modal-size {
   }
 }
 
-// Badge de estado
 .status-badge {
   font-size: 0.8rem;
   padding: 6px 12px;
@@ -154,7 +137,6 @@ ion-modal.custom-modal-size {
   font-weight: 600;
 }
 
-// Footer con botones
 .footer-toolbar {
   --background: white;
   --border-color: #e0e0e0;
@@ -163,10 +145,6 @@ ion-modal.custom-modal-size {
   --padding-end: 20px;
 }
 
-
-
-
-// Responsive design
 @media (max-width: 480px) {
     .modal-content {
     max-width: 280px;       
