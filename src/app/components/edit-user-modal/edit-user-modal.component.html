@@ -1,0 +1,183 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Editar Usuario</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
+    
+    <!-- Nombre Completo -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
+      <ion-input 
+        type="text" 
+        formControlName="nombre" 
+        placeholder="Nombre completo"
+        [clearInput]="true">
+      </ion-input>
+    </ion-item>
+    <div class="error-message" *ngIf="isFieldInvalid('nombre')">
+      <ion-text color="danger">
+        <small>El nombre es requerido</small>
+      </ion-text>
+    </div>
+
+    <!-- Email -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
+      <ion-input 
+        type="email" 
+        formControlName="email" 
+        placeholder="Correo electrónico"
+        [clearInput]="true"
+        (ionBlur)="checkEmailUniqueness()">
+      </ion-input>
+    </ion-item>
+    <div class="error-message" *ngIf="isFieldInvalid('email')">
+      <ion-text color="danger">
+        <small *ngIf="editUserForm.get('email')?.errors?.['required']">
+          El email es requerido
+        </small>
+        <small *ngIf="editUserForm.get('email')?.errors?.['email']">
+          Ingrese un email válido
+        </small>
+        <small *ngIf="editUserForm.get('email')?.errors?.['emailTaken']">
+          Este email ya está registrado
+        </small>
+      </ion-text>
+    </div>
+
+    <!-- Identificación -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="card-outline" slot="start" color="primary"></ion-icon>
+      <ion-input 
+        type="text" 
+        formControlName="identificacion" 
+        placeholder="Identificación (cédula)"
+        [clearInput]="true">
+      </ion-input>
+    </ion-item>
+    <div class="error-message" *ngIf="isFieldInvalid('identificacion')">
+      <ion-text color="danger">
+        <small>La identificación es requerida</small>
+      </ion-text>
+    </div>
+
+    <!-- Teléfono -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="call-outline" slot="start" color="primary"></ion-icon>
+      <ion-input 
+        type="tel" 
+        formControlName="telefono" 
+        placeholder="Teléfono"
+        [clearInput]="true">
+      </ion-input>
+    </ion-item>
+    <div class="error-message" *ngIf="isFieldInvalid('telefono')">
+      <ion-text color="danger">
+        <small>El teléfono es requerido</small>
+      </ion-text>
+    </div>
+
+    <!-- Rol -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="shield-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>Rol</ion-label>
+      <ion-select formControlName="role" placeholder="Seleccione un rol">
+        <ion-select-option value="Cliente">Cliente</ion-select-option>
+        <ion-select-option value="Gestor">Gestor</ion-select-option>
+        <ion-select-option value="Administrador">Administrador</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div class="error-message" *ngIf="isFieldInvalid('role')">
+      <ion-text color="danger">
+        <small>Seleccione un rol</small>
+      </ion-text>
+    </div>
+
+    <!-- Nota sobre contraseña -->
+    <div class="password-note">
+      <ion-icon name="information-circle-outline" color="primary"></ion-icon>
+      <ion-text color="medium">
+        <small>Deja los campos de contraseña en blanco si no deseas cambiarla</small>
+      </ion-text>
+    </div>
+
+    <!-- Contraseña -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="lock-closed-outline" slot="start" color="primary"></ion-icon>
+      <ion-input 
+        [type]="showPassword ? 'text' : 'password'" 
+        formControlName="password"
+        placeholder="Contraseña (opcional)">
+      </ion-input>
+      <ion-icon 
+        slot="end" 
+        [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+        (click)="togglePassword()" 
+        color="medium"
+        style="cursor: pointer;">
+      </ion-icon>
+    </ion-item>
+    <div class="password-requirements" *ngIf="editUserForm.get('password')?.value">
+      <ion-text color="medium">
+        <small>Mínimo 8 caracteres, 1 mayúscula, 1 número</small>
+      </ion-text>
+    </div>
+    <div class="error-message" *ngIf="isFieldInvalid('password')">
+      <ion-text color="danger">
+        <small>{{ getPasswordError() }}</small>
+      </ion-text>
+    </div>
+
+    <!-- Confirmar Contraseña -->
+    <ion-item lines="none" class="input-item">
+      <ion-icon name="lock-closed-outline" slot="start" color="primary"></ion-icon>
+      <ion-input 
+        [type]="showConfirmPassword ? 'text' : 'password'" 
+        formControlName="confirmPassword"
+        placeholder="Confirmar contraseña (opcional)">
+      </ion-input>
+      <ion-icon 
+        slot="end" 
+        [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"
+        (click)="toggleConfirmPassword()" 
+        color="medium"
+        style="cursor: pointer;">
+      </ion-icon>
+    </ion-item>
+    <div class="error-message" 
+      *ngIf="editUserForm.hasError('passwordMismatch') && editUserForm.get('confirmPassword')?.touched">
+      <ion-text color="danger">
+        <small>Las contraseñas no coinciden</small>
+      </ion-text>
+    </div>
+
+    <!-- Botones -->
+    <div class="button-group">
+      <ion-button 
+        expand="block" 
+        type="submit" 
+        color="primary"
+        [disabled]="editUserForm.invalid || isLoading">
+        <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+        <span *ngIf="!isLoading">Guardar Cambios</span>
+      </ion-button>
+
+      <ion-button 
+        expand="block" 
+        fill="outline" 
+        color="medium" 
+        type="button"
+        (click)="dismiss()">
+        Cancelar
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

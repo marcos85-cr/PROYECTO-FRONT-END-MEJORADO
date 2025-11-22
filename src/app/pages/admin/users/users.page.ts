@@ -6,6 +6,7 @@ import { IonicModule, ModalController, AlertController, ToastController} from '@
 import { User } from '../../../models/user.model';
 import { UserDetailModalComponent } from '../../../components/user-detail-modal/user-detail-modal.component';
 import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
+import { EditUserModalComponent } from '../../../components/edit-user-modal/edit-user-modal.component'; // ← NUEVO IMPORT
 import { UserService } from '../../../services/user.service';
 
 @Component({
@@ -57,8 +58,8 @@ export class UsersPage implements OnInit {
         email: 'admin@banco.com',
         role: 'Administrador',
         nombre: 'Juan Pérez',
-        identificacion: '1-1111-1111', // ✅ Siempre asignado
-        telefono: '8888-8888', // ✅ Siempre asignado
+        identificacion: '1-1111-1111',
+        telefono: '8888-8888',
         bloqueado: false,
         intentosFallidos: 0,
         cuentasActivas: 0
@@ -68,8 +69,8 @@ export class UsersPage implements OnInit {
         email: 'gestor@banco.com',
         role: 'Gestor',
         nombre: 'María López',
-        identificacion: '2-2222-2222', // ✅ Siempre asignado
-        telefono: '7777-7777', // ✅ Siempre asignado
+        identificacion: '2-2222-2222',
+        telefono: '7777-7777',
         bloqueado: false,
         intentosFallidos: 0,
         cuentasActivas: 0
@@ -79,8 +80,8 @@ export class UsersPage implements OnInit {
         email: 'cliente@banco.com',
         role: 'Cliente',
         nombre: 'Carlos Sánchez',
-        identificacion: '3-3333-3333', // ✅ Siempre asignado
-        telefono: '6666-6666', // ✅ Siempre asignado
+        identificacion: '3-3333-3333',
+        telefono: '6666-6666',
         bloqueado: false,
         intentosFallidos: 0,
         cuentasActivas: 2
@@ -92,18 +93,16 @@ export class UsersPage implements OnInit {
   filterUsers() {
     let filtered = [...this.users];
 
-    // Filtrar por rol
     if (this.selectedRole !== 'all') {
       filtered = filtered.filter(user => user.role === this.selectedRole);
     }
 
-    // Filtrar por término de búsqueda
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(user =>
         user.nombre.toLowerCase().includes(term) ||
         user.email.toLowerCase().includes(term) ||
-        (user.identificacion?.includes(term) ?? false) // ✅ Manejar undefined
+        (user.identificacion?.includes(term) ?? false)
       );
     }
 
@@ -137,7 +136,6 @@ export class UsersPage implements OnInit {
     const { data } = await modal.onWillDismiss();
     
     if (data?.action === 'userCreated') {
-      // Asegurar que el nuevo usuario tenga todos los campos requeridos
       const newUser: User = {
         ...data.user,
         identificacion: data.user.identificacion ?? 'N/A',
@@ -180,7 +178,34 @@ export class UsersPage implements OnInit {
         this.filterUsers();
       }
     } else if (data?.action === 'edit') {
-      await this.editUser(data.user);
+      // ← AQUÍ: Abrir modal de edición en lugar de solo mostrar un toast
+      await this.openEditModal(data.user);
+    }
+  }
+
+  /**
+   * Abre el modal para editar un usuario
+   */
+  async openEditModal(user: User) {
+    const modal = await this.modalController.create({
+      component: EditUserModalComponent,
+      componentProps: {
+        user: user
+      },
+      cssClass: 'edit-user-modal'
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    
+    if (data?.action === 'userUpdated') {
+      const index = this.users.findIndex(u => u.id === data.user.id);
+      if (index !== -1) {
+        this.users[index] = data.user;
+        this.filterUsers();
+        await this.showToast('Usuario actualizado exitosamente', 'success');
+      }
     }
   }
 
@@ -190,10 +215,6 @@ export class UsersPage implements OnInit {
       `Usuario ${user.bloqueado ? 'bloqueado' : 'desbloqueado'} exitosamente`,
       'success'
     );
-  }
-
-  async editUser(user: User) {
-    await this.showToast('Función de edición en desarrollo', 'warning');
   }
 
   async handleRefresh(event: any) {
