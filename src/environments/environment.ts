@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000/api', // Cambiar por tu URL de API
-  apiTimeout: 30000,
+  apiUrl: 'http://localhost:5085/api', // URL de la API en desarrollo
 };
 /*
  * For easier debugging in development mode, you can import the following file
